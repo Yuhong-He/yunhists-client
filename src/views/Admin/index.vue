@@ -3,14 +3,11 @@
 </template>
 
 <script>
-
 export default {
-  components: {
-
-  },
+  name: 'index'
 };
 </script>
 
-<style>
+<style scoped>
 
 </style>
