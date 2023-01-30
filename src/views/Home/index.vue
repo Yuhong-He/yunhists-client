@@ -4,7 +4,7 @@
     <div class="search-container">
       <span class="item"><font-awesome-icon icon="fa-solid fa-book-open" /></span>
       <div class="search-box">
-        <input type="text" class="search-btn" id="search-btn" placeholder="搜索">
+        <input type="text" class="search-btn" id="search-btn" :placeholder="$t('home.search')">
       </div>
       <span class="item"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></span>
     </div>
@@ -14,6 +14,7 @@
 
 <script>
 import router from "@/router";
+import store from '@/store'
 
 export default {
   mounted() {

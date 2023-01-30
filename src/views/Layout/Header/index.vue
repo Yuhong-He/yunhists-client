@@ -12,53 +12,54 @@
     >
       <el-menu-item index="/">
         <font-awesome-icon icon="fa-solid fa-house" />
-        <span class="nav-text">首页</span>
+        <span class="nav-text">{{ $t('header.home') }}</span>
       </el-menu-item>
       <el-menu-item index="/thesis/list">
         <font-awesome-icon icon="fa-solid fa-book-open" />
-        <span class="nav-text">论文</span>
+        <span class="nav-text">{{ $t('header.thesis') }}</span>
       </el-menu-item>
       <el-menu-item index="/category/list">
         <font-awesome-icon icon="fa-solid fa-folder-tree" />
-        <span class="nav-text">分类</span>
+        <span class="nav-text">{{ $t('header.category') }}</span>
       </el-menu-item>
       <el-submenu index="/admin">
         <template slot="title">
           <span>
             <font-awesome-icon icon="fa-solid fa-gear" />
-            <span class="nav-text">管理</span>
+            <span class="nav-text">{{ $t('header.manage') }}</span>
           </span>
         </template>
-        <el-menu-item index="/admin/approve">审批分享</el-menu-item>
+        <el-menu-item index="/admin/approve">{{ $t('header.approve') }}</el-menu-item>
       </el-submenu>
       <el-menu-item style="float: right;" index="/login">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
-        <span class="nav-text">登录</span>
+        <span class="nav-text">{{ $t('header.login') }}</span>
       </el-menu-item>
       <el-menu-item style="float: right;" index="/profile">
         <font-awesome-icon icon="fa-solid fa-user" />
         <span class="nav-text">Alex</span>
       </el-menu-item>
-      <el-submenu  style="float: right;" index="">
+      <el-submenu style="float: right;" index="">
         <template slot="title">
           <span class="nav-text"><font-awesome-icon icon="fa-solid fa-language" /></span>
         </template>
-        <el-menu-item index="">中文</el-menu-item>
-        <el-menu-item index="">English</el-menu-item>
+        <el-menu-item index="" @click="setLangTo('zh')">中文</el-menu-item>
+        <el-menu-item index="" @click="setLangTo('en')">English</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
 </template>
 
 <script>
+import { mapMutations } from 'vuex';
+
 export default {
   data() {
     return {
-      activeIndex: '1',
-      activeIndex2: '1'
     };
   },
   methods: {
+    ...mapMutations('lang', ['setLang']),
     activeMenu() {
       let route = this.$route;
       let {path, meta} = route;
@@ -66,6 +67,10 @@ export default {
         return meta.activeMenu;
       }
       return path;
+    },
+    setLangTo(lang) {
+      this.setLang(lang);
+      this.$i18n.locale = lang;
     }
   }
 }

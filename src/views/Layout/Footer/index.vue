@@ -2,15 +2,15 @@
   <div>
     <div class="app">
       <div class="row1">
-        <span class="clickable" @click="centerDialogVisible = true">关于本站</span>
+        <span class="clickable" @click="centerDialogVisible = true">{{ $t('footer.about') }}</span>
         <span class="vertical-bar"><font-awesome-icon icon="fa-solid fa-ellipsis-vertical" /></span>
-        <span class="clickable">服务条款</span>
+        <span class="clickable">{{ $t('footer.term') }}</span>
         <span class="vertical-bar"><font-awesome-icon icon="fa-solid fa-ellipsis-vertical" /></span>
-        <span class="clickable">隐私政策</span>
+        <span class="clickable">{{ $t('footer.privacy') }}</span>
       </div>
       <div class="row2">
         <span class="copyright-icon"><font-awesome-icon icon="fa-regular fa-copyright" /></span>
-        <span>滇史论辑</span>
+        <span>{{ $t('footer.site') }}</span>
       </div>
       <el-dialog
           title="提示"

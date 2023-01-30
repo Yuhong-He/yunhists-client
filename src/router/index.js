@@ -54,7 +54,8 @@ const routes = [
             name: 'ThesisAdd',
             component: ThesisAdd,
             meta: {
-              title: 'Thesis Add'
+              title: 'Add Thesis',
+              activeMenu: '/thesis/list'
             }
           }
         ]
@@ -81,7 +82,8 @@ const routes = [
             name: 'CategoryDetail',
             component: CategoryDetail,
             meta: {
-              title: 'Category Detail'
+              title: 'Category Detail',
+              activeMenu: '/category/list'
             }
           },
           {
@@ -89,7 +91,8 @@ const routes = [
             name: 'CategoryAdd',
             component: CategoryAdd,
             meta: {
-              title: 'Category Add'
+              title: 'Add Category',
+              activeMenu: '/category/list'
             }
           }
         ]
@@ -97,7 +100,10 @@ const routes = [
       {
         path: '/profile',
         name: 'Profile',
-        component: Profile
+        component: Profile,
+        meta: {
+          title: 'Profile',
+        }
       },
       {
         path: '/admin',
@@ -123,7 +129,10 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      title: 'Login'
+    }
   }
 ]
 
