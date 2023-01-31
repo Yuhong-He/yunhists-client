@@ -4,7 +4,7 @@
     <div class="search-container">
       <span class="item"><font-awesome-icon icon="fa-solid fa-book-open" /></span>
       <div class="search-box">
-        <input type="text" class="search-btn" id="search-btn" :placeholder="$t('home.search')">
+        <input type="text" class="search-btn" id="search-btn" autocomplete="off" :placeholder="$t('home.search')">
       </div>
       <span class="item"><font-awesome-icon icon="fa-solid fa-magnifying-glass" /></span>
     </div>
@@ -14,12 +14,15 @@
 
 <script>
 import router from "@/router";
-import store from '@/store'
 
 export default {
   mounted() {
     window.addEventListener("keydown", function(event) {
-      const input = document.getElementById("search-btn").value;
+      const search_btn = document.getElementById("search-btn");
+      let input = "";
+      if(search_btn) {
+        input = search_btn.value;
+      }
       if(event.key === "Enter") {
         if(input && input.length > 0) {
           console.log(input);
@@ -68,7 +71,7 @@ export default {
   text-align: center;
   line-height: 40px;
   font-size: 40px;
-  text-shadow: 2px 2px rgb(30,30,30);
+  text-shadow: 0 0 20px #000;
 }
 
 .zh-name {

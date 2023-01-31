@@ -24,6 +24,9 @@ import {
 import {
     faCopyright
 } from '@fortawesome/free-regular-svg-icons';
+import {
+    faGoogle
+} from '@fortawesome/free-brands-svg-icons';
 library.add(faCopyright);
 library.add(faLanguage);
 library.add(faEllipsisVertical);
@@ -34,16 +37,20 @@ library.add(faFolderTree);
 library.add(faUser);
 library.add(faRightToBracket);
 library.add(faGear);
+library.add(faGoogle);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false
 
 router.beforeEach((to, from, next) => {
-    /* 路由发生变化修改页面title */
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    i18n.locale = store.state.lang.prefLang;
+    if(store.state.lang.prefLang && store.state.lang.prefLang.length > 0) {
+        i18n.locale = store.state.lang.prefLang;
+    } else {
+        i18n.locale = "zh";
+    }
     next()
 })
 
