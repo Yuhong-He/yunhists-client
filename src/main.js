@@ -6,6 +6,7 @@ import './plugins/element'
 import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/reset.css'
 import i18n from './lang/index'
+import api from './api'
 
 // Fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -40,7 +41,8 @@ library.add(faGear);
 library.add(faGoogle);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
+Vue.prototype.$api = api;
 
 router.beforeEach((to, from, next) => {
     if (to.meta.title) {

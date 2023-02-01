@@ -7,19 +7,21 @@
           <el-row>
             <el-col :span="12" :offset="6">
               <div class="b-title">{{ $t('login.accountLogin') }}</div>
-              <el-form ref="form" :model="loginForm">
-                <el-form-item>
-                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.email" clearable></el-input>
+              <el-form :model="loginForm" status-icon :rules="loginRule" ref="loginForm">
+                <el-form-item prop="email">
+                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.email" clearable autocomplete="off"></el-input>
+                </el-form-item>
+                <el-form-item prop="password" style="margin-bottom: -5px;">
+                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.password" clearable show-password autocomplete="off"></el-input>
                 </el-form-item>
                 <el-form-item style="margin-bottom: -25px;">
-                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.password" clearable show-password></el-input>
                   <div class="reset_password">
-                    <span>{{ $t('login.forgotPassword') }}</span>
+                    <span class="reset_password">{{ $t('login.forgotPassword') }}</span>
                   </div>
                 </el-form-item>
                 <el-divider></el-divider>
                 <el-form-item>
-                  <el-button type="goon" @click="login" round>{{ $t('login.login') }}</el-button>
+                  <el-button type="goon" @click="login('loginForm')" round>{{ $t('login.login') }}</el-button>
                   <el-button size="small" @click="google" round><font-awesome-icon style="color: red;" icon="fa-brands fa-google" /></el-button>
                 </el-form-item>
               </el-form>
@@ -31,7 +33,7 @@
           <el-row>
             <el-col :span="12" :offset="6">
               <div class="b-title">{{ $t('login.registerAccount') }}</div>
-              <el-form ref="form" :model="registerForm">
+              <el-form :model="registerForm" status-icon :rules="registerRule" ref="registerForm">
                 <el-form-item style="margin-bottom: 10px;">
                   <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="registerForm.email" clearable></el-input>
                 </el-form-item>
@@ -74,12 +76,42 @@
 </template>
 
 <script>
+import {mapMutations} from "vuex";
+import i18n from "@/lang";
+
 export default{
   data(){
+    const validateEmail = (rule, value, callback) => {
+      const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (value === '') {
+        callback(new Error(i18n.tc('login.enterEmail')));
+      } else if(!regex.test(value)) {
+        callback(new Error(i18n.tc('login.invalidEmail')));
+      } else {
+        callback();
+      }
+    };
+    const validatePassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(i18n.tc('login.enterPwd')));
+      } else {
+        callback();
+      }
+    };
+
     return {
+      isLogin: true,
       loginForm: {
         email: '',
         password: ''
+      },
+      loginRule: {
+        email: [
+          { validator: validateEmail, trigger: 'blur' }
+        ],
+        password: [
+          { validator: validatePassword, trigger: 'blur' }
+        ]
       },
       registerForm: {
         email: '',
@@ -88,22 +120,54 @@ export default{
         repeatPassword: '',
         verificationCode: ''
       },
-      isLogin: true,
+      registerRule: {
+
+      }
     }
   },
   methods:{
+    ...mapMutations('UserInfo', ['setUserId']),
+    ...mapMutations('UserInfo', ['setUsername']),
+    ...mapMutations('UserInfo', ['setUserRights']),
+    ...mapMutations('UserInfo', ['setToken']),
     changeType() {
-      this.isLogin = !this.isLogin
-      this.loginForm.email = ''
-      this.loginForm.password = ''
-      this.registerForm.email = ''
-      this.registerForm.name = ''
-      this.registerForm.password = ''
-      this.registerForm.repeatPassword = ''
-      this.registerForm.verificationCode = ''
+      this.isLogin = !this.isLogin;
+      this.loginForm.email = '';
+      this.loginForm.password = '';
+      this.registerForm.email = '';
+      this.registerForm.name = '';
+      this.registerForm.password = '';
+      this.registerForm.repeatPassword = '';
+      this.registerForm.verificationCode = '';
     },
-    login() {
-      console.log("Login");
+    login(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.doLogin(this.loginForm.email, this.loginForm.password);
+        }
+      });
+    },
+    async doLogin(email, password) {
+      let res = await this.$api.login({'email': email, 'password': password});
+      if(res.data.code === 200) {
+        this.setUserId(res.data.data.userId);
+        this.setUsername(res.data.data.username);
+        this.setUserRights(res.data.data.userRights);
+        this.setToken(res.data.data.token);
+        await this.$router.push('/');
+      } else if (res.data.code === 207) {
+        await this.$alert(i18n.tc('login.incorrectPwd'), {
+          confirmButtonText: i18n.tc('login.confirm')
+        }).catch(() => {});
+      } else if (res.data.code === 208) {
+        await this.$alert(i18n.tc('login.emailNotRegistered'), {
+          confirmButtonText: i18n.tc('login.confirm')
+        }).catch(() => {});
+      } else if (res.data.code === 209) {
+        await this.$alert(i18n.tc('login.googleAccount'), {
+          confirmButtonText: i18n.tc('login.confirm')
+        }).catch(() => {});
+      }
     },
     google() {
       console.log("Google Login");

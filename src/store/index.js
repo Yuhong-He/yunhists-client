@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import lang from './modules/lang';
+import UserInfo from './modules/userInfo';
 import createPersistedstate from 'vuex-persistedstate';
 
 Vue.use(Vuex)
@@ -15,12 +16,13 @@ export default new Vuex.Store({
   actions: {
   },
   modules: {
-    lang
+    lang,
+    UserInfo
   },
   plugins: [
     createPersistedstate({
       key: 'UserInfo',
-      paths: ['lang']
+      paths: ['lang', 'UserInfo']
     })
   ]
 })

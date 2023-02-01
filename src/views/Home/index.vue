@@ -46,7 +46,7 @@ export default {
 .app::before {
   content: "";
   background: url(https://www.yunnanpedia.com/images/3/37/BannerBackgroundImage.jpg) no-repeat center;
-  object-fit: cover;
+  background-size: cover;
   width: 100%;
   height: 82%;
   position: absolute;

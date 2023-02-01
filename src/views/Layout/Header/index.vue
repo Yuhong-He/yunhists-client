@@ -22,7 +22,7 @@
         <font-awesome-icon icon="fa-solid fa-folder-tree" />
         <span class="nav-text">{{ $t('header.category') }}</span>
       </el-menu-item>
-      <el-submenu index="/admin">
+      <el-submenu index="/admin" v-if="(this.userRights === 1)">
         <template slot="title">
           <span>
             <font-awesome-icon icon="fa-solid fa-gear" />
@@ -31,13 +31,17 @@
         </template>
         <el-menu-item index="/admin/approve">{{ $t('header.approve') }}</el-menu-item>
       </el-submenu>
-      <el-menu-item style="float: right;" index="/login">
+      <el-menu-item style="float: right;" v-if="(!this.username || this.username.length === 0)" index="/login">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
         <span class="nav-text">{{ $t('header.login') }}</span>
       </el-menu-item>
-      <el-menu-item style="float: right;" index="/profile">
+      <el-menu-item style="float: right;" v-if="(this.username && this.username.length > 0)" index="" @click="logout">
+        <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
+        <span class="nav-text">{{ $t('header.logout') }}</span>
+      </el-menu-item>
+      <el-menu-item style="float: right;" v-if="(this.username && this.username.length > 0)" index="/profile">
         <font-awesome-icon icon="fa-solid fa-user" />
-        <span class="nav-text">Alex</span>
+        <span class="nav-text">{{ this.username }}</span>
       </el-menu-item>
       <el-submenu style="float: right;" index="">
         <template slot="title">
@@ -51,15 +55,23 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import {mapMutations, mapState} from 'vuex';
+import i18n from "@/lang";
 
 export default {
   data() {
     return {
     };
   },
+  computed: {
+    ...mapState('UserInfo', ['username', 'userRights'])
+  },
   methods: {
     ...mapMutations('lang', ['setLang']),
+    ...mapMutations('UserInfo', ['setUserId']),
+    ...mapMutations('UserInfo', ['setUsername']),
+    ...mapMutations('UserInfo', ['setUserRights']),
+    ...mapMutations('UserInfo', ['setToken']),
     activeMenu() {
       let route = this.$route;
       let {path, meta} = route;
@@ -71,6 +83,22 @@ export default {
     setLangTo(lang) {
       this.setLang(lang);
       this.$i18n.locale = lang;
+    },
+    logout() {
+      this.$confirm(i18n.tc('header.confirmLogout'), {
+        confirmButtonText: i18n.tc('header.confirm'),
+        cancelButtonText: i18n.tc('header.cancel'),
+        type: 'warning'
+      }).then(() => {
+        this.setUserId("");
+        this.setUsername("");
+        this.setUserRights("");
+        this.setToken("");
+        this.$message({
+          type: 'success',
+          message: i18n.tc('header.logoutSuccess')
+        });
+      }).catch(() => {});
     }
   }
 }

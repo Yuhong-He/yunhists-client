@@ -8,7 +8,13 @@ export default {
         category: 'Category',
         manage: 'Manage',
         approve: 'Approve Sharing',
-        login: 'Login'
+        login: 'Login',
+        logout: 'Logout',
+        confirmLogout: 'Confirm Logout?',
+        confirm: 'Confirm',
+        cancel: 'Cancel',
+        logoutSuccess: 'Logout Success',
+        logoutCancelled: 'Logout Cancelled'
     },
     footer: {
         about: 'About',
@@ -29,6 +35,13 @@ export default {
         send: 'Send',
         register: 'Register',
         noAccount: 'New user?',
-        haveAccount: 'Have account?'
+        haveAccount: 'Have account?',
+        enterEmail: 'Please enter email',
+        invalidEmail: 'Invalid email',
+        enterPwd: 'Please enter password',
+        incorrectPwd: 'Incorrect password',
+        confirm: 'Confirm',
+        emailNotRegistered: 'This email hasn\'t been registered',
+        googleAccount: 'This account was registered with Google, please login with Google'
     }
 };
