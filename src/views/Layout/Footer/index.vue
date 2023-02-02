@@ -41,7 +41,7 @@ export default {
 
 <style lang="less" scoped>
 .app {
-  padding: 10px;
+  padding: 15px;
   text-align: center;
   font-size: 1.3em;
   color: rgb(50, 50, 50);

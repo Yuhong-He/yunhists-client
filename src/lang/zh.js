@@ -43,6 +43,14 @@ export default {
         confirm: '确定',
         emailNotRegistered: '该邮箱未注册',
         googleAccount: '该账户由谷歌账户注册，请通过谷歌登录',
-        welcome: '欢迎，'
+        welcome: '欢迎，',
+        missUsername: '请输入用户名',
+        usernameLengthNotMatch: '长度在2到15个字符',
+        missPassword: '请输入密码',
+        passwordLengthNotMatch: '密码至少有6位',
+        missConfirmPassword: '请再次输入密码',
+        passwordNotMatch: '密码不一致',
+        missVerificationCode: '请输入验证码',
+        verificationNotMatch: '验证码是6位数字'
     }
 };

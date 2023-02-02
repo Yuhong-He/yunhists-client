@@ -43,6 +43,14 @@ export default {
         confirm: 'Confirm',
         emailNotRegistered: 'This email hasn\'t been registered',
         googleAccount: 'This account was registered with Google, please login with Google',
-        welcome: 'Welcome'
+        welcome: 'Welcome',
+        missUsername: 'Please enter username',
+        usernameLengthNotMatch: 'Length between 2 - 15',
+        missPassword: 'Please enter password',
+        passwordLengthNotMatch: 'Password at least 6 digits',
+        missConfirmPassword: 'Please enter password again',
+        passwordNotMatch: 'Password not matched',
+        missVerificationCode: 'Please enter verification code',
+        verificationNotMatch: 'Verification code is 6 digits number'
     }
 };

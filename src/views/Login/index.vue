@@ -7,24 +7,20 @@
           <el-row>
             <el-col :span="12" :offset="6">
               <div class="b-title">{{ $t('login.accountLogin') }}</div>
-              <el-form :model="loginForm" status-icon :rules="loginRule" ref="loginForm">
-                <el-form-item prop="email">
-                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.email" clearable autocomplete="off"></el-input>
+              <el-form :model="loginForm" :rules="loginRule" ref="loginForm">
+                <el-form-item prop="login_email">
+                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.login_email" clearable autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item prop="password" style="margin-bottom: -5px;">
-                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.password" clearable show-password autocomplete="off"></el-input>
-                </el-form-item>
-                <el-form-item style="margin-bottom: -25px;">
-                  <div class="reset_password">
-                    <span class="reset_password">{{ $t('login.forgotPassword') }}</span>
-                  </div>
-                </el-form-item>
-                <el-divider></el-divider>
-                <el-form-item>
-                  <el-button type="goon" @click="login('loginForm')" round>{{ $t('login.login') }}</el-button>
-                  <el-button size="small" @click="google" round><font-awesome-icon style="color: red;" icon="fa-brands fa-google" /></el-button>
+                <el-form-item prop="login_password" style="margin-bottom: -5px;">
+                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.login_password" clearable show-password autocomplete="off"></el-input>
                 </el-form-item>
               </el-form>
+              <div class="reset_password">
+                <span class="reset_password">{{ $t('login.forgotPassword') }}</span>
+              </div>
+              <el-divider></el-divider>
+              <el-button type="goon" @click="login('loginForm')" round>{{ $t('login.login') }}</el-button>
+              <el-button size="small" @click="google" round><font-awesome-icon style="color: red;" icon="fa-brands fa-google" /></el-button>
             </el-col>
           </el-row>
         </div>
@@ -33,28 +29,26 @@
           <el-row>
             <el-col :span="12" :offset="6">
               <div class="b-title">{{ $t('login.registerAccount') }}</div>
-              <el-form :model="registerForm" status-icon :rules="registerRule" ref="registerForm">
-                <el-form-item style="margin-bottom: 10px;">
-                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="registerForm.email" clearable></el-input>
+              <el-form :model="registerForm" :rules="registerRule" ref="registerForm">
+                <el-form-item prop="register_email">
+                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="registerForm.register_email" clearable autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 10px;">
-                  <el-input prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" v-model="registerForm.name" clearable></el-input>
+                <el-form-item prop="register_name">
+                  <el-input prefix-icon="el-icon-user-solid" :placeholder="$t('login.username')" v-model="registerForm.register_name" clearable autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 10px;">
-                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="registerForm.password" clearable show-password></el-input>
+                <el-form-item prop="register_password">
+                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="registerForm.register_password" clearable show-password autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 10px;">
-                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.confirmPassword')" v-model="registerForm.repeatPassword" clearable show-password></el-input>
+                <el-form-item prop="register_confirmPassword">
+                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.confirmPassword')" v-model="registerForm.register_confirmPassword" clearable show-password autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item>
-                  <el-input prefix-icon="el-icon-info" :placeholder="$t('login.verificationCode')" v-model="registerForm.verificationCode" clearable>
-                    <el-button slot="append" icon="el-icon-s-promotion">{{ $t('login.send') }}</el-button>
+                <el-form-item style="margin-bottom: 20px;" prop="register_verificationCode">
+                  <el-input prefix-icon="el-icon-info" :placeholder="$t('login.verificationCode')" v-model="registerForm.register_verificationCode" clearable autocomplete="off">
+                    <el-button slot="append" icon="el-icon-s-promotion" @click="verificationCode">{{ $t('login.send') }}</el-button>
                   </el-input>
                 </el-form-item>
-                <el-form-item>
-                  <el-button type="goon" @click="register" round>{{ $t('login.register') }}</el-button>
-                </el-form-item>
               </el-form>
+              <el-button type="goon" @click="register('registerForm')" round>{{ $t('login.register') }}</el-button>
             </el-col>
           </el-row>
         </div>
@@ -82,7 +76,7 @@ import {setTokenCookie} from "@/utils/cookie";
 
 export default{
   data(){
-    const validateEmail = (rule, value, callback) => {
+    const validateLoginEmail = (rule, value, callback) => {
       const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
       if (value === '') {
         callback(new Error(i18n.tc('login.enterEmail')));
@@ -92,9 +86,56 @@ export default{
         callback();
       }
     };
-    const validatePassword = (rule, value, callback) => {
+    const validateLoginPassword = (rule, value, callback) => {
       if (value === '') {
         callback(new Error(i18n.tc('login.enterPwd')));
+      } else {
+        callback();
+      }
+    };
+    const validateRegisterEmail = (rule, value, callback) => {
+      const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+      if (value === '') {
+        callback(new Error(i18n.tc('login.enterEmail')));
+      } else if(!regex.test(value)) {
+        callback(new Error(i18n.tc('login.invalidEmail')));
+      } else {
+        callback();
+      }
+    };
+    const validateRegisterUsername = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(i18n.tc('login.missUsername')));
+      } else if(value.length < 2 || value.length > 15) {
+        callback(new Error(i18n.tc('login.usernameLengthNotMatch')));
+      } else {
+        callback();
+      }
+    };
+    const validateRegisterPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(i18n.tc('login.missPassword')));
+      } else if(value.length < 6) {
+        callback(new Error(i18n.tc('login.passwordLengthNotMatch')));
+      } else {
+        callback();
+      }
+    };
+    const validateRegisterConfirmPassword = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error(i18n.tc('login.missConfirmPassword')));
+      } else if(value !== this.registerForm.register_password) {
+        callback(new Error(i18n.tc('login.passwordNotMatch')));
+      } else {
+        callback();
+      }
+    };
+    const validateRegisterVerificationCode = (rule, value, callback) => {
+      const regex = /^\d{6}$/;
+      if (value === '') {
+        callback(new Error(i18n.tc('login.missVerificationCode')));
+      } else if(!regex.test(value)) {
+        callback(new Error(i18n.tc('login.verificationNotMatch')));
       } else {
         callback();
       }
@@ -103,26 +144,40 @@ export default{
     return {
       isLogin: true,
       loginForm: {
-        email: '',
-        password: ''
+        login_email: '',
+        login_password: ''
       },
       loginRule: {
-        email: [
-          { validator: validateEmail, trigger: 'blur' }
+        login_email: [
+          { validator: validateLoginEmail, trigger: 'blur' }
         ],
-        password: [
-          { validator: validatePassword, trigger: 'blur' }
+        login_password: [
+          { validator: validateLoginPassword, trigger: 'blur' }
         ]
       },
       registerForm: {
-        email: '',
-        name: '',
-        password: '',
-        repeatPassword: '',
-        verificationCode: ''
+        register_email: '',
+        register_name: '',
+        register_password: '',
+        register_confirmPassword: '',
+        register_verificationCode: ''
       },
       registerRule: {
-
+        register_email: [
+          { validator: validateRegisterEmail, trigger: 'blur' }
+        ],
+        register_name: [
+          { validator: validateRegisterUsername, trigger: 'blur' }
+        ],
+        register_password: [
+          { validator: validateRegisterPassword, trigger: 'blur' }
+        ],
+        register_confirmPassword: [
+          { validator: validateRegisterConfirmPassword, trigger: 'blur' }
+        ],
+        register_verificationCode: [
+          { validator: validateRegisterVerificationCode, trigger: 'blur' }
+        ]
       }
     }
   },
@@ -132,18 +187,27 @@ export default{
     ...mapMutations('UserInfo', ['setUserRights']),
     changeType() {
       this.isLogin = !this.isLogin;
-      this.loginForm.email = '';
-      this.loginForm.password = '';
-      this.registerForm.email = '';
-      this.registerForm.name = '';
-      this.registerForm.password = '';
-      this.registerForm.repeatPassword = '';
-      this.registerForm.verificationCode = '';
+      this.loginForm.login_email = '';
+      this.loginForm.login_password = '';
+      this.registerForm.register_email = '';
+      this.registerForm.register_name = '';
+      this.registerForm.register_password = '';
+      this.registerForm.register_confirmPassword = '';
+      this.registerForm.register_verificationCode = '';
+      if(this.isLogin) {
+        this.$nextTick(()=>{
+          this.$refs["loginForm"].clearValidate();
+        })
+      } else {
+        this.$nextTick(()=>{
+          this.$refs["registerForm"].clearValidate();
+        })
+      }
     },
     login(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.doLogin(this.loginForm.email, this.loginForm.password);
+          this.doLogin(this.loginForm.login_email, this.loginForm.login_password);
         }
       });
     },
@@ -176,8 +240,18 @@ export default{
     google() {
       console.log("Google Login");
     },
-    register(){
+    register(formName){
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.doRegister();
+        }
+      });
+    },
+    doRegister() {
       console.log("Register");
+    },
+    verificationCode() {
+      console.log("Verification Code");
     }
   }
 }
@@ -224,7 +298,7 @@ export default{
 }
 
 .register-box {
-  padding-top: 6%;
+  padding-top: 3%;
   text-align: center;
 }
 
@@ -236,6 +310,7 @@ export default{
 }
 
 .reset_password {
+  padding-top: 10px;
   text-align: right;
   span {
     color: dodgerblue;
