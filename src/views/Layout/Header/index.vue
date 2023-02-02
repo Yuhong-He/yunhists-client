@@ -56,7 +56,7 @@
 
 <script>
 import {mapMutations, mapState} from 'vuex';
-import {setTokenCookie} from "@/utils/cookie";
+import {getCookie, setTokenCookie} from "@/utils/cookie";
 import i18n from "@/lang";
 
 export default {
@@ -83,6 +83,9 @@ export default {
     setLangTo(lang) {
       this.setLang(lang);
       this.$i18n.locale = lang;
+      if(getCookie("token").length > 0) {
+        this.updateDatabaseLang(lang);
+      }
     },
     logout() {
       this.$confirm(i18n.tc('header.confirmLogout'), {
@@ -102,6 +105,9 @@ export default {
           message: i18n.tc('header.logoutSuccess')
         });
       }).catch(() => {});
+    },
+    updateDatabaseLang(lang) {
+      this.$api.updateLang({'lang': lang});
     }
   }
 }
