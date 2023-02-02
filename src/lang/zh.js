@@ -42,6 +42,7 @@ export default {
         incorrectPwd: '密码错误',
         confirm: '确定',
         emailNotRegistered: '该邮箱未注册',
-        googleAccount: '该账户由谷歌账户注册，请通过谷歌登录'
+        googleAccount: '该账户由谷歌账户注册，请通过谷歌登录',
+        welcome: '欢迎，'
     }
 };

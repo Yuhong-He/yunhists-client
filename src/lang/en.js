@@ -42,6 +42,7 @@ export default {
         incorrectPwd: 'Incorrect password',
         confirm: 'Confirm',
         emailNotRegistered: 'This email hasn\'t been registered',
-        googleAccount: 'This account was registered with Google, please login with Google'
+        googleAccount: 'This account was registered with Google, please login with Google',
+        welcome: 'Welcome'
     }
 };

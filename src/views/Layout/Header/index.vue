@@ -94,6 +94,9 @@ export default {
         this.setUsername("");
         this.setUserRights("");
         this.setToken("");
+        if(this.$route.path !== '/') {
+          this.$router.push('/');
+        }
         this.$message({
           type: 'success',
           message: i18n.tc('header.logoutSuccess')

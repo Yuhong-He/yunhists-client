@@ -155,6 +155,10 @@ export default{
         this.setUserRights(res.data.data.userRights);
         this.setToken(res.data.data.token);
         await this.$router.push('/');
+        this.$message({
+          type: 'success',
+          message: i18n.tc('login.welcome') + " " + res.data.data.username
+        });
       } else if (res.data.code === 207) {
         await this.$alert(i18n.tc('login.incorrectPwd'), {
           confirmButtonText: i18n.tc('login.confirm')
