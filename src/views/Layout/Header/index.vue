@@ -56,6 +56,7 @@
 
 <script>
 import {mapMutations, mapState} from 'vuex';
+import {setTokenCookie} from "@/utils/cookie";
 import i18n from "@/lang";
 
 export default {
@@ -71,7 +72,6 @@ export default {
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
     ...mapMutations('UserInfo', ['setUserRights']),
-    ...mapMutations('UserInfo', ['setToken']),
     activeMenu() {
       let route = this.$route;
       let {path, meta} = route;
@@ -93,7 +93,7 @@ export default {
         this.setUserId("");
         this.setUsername("");
         this.setUserRights("");
-        this.setToken("");
+        setTokenCookie("");
         if(this.$route.path !== '/') {
           this.$router.push('/');
         }

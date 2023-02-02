@@ -78,6 +78,7 @@
 <script>
 import {mapMutations} from "vuex";
 import i18n from "@/lang";
+import {setTokenCookie} from "@/utils/cookie";
 
 export default{
   data(){
@@ -129,7 +130,6 @@ export default{
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
     ...mapMutations('UserInfo', ['setUserRights']),
-    ...mapMutations('UserInfo', ['setToken']),
     changeType() {
       this.isLogin = !this.isLogin;
       this.loginForm.email = '';
@@ -153,7 +153,7 @@ export default{
         this.setUserId(res.data.data.userId);
         this.setUsername(res.data.data.username);
         this.setUserRights(res.data.data.userRights);
-        this.setToken(res.data.data.token);
+        setTokenCookie(res.data.data.token);
         await this.$router.push('/');
         this.$message({
           type: 'success',

@@ -3,8 +3,7 @@ export default {
     state: {
         userId: '',
         username: '',
-        userRights: '',
-        token: ''
+        userRights: ''
     },
     mutations: {
         setUserId(state, payload) {
@@ -15,9 +14,6 @@ export default {
         },
         setUserRights(state, payload) {
             state.userRights = payload;
-        },
-        setToken(state, payload) {
-            state.token = payload;
         }
     }
 }
