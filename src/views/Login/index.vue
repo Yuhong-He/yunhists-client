@@ -42,7 +42,7 @@
                 <el-form-item prop="register_confirmPassword">
                   <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.confirmPassword')" v-model="registerForm.register_confirmPassword" clearable show-password autocomplete="off"></el-input>
                 </el-form-item>
-                <el-form-item style="margin-bottom: 20px;" prop="register_verificationCode">
+                <el-form-item style="margin-bottom: 15px;" prop="register_verificationCode">
                   <el-input prefix-icon="el-icon-info" :placeholder="$t('login.verificationCode')" v-model="registerForm.register_verificationCode" clearable autocomplete="off">
                     <el-button slot="append" icon="el-icon-s-promotion" @click="verificationCode">{{ $t('login.send') }}</el-button>
                   </el-input>
@@ -182,6 +182,7 @@ export default{
     }
   },
   methods:{
+    ...mapMutations('lang', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
     ...mapMutations('UserInfo', ['setUserRights']),
@@ -218,6 +219,8 @@ export default{
         this.setUsername(res.data.data.username);
         this.setUserRights(res.data.data.userRights);
         setTokenCookie(res.data.data.token);
+        this.setLang(res.data.data.lang);
+        this.$i18n.locale = res.data.data.lang;
         await this.$router.push('/');
         this.$message({
           type: 'success',

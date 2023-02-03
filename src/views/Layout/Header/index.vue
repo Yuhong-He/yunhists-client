@@ -106,8 +106,11 @@ export default {
         });
       }).catch(() => {});
     },
-    updateDatabaseLang(lang) {
-      this.$api.updateLang({'lang': lang});
+    async updateDatabaseLang(lang) {
+      let res = await this.$api.updateLang({'lang': lang});
+      if(res.data.code === 200) {
+        setTokenCookie(res.data.data.token);
+      }
     }
   }
 }
