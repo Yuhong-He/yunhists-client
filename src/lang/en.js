@@ -51,6 +51,14 @@ export default {
         missConfirmPassword: 'Please enter password again',
         passwordNotMatch: 'Password not matched',
         missVerificationCode: 'Please enter verification code',
-        verificationNotMatch: 'Verification code is 6 digits number'
+        verificationNotMatch: 'Verification code is 6 digits number',
+        registerSuccess: "Register success",
+        noVerificationCodeSend: "Never sent a verification code to this email address before",
+        emailRegistered: "The email address already registered",
+        incorrectCode: "Verification code incorrect",
+        codeExpired: "Verification code expired",
+        codeSent: "Verification code sent",
+        waitCountDown: "Please re-send after the countdown",
+        sendEmailFail: "Send email fail, please check email address"
     }
 };

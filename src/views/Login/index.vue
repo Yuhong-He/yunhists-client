@@ -269,29 +269,29 @@ export default{
       if(res.data.code === 200) {
         this.$message({
           type: 'success',
-          message: "注册成功"
+          message: i18n.tc('login.registerSuccess')
         });
         this.isLogin = true;
         this.loginForm.login_email = email;
         this.loginForm.login_password = pwd;
       } else if (res.data.code === 218) {
-        await this.$alert('系统未曾向该邮箱地址发送邮件', {
-          confirmButtonText: '确定',
+        await this.$alert(i18n.tc('login.noVerificationCodeSend'), {
+          confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
       } else if (res.data.code === 215) {
-        await this.$alert('该邮箱已被注册', {
-          confirmButtonText: '确定',
+        await this.$alert(i18n.tc('login.emailRegistered'), {
+          confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
       } else if (res.data.code === 214) {
-        await this.$alert('验证码错误', {
-          confirmButtonText: '确定',
+        await this.$alert(i18n.tc('login.incorrectCode'), {
+          confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
       } else if (res.data.code === 213) {
-        await this.$alert('验证码已过期', {
-          confirmButtonText: '确定',
+        await this.$alert(i18n.tc('login.codeExpired'), {
+          confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
       }
@@ -303,14 +303,14 @@ export default{
         if (regex.test(email)) {
           this.doSendVerificationEmail(email);
         } else {
-          this.$alert('邮箱格式错误', {
-            confirmButtonText: '确定',
+          this.$alert(i18n.tc('login.invalidEmail'), {
+            confirmButtonText: i18n.tc('login.confirm'),
             callback: () => {}
           });
         }
       } else {
-        this.$alert('请输入邮箱地址', {
-          confirmButtonText: '确定',
+        this.$alert(i18n.tc('login.enterEmail'), {
+          confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
       }
@@ -322,17 +322,17 @@ export default{
         this.countDown();
         this.$message({
           type: 'success',
-          message: "验证码已发送"
+          message: i18n.tc('login.codeSent')
         });
       } else if(res.data.code === 211) {
         this.$message({
           type: 'warning',
-          message: "请等倒计时结束再发送"
+          message: i18n.tc('login.waitCountDown')
         });
       } else if(res.data.code === 212) {
         this.$message({
           type: 'warning',
-          message: "邮件发送失败，请检查邮箱地址"
+          message: i18n.tc('login.sendEmailFail')
         });
       }
     },
@@ -349,7 +349,7 @@ export default{
       },1000);
     },
     restoreEmailBtn() {
-      $("#v-email-txt").text("发送");
+      $("#v-email-txt").text(i18n.tc('login.send'));
       $("#v-email-btn").css("cursor", "pointer");
     }
   }

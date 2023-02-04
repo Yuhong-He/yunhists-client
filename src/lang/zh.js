@@ -51,6 +51,14 @@ export default {
         missConfirmPassword: '请再次输入密码',
         passwordNotMatch: '密码不一致',
         missVerificationCode: '请输入验证码',
-        verificationNotMatch: '验证码是6位数字'
+        verificationNotMatch: '验证码是6位数字',
+        registerSuccess: "注册成功",
+        noVerificationCodeSend: "系统未曾向该邮箱地址发送验证码",
+        emailRegistered: "该邮箱已被注册",
+        incorrectCode: "验证码错误",
+        codeExpired: "验证码已过期",
+        codeSent: "验证码已发送",
+        waitCountDown: "请等倒计时结束再发送",
+        sendEmailFail: "邮件发送失败，请检查邮箱地址"
     }
 };
