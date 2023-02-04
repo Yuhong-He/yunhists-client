@@ -9,10 +9,10 @@
               <div class="b-title">{{ $t('login.accountLogin') }}</div>
               <el-form :model="loginForm" :rules="loginRule" ref="loginForm">
                 <el-form-item prop="login_email">
-                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.login_email" clearable autocomplete="off"></el-input>
+                  <el-input prefix-icon="el-icon-message" :placeholder="$t('login.email')" v-model="loginForm.login_email" clearable></el-input>
                 </el-form-item>
                 <el-form-item prop="login_password" style="margin-bottom: -5px;">
-                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.login_password" clearable show-password autocomplete="off"></el-input>
+                  <el-input prefix-icon="el-icon-lock" :placeholder="$t('login.password')" v-model="loginForm.login_password" clearable show-password></el-input>
                 </el-form-item>
               </el-form>
               <div class="reset_password">
@@ -44,7 +44,9 @@
                 </el-form-item>
                 <el-form-item style="margin-bottom: 15px;" prop="register_verificationCode">
                   <el-input prefix-icon="el-icon-info" :placeholder="$t('login.verificationCode')" v-model="registerForm.register_verificationCode" clearable autocomplete="off">
-                    <el-button slot="append" icon="el-icon-s-promotion" @click="verificationCode">{{ $t('login.send') }}</el-button>
+                    <el-button slot="append" icon="el-icon-s-promotion" id="v-email-btn" @click="verificationCode">
+                      <span id="v-email-txt">{{ $t('login.send') }}</span>
+                    </el-button>
                   </el-input>
                 </el-form-item>
               </el-form>
@@ -70,11 +72,15 @@
 </template>
 
 <script>
-import {mapMutations} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
+import $ from "jquery";
 import {setTokenCookie} from "@/utils/cookie";
 
 export default{
+  computed: {
+    ...mapState('lang', ['prefLang'])
+  },
   data(){
     const validateLoginEmail = (rule, value, callback) => {
       const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
@@ -246,15 +252,105 @@ export default{
     register(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.doRegister();
+          this.doRegister(
+              this.registerForm.register_email,
+              this.registerForm.register_name,
+              this.registerForm.register_password,
+              this.registerForm.register_confirmPassword,
+              this.registerForm.register_verificationCode
+          );
         }
       });
     },
-    doRegister() {
-      console.log("Register");
+    async doRegister(email, username, pwd, pwd2, code) {
+      let res = await this.$api.register(
+          {'lang': this.prefLang, 'email': email, 'username': username,
+           'password': pwd, 'password2': pwd2, 'code': code});
+      if(res.data.code === 200) {
+        this.$message({
+          type: 'success',
+          message: "注册成功"
+        });
+        this.isLogin = true;
+        this.loginForm.login_email = email;
+        this.loginForm.login_password = pwd;
+      } else if (res.data.code === 218) {
+        await this.$alert('系统未曾向该邮箱地址发送邮件', {
+          confirmButtonText: '确定',
+          callback: () => {}
+        });
+      } else if (res.data.code === 215) {
+        await this.$alert('该邮箱已被注册', {
+          confirmButtonText: '确定',
+          callback: () => {}
+        });
+      } else if (res.data.code === 214) {
+        await this.$alert('验证码错误', {
+          confirmButtonText: '确定',
+          callback: () => {}
+        });
+      } else if (res.data.code === 213) {
+        await this.$alert('验证码已过期', {
+          confirmButtonText: '确定',
+          callback: () => {}
+        });
+      }
     },
     verificationCode() {
-      console.log("Verification Code");
+      const email = this.registerForm.register_email;
+      if(email && email.length > 0) {
+        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        if (regex.test(email)) {
+          this.doSendVerificationEmail(email);
+        } else {
+          this.$alert('邮箱格式错误', {
+            confirmButtonText: '确定',
+            callback: () => {}
+          });
+        }
+      } else {
+        this.$alert('请输入邮箱地址', {
+          confirmButtonText: '确定',
+          callback: () => {}
+        });
+      }
+    },
+    async doSendVerificationEmail (email) {
+      let res = await this.$api.sendVerificationEmail({'lang': this.prefLang, 'email': email});
+      if(res.data.code === 200) {
+        $("#v-email-btn").css("cursor", "not-allowed");
+        this.countDown();
+        this.$message({
+          type: 'success',
+          message: "验证码已发送"
+        });
+      } else if(res.data.code === 211) {
+        this.$message({
+          type: 'warning',
+          message: "请等倒计时结束再发送"
+        });
+      } else if(res.data.code === 212) {
+        this.$message({
+          type: 'warning',
+          message: "邮件发送失败，请检查邮箱地址"
+        });
+      }
+    },
+    countDown() {
+      clearInterval(this.timer);
+      let countDownNum = 60;
+      this.timer=setInterval(() => {
+        countDownNum--;
+        $("#v-email-txt").text(countDownNum + " s");
+        if(countDownNum <= 0) {
+          clearInterval(this.timer);
+          this.restoreEmailBtn();
+        }
+      },1000);
+    },
+    restoreEmailBtn() {
+      $("#v-email-txt").text("发送");
+      $("#v-email-btn").css("cursor", "pointer");
     }
   }
 }

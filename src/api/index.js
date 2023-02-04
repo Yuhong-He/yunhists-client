@@ -11,12 +11,26 @@ const api = {
             params: data
         })
     },
+    register(data) {
+        return axios({
+            url: BASE_URL + "/user/register",
+            method: "post",
+            params: data
+        })
+    },
     updateLang(data) {
         return axios({
             headers: {
                 "token": getCookie("token")
             },
             url: BASE_URL + "/user/updateLang",
+            method: "post",
+            params: data
+        })
+    },
+    sendVerificationEmail(data) {
+        return axios({
+            url: BASE_URL + "/user/sendVerificationEmail",
             method: "post",
             params: data
         })

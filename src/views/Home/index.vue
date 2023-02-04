@@ -45,7 +45,7 @@ export default {
 
 .app::before {
   content: "";
-  background: url(https://www.yunnanpedia.com/images/3/37/BannerBackgroundImage.jpg) no-repeat center;
+  background: url(https://new.shuge.org/wp-content/uploads/2023/01/fan_xiang01.jpg) no-repeat center;
   background-size: cover;
   width: 100%;
   height: 82%;

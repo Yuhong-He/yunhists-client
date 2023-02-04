@@ -13,6 +13,7 @@ import CategoryDetail from '@/views/Category/Detail'
 import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
 import Approve from '@/views/Admin/Approve'
+import Test from "@/views/Test"
 
 Vue.use(VueRouter)
 
@@ -132,6 +133,14 @@ const routes = [
     component: Login,
     meta: {
       title: 'Login'
+    }
+  },
+  {
+    path: '/test',
+    name: 'Test',
+    component: Test,
+    meta: {
+      title: 'Test'
     }
   }
 ]
