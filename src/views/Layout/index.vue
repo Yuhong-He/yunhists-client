@@ -38,6 +38,9 @@ export default {
     box-sizing: border-box;
     padding-bottom: 70px;
     .footer {
+      display:flex;
+      align-items:center;
+      justify-content:center;
       width: 100%;
       height: 70px;
       position: absolute;

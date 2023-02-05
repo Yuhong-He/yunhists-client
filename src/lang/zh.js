@@ -59,6 +59,10 @@ export default {
         codeExpired: "验证码已过期",
         codeSent: "验证码已发送",
         waitCountDown: "请等倒计时结束再发送",
-        sendEmailFail: "邮件发送失败，请检查邮箱地址"
+        sendEmailFail: "邮件发送失败，请检查邮箱地址",
+        resetPwd: "重置密码",
+        reset: "重置",
+        newPwdSent: "新密码已发送",
+        waitSendEmail: "邮件已发送，请等一会儿再操作"
     }
 };

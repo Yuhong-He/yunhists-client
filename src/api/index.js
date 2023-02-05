@@ -34,6 +34,13 @@ const api = {
             method: "post",
             params: data
         })
+    },
+    resetPassword(data) {
+        return axios({
+            url: BASE_URL + "/user/resetPassword",
+            method: "post",
+            params: data
+        })
     }
 }
 

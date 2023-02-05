@@ -59,6 +59,10 @@ export default {
         codeExpired: "Verification code expired",
         codeSent: "Verification code sent",
         waitCountDown: "Please re-send after the countdown",
-        sendEmailFail: "Send email fail, please check email address"
+        sendEmailFail: "Send email fail, please check email address",
+        resetPwd: "Reset Password",
+        reset: "Reset",
+        newPwdSent: "New password sent",
+        waitSendEmail: "Email already sent, please re-send after one minute"
     }
 };

@@ -16,7 +16,7 @@
                 </el-form-item>
               </el-form>
               <div class="reset_password">
-                <span class="reset_password">{{ $t('login.forgotPassword') }}</span>
+                <span @click="resetPwdBox=true; resetPwdForm.resetPwd_email = loginForm.login_email">{{ $t('login.forgotPassword') }}</span>
               </div>
               <el-divider></el-divider>
               <el-button type="goon" @click="login('loginForm')" round>{{ $t('login.login') }}</el-button>
@@ -68,6 +68,20 @@
         </div>
       </div>
     </div>
+    <el-dialog
+        :title="$t('login.resetPwd')"
+        :visible.sync="resetPwdBox"
+        top="16%"
+        width="30%">
+      <el-form :inline="true" :model="resetPwdForm" ref="resetPwdForm">
+        <el-form-item :label="$t('login.email')">
+          <el-input v-model="resetPwdForm.resetPwd_email" :placeholder="$t('login.email')" clearable></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="resetPwd('resetPwdForm')">{{ $t('login.reset') }}</el-button>
+        </el-form-item>
+      </el-form>
+    </el-dialog>
   </div>
 </template>
 
@@ -149,6 +163,7 @@ export default{
 
     return {
       isLogin: true,
+      resetPwdBox: false,
       loginForm: {
         login_email: '',
         login_password: ''
@@ -184,6 +199,9 @@ export default{
         register_verificationCode: [
           { validator: validateRegisterVerificationCode, trigger: 'blur' }
         ]
+      },
+      resetPwdForm: {
+        resetPwd_email: ''
       }
     }
   },
@@ -232,7 +250,7 @@ export default{
           type: 'success',
           message: i18n.tc('login.welcome') + " " + res.data.data.username
         });
-      } else if (res.data.code === 207) {
+      } else if (res.data.code === 206) {
         await this.$alert(i18n.tc('login.incorrectPwd'), {
           confirmButtonText: i18n.tc('login.confirm')
         }).catch(() => {});
@@ -351,6 +369,49 @@ export default{
     restoreEmailBtn() {
       $("#v-email-txt").text(i18n.tc('login.send'));
       $("#v-email-btn").css("cursor", "pointer");
+    },
+    resetPwd() {
+      const email = this.resetPwdForm.resetPwd_email;
+      if(email && email.length > 0) {
+        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        if(regex.test(email)) {
+          this.doResetPwd(email);
+        } else {
+          this.$alert(i18n.tc('login.invalidEmail'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        }
+      } else {
+        this.$alert(i18n.tc('login.enterEmail'), {
+          confirmButtonText: i18n.tc('login.confirm'),
+          callback: () => {}
+        });
+      }
+    },
+    async doResetPwd(email) {
+      let res = await this.$api.resetPassword({'email': email});
+      if(res.data.code === 200) {
+        this.resetPwdBox = false;
+        this.$message({
+          type: 'success',
+          message: i18n.tc('login.newPwdSent')
+        });
+      } else if (res.data.code === 208) {
+        await this.$alert(i18n.tc('login.emailNotRegistered'), {
+          confirmButtonText: i18n.tc('login.confirm')
+        }).catch(() => {});
+      } else if(res.data.code === 211) {
+        this.$message({
+          type: 'warning',
+          message: i18n.tc('login.waitSendEmail')
+        });
+      } else if(res.data.code === 212) {
+        this.$message({
+          type: 'warning',
+          message: i18n.tc('login.sendEmailFail')
+        });
+      }
     }
   }
 }
