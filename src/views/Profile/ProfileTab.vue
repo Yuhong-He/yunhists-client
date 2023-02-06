@@ -14,16 +14,20 @@
 export default {
   data() {
     return {
-      activeName: ''
+
     };
   },
-  mounted() {
-    if(this.$route.path === "/profile/userInfo") {
-      this.activeName = "UserInfo";
-    } else if(this.$route.path === "/profile/myFavorite") {
-      this.activeName = "MyFavorite";
-    } else if(this.$route.path === "/profile/mySharing") {
-      this.activeName = "MySharing";
+  computed: {
+    activeName: {
+      get() {
+        if(this.$route.path === "/profile/userInfo") {
+          return "UserInfo";
+        } else if(this.$route.path === "/profile/myFavorite") {
+          return "MyFavorite";
+        } else if(this.$route.path === "/profile/mySharing") {
+          return "MySharing";
+        }
+      }
     }
   },
   methods: {
