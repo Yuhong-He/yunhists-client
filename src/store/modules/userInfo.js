@@ -3,7 +3,9 @@ export default {
     state: {
         userId: '',
         username: '',
-        userRights: ''
+        email: '',
+        userRights: '',
+        points: ''
     },
     mutations: {
         setUserId(state, payload) {
@@ -12,8 +14,14 @@ export default {
         setUsername(state, payload) {
             state.username = payload;
         },
+        setEmail(state, payload) {
+            state.email = payload;
+        },
         setUserRights(state, payload) {
             state.userRights = payload;
+        },
+        setPoints(state, payload) {
+            state.points = payload;
         }
     }
 }

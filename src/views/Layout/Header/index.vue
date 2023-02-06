@@ -62,6 +62,7 @@ import i18n from "@/lang";
 export default {
   data() {
     return {
+
     };
   },
   computed: {
@@ -71,7 +72,9 @@ export default {
     ...mapMutations('lang', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
+    ...mapMutations('UserInfo', ['setEmail']),
     ...mapMutations('UserInfo', ['setUserRights']),
+    ...mapMutations('UserInfo', ['setPoints']),
     activeMenu() {
       let route = this.$route;
       let {path, meta} = route;
@@ -95,7 +98,9 @@ export default {
       }).then(() => {
         this.setUserId("");
         this.setUsername("");
+        this.setEmail("");
         this.setUserRights("");
+        this.setPoints("");
         setTokenCookie("");
         if(this.$route.path !== '/') {
           this.$router.push('/');

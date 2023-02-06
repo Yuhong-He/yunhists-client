@@ -209,7 +209,9 @@ export default{
     ...mapMutations('lang', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
+    ...mapMutations('UserInfo', ['setEmail']),
     ...mapMutations('UserInfo', ['setUserRights']),
+    ...mapMutations('UserInfo', ['setPoints']),
     changeType() {
       this.isLogin = !this.isLogin;
       this.loginForm.login_email = '';
@@ -239,10 +241,12 @@ export default{
     async doLogin(email, password) {
       let res = await this.$api.login({'email': email, 'password': password});
       if(res.data.code === 200) {
+        setTokenCookie(res.data.data.token);
         this.setUserId(res.data.data.userId);
         this.setUsername(res.data.data.username);
+        this.setEmail(res.data.data.email);
         this.setUserRights(res.data.data.userRights);
-        setTokenCookie(res.data.data.token);
+        this.setPoints(res.data.data.points);
         this.setLang(res.data.data.lang);
         this.$i18n.locale = res.data.data.lang;
         await this.$router.push('/');

@@ -1,13 +1,34 @@
 <template>
-  <h2>Profile Page</h2>
+  <div class="profile-layout">
+    <ProfileTab></ProfileTab>
+    <router-view></router-view>
+  </div>
 </template>
 
 <script>
+import ProfileTab from "@/views/Profile/ProfileTab.vue";
+import {mapState} from "vuex";
+
 export default {
-  name: "index"
+  computed: {
+    ...mapState('UserInfo', ['username'])
+  },
+  mounted() {
+    if(!(this.username && this.username.length > 0)) {
+      this.$router.push("/login");
+    }
+  },
+  components: {
+    ProfileTab
+  }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.profile-layout {
+  display: block;
+  width: 90%;
+  margin-left: 5%;
+  margin-top: 3%;
+}
 </style>

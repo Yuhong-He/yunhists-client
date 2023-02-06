@@ -64,5 +64,25 @@ export default {
         reset: "重置",
         newPwdSent: "新密码已发送",
         waitSendEmail: "邮件已发送，请等一会儿再操作"
+    },
+    profile: {
+        userInfo: "用户信息",
+        myFavorite: "我的收藏",
+        mySharing: "我的分享",
+        userId: "用户ID",
+        deleteAccount: "删除账户",
+        username: "用户名",
+        change: "修改",
+        email: "邮箱",
+        onlyEmailRegisteredCanChange: "只有邮箱注册的用户可以改绑邮箱，谷歌注册的用户不可以。",
+        changeEmail: "改绑",
+        password: "密码",
+        changeLangAtNavbar: "请在导航栏右侧修改语言。",
+        langSetting: "语言设置",
+        userRightsGroup: "权限组",
+        pointsLevel: "积分等级",
+        levelTotal: "一共二十级，在系统内分享新论文可以获得积分。",
+        comma: "，",
+        points: "分"
     }
 };

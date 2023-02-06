@@ -64,5 +64,25 @@ export default {
         reset: "Reset",
         newPwdSent: "New password sent",
         waitSendEmail: "Email already sent, please re-send after one minute"
+    },
+    profile: {
+        userInfo: "User Info",
+        myFavorite: "My Favorite",
+        mySharing: "My Sharing",
+        userId: "User ID",
+        deleteAccount: "Delete Account",
+        username: "Username",
+        change: "Change",
+        email: "Email",
+        onlyEmailRegisteredCanChange: "Only email-registered user can change their email address, and Google-registered user cannot.",
+        changeEmail: "Change",
+        password: "Password",
+        changeLangAtNavbar: "Please change the language on the right side of the navigation bar.",
+        langSetting: "Language",
+        userRightsGroup: "User Rights Group",
+        pointsLevel: "Points & Level",
+        levelTotal: "There are a total of 20 levels, and you can get points for sharing new papers in the system.",
+        comma: ", ",
+        points: " points"
     }
 };

@@ -14,6 +14,9 @@ import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
 import Approve from '@/views/Admin/Approve'
 import Test from "@/views/Test"
+import UserInfo from "@/views/Profile/UserInfo.vue";
+import MySharing from "@/views/Profile/MySharing.vue";
+import MyFavorite from "@/views/Profile/MyFavorite.vue";
 
 Vue.use(VueRouter)
 
@@ -104,7 +107,37 @@ const routes = [
         component: Profile,
         meta: {
           title: 'Profile',
-        }
+        },
+        redirect: '/profile/userInfo',
+        children: [
+          {
+            path: 'userInfo',
+            name: 'UserInfo',
+            component: UserInfo,
+            meta: {
+              title: 'User Info',
+              activeMenu: '/profile'
+            }
+          },
+          {
+            path: 'mySharing',
+            name: 'MySharing',
+            component: MySharing,
+            meta: {
+              title: 'My Sharing',
+              activeMenu: '/profile'
+            }
+          },
+          {
+            path: 'myFavorite',
+            name: 'MyFavorite',
+            component: MyFavorite,
+            meta: {
+              title: 'My Favorite',
+              activeMenu: '/profile'
+            }
+          }
+        ]
       },
       {
         path: '/admin',

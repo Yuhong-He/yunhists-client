@@ -20,7 +20,9 @@ import {
     faFolderTree,
     faUser,
     faRightToBracket,
-    faGear
+    faGear,
+    faCircleInfo,
+    faCircleQuestion
 } from '@fortawesome/free-solid-svg-icons';
 import {
     faCopyright
@@ -39,6 +41,8 @@ library.add(faUser);
 library.add(faRightToBracket);
 library.add(faGear);
 library.add(faGoogle);
+library.add(faCircleInfo);
+library.add(faCircleQuestion);
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;

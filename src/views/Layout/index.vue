@@ -37,6 +37,9 @@ export default {
     position: relative;
     box-sizing: border-box;
     padding-bottom: 70px;
+    .content {
+      min-height: 525px;
+    }
     .footer {
       display:flex;
       align-items:center;
