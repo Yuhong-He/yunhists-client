@@ -83,6 +83,20 @@ export default {
         pointsLevel: "Points & Level",
         levelTotal: "There are a total of 20 levels, and you can get points for sharing new papers in the system.",
         comma: ", ",
-        points: " points"
+        points: " points",
+        confirmDeleteAccount: "Confirm Delete Account?",
+        confirmDeleteAccountInfo: "If you confirm to delete your account, your email address, password, and username in the database will be cleared, you will not be able to log in to the account, and your username and email address will not be visible in the sharing records. Before deleting, please remember your ID, if you want to restore your account, please contact the admin by email and provide your user ID.",
+        confirm: "Confirm",
+        cancel: "Cancel",
+        accountDeleted: "Account Deleted"
+    },
+    util: {
+        user: {
+            noUser: "User not exist, please login again",
+            tokenExpired: "Token expired, please login again",
+            tokenError: "Token error, please login again",
+            missingToken: "Token not exist, please login again",
+            unknownError: "Unknown error, please login again"
+        }
     }
 };

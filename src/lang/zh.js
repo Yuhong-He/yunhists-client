@@ -83,6 +83,20 @@ export default {
         pointsLevel: "积分等级",
         levelTotal: "一共二十级，在系统内分享新论文可以获得积分。",
         comma: "，",
-        points: "分"
+        points: "分",
+        confirmDeleteAccount: "确认删除账户？",
+        confirmDeleteAccountInfo: "如您确认删除账户，数据库中您的邮箱、密码、用户名会被清除，您将无法登录账户，分享记录中也无法看到您的用户名及邮箱。在删除前，请记下您的ID，如您希望恢复账户，请通过电子邮件联系管理员，并提供用户ID。",
+        confirm: "确认",
+        cancel: "取消",
+        accountDeleted: "账户已删除"
+    },
+    util: {
+        user: {
+            noUser: "用户不存在，请重新登陆",
+            tokenExpired: "Token过期，请重新登陆",
+            tokenError: "Token错误，请重新登陆",
+            missingToken: "Token不存在，请重新登陆",
+            unknownError: "未知错误，请重新登陆"
+        }
     }
 };

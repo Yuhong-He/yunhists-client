@@ -1,9 +1,9 @@
-function setTokenCookie(token) {
+function setToken(token) {
     document.cookie = "token=" + token;
 }
 
-function getCookie(cName) {
-    const name = cName + "=";
+function getToken() {
+    const name = "token=";
     const ca = document.cookie.split(';');
     for(let i=0; i<ca.length; i++)
     {
@@ -12,4 +12,4 @@ function getCookie(cName) {
     }
     return "";
 }
-export {setTokenCookie, getCookie};
+export {setToken, getToken};

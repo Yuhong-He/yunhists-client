@@ -8,7 +8,7 @@
         <div class="info-text">{{ this.userId }}</div>
       </el-col>
       <el-col :span="8">
-        <el-button size="medium" type="danger">{{ $t('profile.deleteAccount') }}</el-button>
+        <el-button size="medium" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
       </el-col>
     </el-row>
     <el-divider><font-awesome-icon icon="fa-solid fa-gear" /></el-divider>
@@ -106,16 +106,31 @@
       </el-col>
       <el-col :span="8"></el-col>
     </el-row>
+    <el-dialog
+        :title="$t('profile.confirmDeleteAccount')"
+        :visible.sync="deleteAccountPanel"
+        width="30%"
+        custom-class="dialog-box"
+        center>
+      <span>{{ $t('profile.confirmDeleteAccountInfo') }}</span>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="deleteAccountPanel = false">{{ $t('profile.cancel') }}</el-button>
+    <el-button type="danger" @click="deleteAccount">{{ $t('profile.confirm') }}</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
+import {authError} from "@/utils/user";
+import {setToken} from "@/utils/token";
+import i18n from "@/lang";
 
 export default {
   data() {
     return {
-
+      deleteAccountPanel: false
     }
   },
   computed: {
@@ -153,14 +168,12 @@ export default {
       }
     }
   },
-  mounted() {
-    if(this.$i18n.locale === "zh") {
-      this.lang = "中文";
-    } else if (this.$i18n.locale === "en") {
-      this.lang = "English";
-    }
-  },
   methods: {
+    ...mapMutations('UserInfo', ['setUserId']),
+    ...mapMutations('UserInfo', ['setUsername']),
+    ...mapMutations('UserInfo', ['setEmail']),
+    ...mapMutations('UserInfo', ['setUserRights']),
+    ...mapMutations('UserInfo', ['setPoints']),
     generateLevelName(points, lang) {
       points = parseInt(points);
       const zhName = ["布衣", "典史（无品）", "巡检（从九品）", "主簿（正九品）", "照磨（从八品）", "县丞（正八品）", "判官（从七品）", "知县（正七品）", "州同（从六品）", "通判（正六品）", "知州（从五品）", "同知（正五品）", "参议（从四品）", "知府（正四品）", "参政（从三品）", "按察使（正三品）", "布政使（从二品）", "都御史（正二品）", "少师（从一品）", "太师（正一品）"];
@@ -183,6 +196,28 @@ export default {
         return zhName[i - 1];
       } else if(lang === "en") {
         return enName[i - 1];
+      }
+    },
+    deleteAccount() {
+      this.doDeleteAccount();
+    },
+    async doDeleteAccount() {
+      let res = await this.$api.deleteAccount();
+      if(res.data.code === 200) {
+        setToken("");
+        this.setUserId("");
+        this.setUsername("");
+        this.setEmail("");
+        this.setUserRights("");
+        this.setPoints("");
+        this.deleteAccountPanel = false;
+        await this.$router.push('/');
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.accountDeleted')
+        });
+      } else {
+        authError(res.data.code);
       }
     }
   }
@@ -219,5 +254,8 @@ export default {
     font-size: 0.5em;
     margin-left: 2px;
   }
+}
+.el-dialog__body span {
+  word-break: normal;
 }
 </style>

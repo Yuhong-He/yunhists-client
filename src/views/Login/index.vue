@@ -89,7 +89,7 @@
 import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import $ from "jquery";
-import {setTokenCookie} from "@/utils/cookie";
+import {setToken} from "@/utils/token";
 
 export default{
   computed: {
@@ -241,7 +241,7 @@ export default{
     async doLogin(email, password) {
       let res = await this.$api.login({'email': email, 'password': password});
       if(res.data.code === 200) {
-        setTokenCookie(res.data.data.token);
+        setToken(res.data.data.token);
         this.setUserId(res.data.data.userId);
         this.setUsername(res.data.data.username);
         this.setEmail(res.data.data.email);
@@ -556,5 +556,9 @@ export default{
   color: #FFF;
   background-color: rgb(57,167,176);
   border-color: rgb(57,167,176);
+}
+
+.el-dialog__body span {
+  word-break: normal;
 }
 </style>

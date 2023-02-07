@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {getCookie} from "@/utils/cookie";
+import {getToken} from "@/utils/token";
 
 const BASE_URL = "http://localhost:9999/api";
 
@@ -21,7 +21,7 @@ const api = {
     updateLang(data) {
         return axios({
             headers: {
-                "token": getCookie("token")
+                "token": getToken()
             },
             url: BASE_URL + "/user/updateLang",
             method: "post",
@@ -40,6 +40,15 @@ const api = {
             url: BASE_URL + "/user/resetPassword",
             method: "post",
             params: data
+        })
+    },
+    deleteAccount() {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/delete",
+            method: "post"
         })
     }
 }

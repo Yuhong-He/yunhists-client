@@ -56,8 +56,8 @@
 
 <script>
 import {mapMutations, mapState} from 'vuex';
-import {getCookie, setTokenCookie} from "@/utils/cookie";
 import i18n from "@/lang";
+import {getToken, setToken} from "@/utils/token";
 
 export default {
   data() {
@@ -86,7 +86,7 @@ export default {
     setLangTo(lang) {
       this.setLang(lang);
       this.$i18n.locale = lang;
-      if(getCookie("token").length > 0) {
+      if(getToken().length > 0) {
         this.updateDatabaseLang(lang);
       }
     },
@@ -101,7 +101,7 @@ export default {
         this.setEmail("");
         this.setUserRights("");
         this.setPoints("");
-        setTokenCookie("");
+        setToken("");
         if(this.$route.path !== '/') {
           this.$router.push('/');
         }
@@ -114,7 +114,7 @@ export default {
     async updateDatabaseLang(lang) {
       let res = await this.$api.updateLang({'lang': lang});
       if(res.data.code === 200) {
-        setTokenCookie(res.data.data.token);
+        setToken(res.data.data.token);
       }
     }
   }
