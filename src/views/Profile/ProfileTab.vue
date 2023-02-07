@@ -27,6 +27,9 @@ export default {
         } else if(this.$route.path === "/profile/mySharing") {
           return "MySharing";
         }
+      },
+      set() {
+        
       }
     }
   },

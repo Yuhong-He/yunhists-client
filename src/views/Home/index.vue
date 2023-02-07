@@ -39,17 +39,10 @@ export default {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100vw;
-  height: 82vh;
-}
-
-.app::before {
-  content: "";
+  height: calc(100vh - 60px);
+  min-height: 525px;
   background: url(https://new.shuge.org/wp-content/uploads/2023/01/fan_xiang01.jpg) no-repeat center;
   background-size: cover;
-  width: 100%;
-  height: 82%;
-  position: absolute;
 }
 
 .search-container {

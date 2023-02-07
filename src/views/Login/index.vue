@@ -423,23 +423,25 @@ export default{
 
 <style lang="less" scoped>
 .auth-background {
-  width: 100vw;
   height: 100vh;
+  min-height: 500px;
   box-sizing: border-box;
   content: "";
   background: url(https://upload.wikimedia.org/wikipedia/commons/d/de/%E7%8E%89%E9%BE%99%E9%9B%AA%E5%B1%B1_Jade_Dragon_Snow_Mountain_-_panoramio.jpg) no-repeat center;
   background-size: cover;
   object-fit: cover;
-  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .auth-container {
-  width: 60%;
-  height: 60%;
+  width: 60vw;
+  min-width: 500px;
+  height: 35vw;
+  min-height: 410px;
   position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%,-50%);
+  display: flex;
   background-color: #fff;
   border-radius: 20px;
   box-shadow: 0 0 3px #f0f0f0,
@@ -447,6 +449,9 @@ export default{
 }
 
 .auth-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 70%;
   height: 100%;
   position: absolute;
@@ -457,12 +462,12 @@ export default{
 }
 
 .login-box {
-  padding-top: 15%;
+  width: 90%;
   text-align: center;
 }
 
 .register-box {
-  padding-top: 3%;
+  width: 90%;
   text-align: center;
 }
 
@@ -485,7 +490,7 @@ export default{
 .small-box {
   width: 30%;
   height: 100%;
-  background: linear-gradient(135deg,rgb(57,167,176),rgb(56,183,145));
+  background: linear-gradient(135deg, rgb(57,167,176), rgb(56,183,145));
   position: absolute;
   top: 0;
   left: 0;
