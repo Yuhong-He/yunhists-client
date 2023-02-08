@@ -30,7 +30,7 @@ const api = {
     },
     sendVerificationEmail(data) {
         return axios({
-            url: BASE_URL + "/user/sendVerificationEmail",
+            url: BASE_URL + "/user/sendRegisterEmail",
             method: "post",
             params: data
         })
@@ -49,6 +49,46 @@ const api = {
             },
             url: BASE_URL + "/user/delete",
             method: "post"
+        })
+    },
+    updateUsername(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/updateUsername",
+            method: "post",
+            params: data
+        })
+    },
+    sendChangeEmailEmail(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/sendChangeEmailEmail",
+            method: "post",
+            params: data
+        })
+    },
+    updateEmail(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/updateEmail",
+            method: "post",
+            params: data
+        })
+    },
+    updatePassword(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/updatePassword",
+            method: "post",
+            params: data
         })
     }
 }

@@ -71,6 +71,7 @@
     <el-dialog
         :title="$t('login.resetPwd')"
         :visible.sync="resetPwdBox"
+        :close-on-click-modal="false"
         top="16%"
         width="30%">
       <el-form :inline="true" :model="resetPwdForm" ref="resetPwdForm">
@@ -126,7 +127,7 @@ export default{
     const validateRegisterUsername = (rule, value, callback) => {
       if (value === '') {
         callback(new Error(i18n.tc('login.missUsername')));
-      } else if(value.length < 2 || value.length > 15) {
+      } else if(value.trim().length < 2 || value.trim().length > 15) {
         callback(new Error(i18n.tc('login.usernameLengthNotMatch')));
       } else {
         callback();
@@ -361,7 +362,7 @@ export default{
     countDown() {
       clearInterval(this.timer);
       let countDownNum = 60;
-      this.timer=setInterval(() => {
+      this.timer = setInterval(() => {
         countDownNum--;
         $("#v-email-txt").text(countDownNum + " s");
         if(countDownNum <= 0) {

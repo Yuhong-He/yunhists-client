@@ -20,7 +20,7 @@
         <div class="info-text">{{ this.username }}</div>
       </el-col>
       <el-col :span="8">
-        <el-button size="medium">{{ $t('profile.change') }}</el-button>
+        <el-button size="medium" @click="openChangeUsernamePanel">{{ $t('profile.change') }}</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="40">
@@ -42,7 +42,7 @@
         <div class="info-text">{{ this.email }}</div>
       </el-col>
       <el-col :span="8">
-        <el-button size="medium">{{ $t('profile.changeEmail') }}</el-button>
+        <el-button size="medium" @click="openChangeEmailPanel">{{ $t('profile.change') }}</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="40">
@@ -53,7 +53,7 @@
         <div class="info-text">*********</div>
       </el-col>
       <el-col :span="8">
-        <el-button size="medium">{{ $t('profile.change') }}</el-button>
+        <el-button size="medium" @click="openChangePasswordPanel">{{ $t('profile.change') }}</el-button>
       </el-col>
     </el-row>
     <el-row :gutter="40">
@@ -110,13 +110,105 @@
         :title="$t('profile.confirmDeleteAccount')"
         :visible.sync="deleteAccountPanel"
         width="30%"
-        custom-class="dialog-box"
         center>
       <span>{{ $t('profile.confirmDeleteAccountInfo') }}</span>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="deleteAccountPanel = false">{{ $t('profile.cancel') }}</el-button>
-    <el-button type="danger" @click="deleteAccount">{{ $t('profile.confirm') }}</el-button>
-  </span>
+        <el-button @click="deleteAccountPanel = false">{{ $t('profile.cancel') }}</el-button>
+        <el-button type="danger" @click="deleteAccount">{{ $t('profile.confirm') }}</el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+        :title="$t('profile.changeUsername')"
+        :visible.sync="changeUsernamePanel"
+        width="30%"
+        :close-on-click-modal="false"
+        center>
+      <el-input
+          :placeholder="$t('profile.inputNewUsername')"
+          v-model="newUsername"
+          clearable>
+      </el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="changeUsernamePanel = false">{{ $t('profile.cancel') }}</el-button>
+        <el-button type="primary" @click="changeUsername">{{ $t('profile.confirm') }}</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+        :title="$t('profile.changeEmail')"
+        :visible.sync="changeEmailPanel"
+        width="30%"
+        :close-on-click-modal="false"
+        center>
+      <div>
+        <el-input
+            :placeholder="$t('profile.inputNewEmail')"
+            v-model="newEmail"
+            clearable>
+        </el-input>
+      </div>
+      <div class="dialog-multi-input">
+        <el-input
+            :placeholder="$t('profile.inputAccountPwd')"
+            v-model="oldPassword"
+            autocomplete="off"
+            show-password
+            clearable>
+        </el-input>
+      </div>
+      <div class="dialog-multi-input">
+        <el-input
+            :placeholder="$t('profile.inputVerificationCode')"
+            v-model="verificationCode"
+            clearable>
+          <el-button slot="append" icon="el-icon-s-promotion" id="v-email-btn" @click="sendChangeEmailEmail">
+            <span id="v-email-txt">{{ $t('profile.send') }}</span>
+          </el-button>
+        </el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="changeEmailPanel = false">{{ $t('profile.cancel') }}</el-button>
+        <el-button type="primary" @click="changeEmail">{{ $t('profile.confirm') }}</el-button>
+      </span>
+    </el-dialog>
+
+    <el-dialog
+        :title="$t('profile.changePassword')"
+        :visible.sync="changePasswordPanel"
+        width="30%"
+        :close-on-click-modal="false"
+        center>
+      <div>
+        <el-input
+            :placeholder="$t('profile.inputOldPwd')"
+            v-model="oldPassword"
+            autocomplete="off"
+            show-password
+            clearable>
+        </el-input>
+      </div>
+      <div class="dialog-multi-input">
+        <el-input
+            :placeholder="$t('profile.inputNewPwd')"
+            autocomplete="off"
+            v-model="newPassword"
+            show-password
+            clearable>
+        </el-input>
+      </div>
+      <div class="dialog-multi-input">
+        <el-input
+            :placeholder="$t('profile.inputNewPwd2')"
+            v-model="newPassword2"
+            autocomplete="off"
+            show-password
+            clearable>
+        </el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="changePasswordPanel = false">{{ $t('profile.cancel') }}</el-button>
+        <el-button type="primary" @click="changePassword">{{ $t('profile.confirm') }}</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -126,11 +218,21 @@ import {mapMutations, mapState} from "vuex";
 import {authError} from "@/utils/user";
 import {setToken} from "@/utils/token";
 import i18n from "@/lang";
+import $ from "jquery";
 
 export default {
   data() {
     return {
-      deleteAccountPanel: false
+      deleteAccountPanel: false,
+      changeUsernamePanel: false,
+      newUsername: "",
+      changeEmailPanel: false,
+      newEmail: "",
+      verificationCode: "",
+      changePasswordPanel: false,
+      oldPassword: "",
+      newPassword: "",
+      newPassword2: ""
     }
   },
   computed: {
@@ -219,6 +321,211 @@ export default {
       } else {
         authError(res.data.code);
       }
+    },
+    openChangeUsernamePanel() {
+      this.newUsername = this.username;
+      this.changeUsernamePanel = true;
+    },
+    changeUsername() {
+      if(this.newUsername && this.newUsername.trim().length >= 2 && this.newUsername.trim().length <= 15) {
+        if(this.newUsername !== this.username) {
+          this.doChangeUsername(this.newUsername.trim());
+        } else {
+          this.$message(i18n.tc('profile.usernameSame'));
+        }
+      } else {
+        this.$message.error(i18n.tc('profile.usernameLength'));
+      }
+    },
+    async doChangeUsername(username) {
+      let res = await this.$api.updateUsername({"username": username});
+      if(res.data.code === 200) {
+        setToken(res.data.data.token);
+        this.setUsername(username);
+        this.changeUsernamePanel = false;
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.changeSuccess')
+        });
+      } else {
+        authError(res.data.code);
+      }
+    },
+    openChangeEmailPanel() {
+      this.newEmail = this.email;
+      this.oldPassword = "";
+      this.changeEmailPanel = true;
+      this.verificationCode = "";
+    },
+    sendChangeEmailEmail() {
+      const email = this.newEmail;
+      if(email && email.length > 0) {
+        const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+        if (regex.test(email)) {
+          if(email !== this.email) {
+            this.doSendChangeEmailEmail(email);
+          } else {
+            this.$message(i18n.tc('profile.emailSame'));
+          }
+        } else {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('profile.invalidEmail')
+          });
+        }
+      } else {
+        this.$message({
+          type: 'warning',
+          message: i18n.tc('profile.inputNewEmail')
+        });
+      }
+    },
+    async doSendChangeEmailEmail(email) {
+      let res = await this.$api.sendChangeEmailEmail({'email': email});
+      if(res.data.code === 200) {
+        $("#v-email-btn").css("cursor", "not-allowed");
+        this.countDown();
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.codeSent')
+        });
+      } else if(res.data.code === 211) {
+        this.$message({
+          type: 'warning',
+          message: i18n.tc('profile.waitCountDown')
+        });
+      } else if(res.data.code === 212) {
+        this.$message.error(i18n.tc('profile.sendEmailFail'));
+      } else {
+        authError(res.data.code);
+      }
+    },
+    countDown() {
+      clearInterval(this.timer);
+      let countDownNum = 60;
+      this.timer = setInterval(() => {
+        countDownNum--;
+        $("#v-email-txt").text(countDownNum + " s");
+        if(countDownNum <= 0) {
+          clearInterval(this.timer);
+          this.restoreEmailBtn();
+        }
+      },1000);
+    },
+    restoreEmailBtn() {
+      $("#v-email-txt").text(i18n.tc('profile.send'));
+      $("#v-email-btn").css("cursor", "pointer");
+    },
+    changeEmail() {
+      const email = this.newEmail;
+      if(email && email.length > 0 && email) {
+        if(email !== this.email) {
+          const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+          if(regex.test(email)) {
+            if(this.oldPassword && this.oldPassword.length > 0) {
+              if(this.verificationCode && this.verificationCode.length === 6) {
+                this.doChangeEmail(email, this.oldPassword, this.verificationCode);
+              } else {
+                this.$message({
+                  message: i18n.tc('profile.input6VerificationCode'),
+                  type: 'warning'
+                });
+              }
+            } else {
+              this.$message({
+                message: i18n.tc('profile.inputOldPwd'),
+                type: 'warning'
+              });
+            }
+          } else {
+            this.$message({
+              message: i18n.tc('profile.invalidEmail'),
+              type: 'warning'
+            });
+          }
+        } else {
+          this.$message(i18n.tc('profile.emailSame'));
+        }
+      } else {
+        this.$message({
+          message: i18n.tc('profile.inputNewEmail'),
+          type: 'warning'
+        });
+      }
+    },
+    async doChangeEmail(email, password, code) {
+      let res = await this.$api.updateEmail({'email': email, 'password': password, 'code': code});
+      if(res.data.code === 200) {
+        setToken(res.data.data.token);
+        this.setEmail(email);
+        this.changeEmailPanel = false;
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.changeSuccess')
+        });
+      } else if (res.data.code === 206) {
+        this.$message.error(i18n.tc('profile.incorrectPwd'));
+      } else if (res.data.code === 213) {
+        this.$message.error(i18n.tc('profile.codeExpired'));
+      } else if (res.data.code === 214) {
+        this.$message.error(i18n.tc('profile.incorrectCode'));
+      } else if (res.data.code === 218) {
+        this.$message.error(i18n.tc('profile.noVerificationCodeSend'));
+      } else {
+        authError(res.data.code);
+      }
+    },
+    openChangePasswordPanel() {
+      this.oldPassword = "";
+      this.newPassword = "";
+      this.newPassword2 = "";
+      this.changePasswordPanel = true;
+    },
+    changePassword() {
+      if(this.oldPassword && this.oldPassword.length > 0) {
+        if(this.newPassword && this.newPassword.length > 0) {
+          if(this.newPassword.length >= 6) {
+            if(this.newPassword === this.newPassword2) {
+              this.doChangePassword(this.oldPassword, this.newPassword, this.newPassword2);
+            } else {
+              this.$message({
+                message: i18n.tc('profile.newPwdNotMatch'),
+                type: 'warning'
+              });
+            }
+          } else {
+            this.$message({
+              message: i18n.tc('profile.passwordLengthNotMatch'),
+              type: 'warning'
+            });
+          }
+        } else {
+          this.$message({
+            message: i18n.tc('profile.inputNewPwd'),
+            type: 'warning'
+          });
+        }
+      } else {
+        this.$message({
+          message: i18n.tc('profile.inputOldPwd'),
+          type: 'warning'
+        });
+      }
+    },
+    async doChangePassword(oldPwd, newPwd, newPwd2) {
+      let res = await this.$api.updatePassword({'oldPwd': oldPwd, 'newPwd': newPwd, 'newPwd2': newPwd2});
+      if(res.data.code === 200) {
+        setToken(res.data.data.token);
+        this.changePasswordPanel = false;
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.changeSuccess')
+        });
+      } else if (res.data.code === 206) {
+        this.$message.error(i18n.tc('profile.incorrectPwd'));
+      } else {
+        authError(res.data.code);
+      }
     }
   }
 }
@@ -257,5 +564,8 @@ export default {
 }
 .el-dialog__body span {
   word-break: normal;
+}
+.dialog-multi-input {
+  padding-top: 10px;
 }
 </style>
