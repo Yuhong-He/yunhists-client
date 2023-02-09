@@ -90,7 +90,23 @@ const api = {
             method: "post",
             params: data
         })
-    }
+    },
+    getCategoryOption(catName, lang) {
+        return axios({
+            url: BASE_URL + "/category/option/" + catName + "/" + lang,
+            method: "get"
+        })
+    },
+    addCategory(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/add",
+            method: "post",
+            data: data
+        })
+    },
 }
 
 export default api;

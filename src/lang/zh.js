@@ -121,7 +121,26 @@ export default {
             tokenExpired: "Token过期，请重新登陆",
             tokenError: "Token错误，请重新登陆",
             missingToken: "Token不存在，请重新登陆",
-            unknownError: "未知错误，请重新登陆"
+            unknownError: "未知错误，请重新登陆",
+            noPermission: "您没有权限！"
         }
+    },
+    components: {
+        categorySelector: {
+            searchCategory: "请搜索分类"
+        }
+    },
+    category: {
+        addCategory: "添加分类",
+        zhName: "中文名称",
+        enName: "英文名称",
+        parentCat: "母分类",
+        confirm: "确认",
+        noPermissionVisit: "您没有权限访问本页面",
+        inputZhName: "请输入中文名称",
+        inputEnName: "请输入英文名称",
+        addSuccess: "添加成功",
+        zhCatExist: "该中文分类已存在",
+        enCatExist: "该英文分类已存在"
     }
 };

@@ -121,7 +121,26 @@ export default {
             tokenExpired: "Token expired, please login again",
             tokenError: "Token error, please login again",
             missingToken: "Token not exist, please login again",
-            unknownError: "Unknown error, please login again"
+            unknownError: "Unknown error, please login again",
+            noPermission: "You Don't Have Permission!"
         }
+    },
+    components: {
+        categorySelector: {
+            searchCategory: "Please search category"
+        }
+    },
+    category: {
+        addCategory: "Add Category",
+        zhName: "Chinese Name",
+        enName: "English Name",
+        parentCat: "Parent Category",
+        confirm: "Confirm",
+        noPermissionVisit: "You don't have permission to this page",
+        inputZhName: "Please input Chinese name",
+        inputEnName: "Please input English name",
+        addSuccess: "Add Success",
+        zhCatExist: "This Chinese category already exists",
+        enCatExist: "This English category already exists"
     }
 };

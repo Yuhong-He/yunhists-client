@@ -17,6 +17,8 @@ function authError(errorCode) {
 function printErrorMsg(errorCode) {
     if(errorCode === 205) {
         Vue.prototype.$message.error(i18n.tc('util.user.noUser'));
+    } else if (errorCode === 203) {
+        Vue.prototype.$message.error(i18n.tc('util.user.noPermission'));
     } else if (errorCode === 223) {
         Vue.prototype.$message.error(i18n.tc('util.user.tokenExpired'));
     } else if (errorCode === 224) {
