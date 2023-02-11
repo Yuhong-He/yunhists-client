@@ -250,7 +250,7 @@ export default{
         this.setPoints(res.data.data.points);
         this.setLang(res.data.data.lang);
         this.$i18n.locale = res.data.data.lang;
-        await this.$router.push('/');
+        await this.$router.go(-1);
         this.$message({
           type: 'success',
           message: i18n.tc('login.welcome') + " " + res.data.data.username

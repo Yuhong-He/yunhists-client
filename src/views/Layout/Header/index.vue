@@ -35,7 +35,7 @@
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
         <span class="nav-text">{{ $t('header.login') }}</span>
       </el-menu-item>
-      <el-menu-item style="float: right;" v-if="(this.username && this.username.length > 0)" index="" @click="logout">
+      <el-menu-item style="float: right;" v-if="(this.username && this.username.length > 0)" @click="logout">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />
         <span class="nav-text">{{ $t('header.logout') }}</span>
       </el-menu-item>
@@ -47,8 +47,8 @@
         <template slot="title">
           <span class="nav-text"><font-awesome-icon icon="fa-solid fa-language" /></span>
         </template>
-        <el-menu-item index="" @click="setLangTo('zh')">中文</el-menu-item>
-        <el-menu-item index="" @click="setLangTo('en')">English</el-menu-item>
+        <el-menu-item @click="setLangTo('zh')" id="lang_zh">中文</el-menu-item>
+        <el-menu-item @click="setLangTo('en')" id="lang_en">English</el-menu-item>
       </el-submenu>
     </el-menu>
   </div>
@@ -102,9 +102,7 @@ export default {
         this.setUserRights("");
         this.setPoints("");
         setToken("");
-        if(this.$route.path !== '/') {
-          this.$router.push('/');
-        }
+        this.$router.go(-1);
         this.$message({
           type: 'success',
           message: i18n.tc('header.logoutSuccess')

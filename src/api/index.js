@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {getToken} from "@/utils/token";
+import i18n from "@/lang";
 
 const BASE_URL = "http://localhost:9999/api";
 
@@ -105,6 +106,36 @@ const api = {
             url: BASE_URL + "/category/add",
             method: "post",
             data: data
+        })
+    },
+    getCategoryList(lang, page, pageSize, query, sortCol, sortOrder) {
+        return axios({
+            url: BASE_URL + "/category/list/" + lang +"/" + page + "/" + pageSize,
+            method: "get",
+            params: {
+                name: query,
+                sortCol: sortCol,
+                sortOrder: sortOrder
+            }
+        })
+    },
+    addCatALot(data) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/addCatALot",
+            method: "post",
+            data: data
+        })
+    },
+    getCategoryByIds(ids) {
+        return axios({
+            url: BASE_URL + "/category/ids",
+            method: "get",
+            params: {
+                ids: ids
+            }
         })
     },
 }

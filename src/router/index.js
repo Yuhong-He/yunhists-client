@@ -83,6 +83,10 @@ const routes = [
           },
           {
             path: 'id',
+            redirect: '/category/list'
+          },
+          {
+            path: 'id/:id',
             name: 'CategoryDetail',
             component: CategoryDetail,
             meta: {
@@ -167,6 +171,11 @@ const routes = [
     meta: {
       title: 'Login'
     }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: Test
   },
   {
     path: '/test',
