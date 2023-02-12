@@ -52,8 +52,8 @@ router.beforeEach((to, from, next) => {
     if (to.meta.title) {
         document.title = to.meta.title
     }
-    if(store.state.lang.prefLang && store.state.lang.prefLang.length > 0) {
-        i18n.locale = store.state.lang.prefLang;
+    if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
+        i18n.locale = store.state.Settings.lang;
     } else {
         i18n.locale = "zh";
     }

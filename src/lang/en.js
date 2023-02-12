@@ -153,7 +153,7 @@ export default {
         forFollowingCats: "For the following category(s):",
         addNewCommonParentCats: "Add common parent category(s)",
         cancel: "Cancel",
-        rows: " Raws",
+        rows: " Rows",
         selectCategory: "Please select the category you want to operate",
         selectParentCat: "Please select the common parent category you want add to",
         batchSuccess: "Batch Operate Success",
@@ -165,6 +165,8 @@ export default {
         failedBecause: " failed, because: ",
         canNotBeCatItself: "Can not be the category of itself",
         relationExist: "The relationship already exist",
-        noData: "No Data"
+        noData: "No Data",
+        tips: "Tips",
+        clickGoToDetailPage: "Click on the category name to enter the details page"
     }
 };

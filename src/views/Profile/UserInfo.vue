@@ -237,12 +237,12 @@ export default {
   },
   computed: {
     ...mapState('UserInfo', ['userId', 'username', 'email', 'userRights', 'points']),
-    ...mapState('lang', ['prefLang']),
+    ...mapState('Settings', ['lang']),
     langSetting: {
       get() {
-        if(this.prefLang === "zh") {
+        if(this.lang === "zh") {
           return "中文";
-        } else if (this.prefLang === "en") {
+        } else if (this.lang === "en") {
           return "English";
         }
       }
@@ -250,15 +250,15 @@ export default {
     userRightsGroup: {
       get() {
         if(this.userRights === 0) {
-          if(this.prefLang === "zh") {
+          if(this.lang === "zh") {
             return "用户";
-          } else if (this.prefLang === "en") {
+          } else if (this.lang === "en") {
             return "User";
           }
         } else if (this.userRights === 1) {
-          if(this.prefLang === "zh") {
+          if(this.lang === "zh") {
             return "管理员";
-          } else if (this.prefLang === "en") {
+          } else if (this.lang === "en") {
             return "Admin";
           }
         }
@@ -266,7 +266,7 @@ export default {
     },
     userLevel: {
       get() {
-        return this.generateLevelName(this.points, this.prefLang);
+        return this.generateLevelName(this.points, this.lang);
       }
     }
   },

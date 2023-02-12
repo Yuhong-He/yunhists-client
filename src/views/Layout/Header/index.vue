@@ -69,7 +69,7 @@ export default {
     ...mapState('UserInfo', ['username', 'userRights'])
   },
   methods: {
-    ...mapMutations('lang', ['setLang']),
+    ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
     ...mapMutations('UserInfo', ['setEmail']),

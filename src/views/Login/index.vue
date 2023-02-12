@@ -94,7 +94,7 @@ import {setToken} from "@/utils/token";
 
 export default{
   computed: {
-    ...mapState('lang', ['prefLang'])
+    ...mapState('Settings', ['lang'])
   },
   data(){
     const validateLoginEmail = (rule, value, callback) => {
@@ -207,7 +207,7 @@ export default{
     }
   },
   methods:{
-    ...mapMutations('lang', ['setLang']),
+    ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId']),
     ...mapMutations('UserInfo', ['setUsername']),
     ...mapMutations('UserInfo', ['setEmail']),
@@ -287,7 +287,7 @@ export default{
     },
     async doRegister(email, username, pwd, pwd2, code) {
       let res = await this.$api.register(
-          {'lang': this.prefLang, 'email': email, 'username': username,
+          {'lang': this.lang, 'email': email, 'username': username,
            'password': pwd, 'password2': pwd2, 'code': code});
       if(res.data.code === 200) {
         this.$message({
@@ -339,7 +339,7 @@ export default{
       }
     },
     async doSendVerificationEmail (email) {
-      let res = await this.$api.sendVerificationEmail({'lang': this.prefLang, 'email': email});
+      let res = await this.$api.sendVerificationEmail({'lang': this.lang, 'email': email});
       if(res.data.code === 200) {
         $("#v-email-btn").css("cursor", "not-allowed");
         this.countDown();

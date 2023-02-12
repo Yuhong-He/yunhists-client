@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import _ from "lodash";
 import Pagination from "@/components/Pagination.vue";
@@ -120,6 +120,7 @@ export default {
   },
   computed: {
     ...mapState('UserInfo', ['userRights']),
+    ...mapState('Settings', ['categoryListTips']),
     options() {
       return [{
         value: '5',
@@ -147,7 +148,13 @@ export default {
       this.refreshRoute();
     }
   },
+  mounted() {
+    if(this.categoryListTips === "") {
+      this.showTips();
+    }
+  },
   methods: {
+    ...mapMutations('Settings', ['setCategoryListTips']),
     router() {
       return router
     },
@@ -327,6 +334,14 @@ export default {
       } else if(val === 4) {
         return i18n.tc('category.relationExist');
       }
+    },
+    showTips() {
+      this.$notify({
+        title: i18n.tc('category.tips'),
+        message: i18n.tc('category.clickGoToDetailPage'),
+        duration: 0
+      });
+      this.setCategoryListTips("ok");
     }
   }
 }

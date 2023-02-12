@@ -24,7 +24,7 @@ import {mapState} from "vuex";
 
 export default {
   computed: {
-    ...mapState('lang', ['prefLang'])
+    ...mapState('Settings', ['lang'])
   },
   data() {
     return {
@@ -47,13 +47,13 @@ export default {
     },
     async doGetCategoryOptions(query) {
       this.options = [];
-      let res = await this.$api.getCategoryOption(query, this.prefLang);
+      let res = await this.$api.getCategoryOption(query, this.lang);
       if(res.data.code === 200) {
         this.loading = false;
         res.data.data.catOptions.forEach(cat => {
           let catOption = {};
           catOption.value = cat.id;
-          if(this.prefLang === "zh") {
+          if(this.lang === "zh") {
             catOption.label = cat.zhName;
           } else {
             catOption.label = cat.enName;

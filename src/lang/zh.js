@@ -165,6 +165,8 @@ export default {
         failedBecause: "失败，原因：",
         canNotBeCatItself: "不能成为自己的子分类",
         relationExist: "该从属关系已存在",
-        noData: "暂无数据"
+        noData: "暂无数据",
+        tips: "提示",
+        clickGoToDetailPage: "点击分类名可以进入详情页哦"
     }
 };
