@@ -14,6 +14,7 @@ import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
 import Approve from '@/views/Admin/Approve'
 import Test from "@/views/Test"
+import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
 import MyFavorite from "@/views/Profile/MyFavorite.vue";
@@ -175,7 +176,7 @@ const routes = [
   {
     path: '/:pathMatch(.*)*',
     name: 'NotFound',
-    component: Test
+    component: NotFound
   },
   {
     path: '/test',
