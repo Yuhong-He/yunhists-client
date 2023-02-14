@@ -19,7 +19,9 @@
                 <span @click="resetPwdBox=true; resetPwdForm.resetPwd_email = loginForm.login_email">{{ $t('login.forgotPassword') }}</span>
               </div>
               <el-divider></el-divider>
-              <el-button type="goon" @click="login('loginForm')" round>{{ $t('login.login') }}</el-button>
+              <el-button type="goon" @click="login('loginForm')" round :loading="loginLoading">
+                {{ $t('login.login') }}
+              </el-button>
               <el-button size="small" @click="google" round><font-awesome-icon style="color: red;" icon="fa-brands fa-google" /></el-button>
             </el-col>
           </el-row>
@@ -203,16 +205,14 @@ export default{
       },
       resetPwdForm: {
         resetPwd_email: ''
-      }
+      },
+      loginLoading: false
     }
   },
   methods:{
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUserId']),
-    ...mapMutations('UserInfo', ['setUsername']),
-    ...mapMutations('UserInfo', ['setEmail']),
-    ...mapMutations('UserInfo', ['setUserRights']),
-    ...mapMutations('UserInfo', ['setPoints']),
+    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     changeType() {
       this.isLogin = !this.isLogin;
       this.loginForm.login_email = '';
@@ -240,6 +240,7 @@ export default{
       });
     },
     async doLogin(email, password) {
+      this.loginLoading = true;
       let res = await this.$api.login({'email': email, 'password': password});
       if(res.data.code === 200) {
         setToken(res.data.data.token);
@@ -248,6 +249,9 @@ export default{
         this.setEmail(res.data.data.email);
         this.setUserRights(res.data.data.userRights);
         this.setPoints(res.data.data.points);
+        this.setAccessKeyId(res.data.data.sts.accessKeyId);
+        this.setAccessKeySecret(res.data.data.sts.accessKeySecret);
+        this.setStsToken(res.data.data.sts.stsToken);
         this.setLang(res.data.data.lang);
         this.$i18n.locale = res.data.data.lang;
         await this.$router.go(-1);

@@ -1,13 +1,217 @@
 <template>
-  <h2>Add Thesis</h2>
+  <div class="add-thesis-container">
+    <div class="add-thesis-title">
+      <h2>{{ $t('thesis.addThesis') }}</h2>
+    </div>
+    <div class="add-thesis-form">
+      <el-form ref="form" :model="form" label-width="120px">
+        <el-form-item :label="$t('thesis.author')" prop="author">
+          <el-input v-model="form.author" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.title')" prop="title">
+          <el-input v-model="form.title" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.publication')" prop="publication">
+          <el-input v-model="form.publication" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.type')">
+          <el-radio-group v-model="form.type">
+            <el-radio label="0">{{ $t('thesis.journal') }}</el-radio>
+            <el-radio label="1">{{ $t('thesis.collection') }}</el-radio>
+            <el-radio label="2">{{ $t('thesis.bookChapter') }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item v-if="this.form.type === '1' || this.form.type === '2'" :label="$t('thesis.location')" prop="location">
+          <el-input v-model="form.location" clearable></el-input>
+        </el-form-item>
+        <el-form-item v-if="this.form.type === '1' || this.form.type === '2'" :label="$t('thesis.publisher')" prop="publisher">
+          <el-input v-model="form.publisher" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.year')" prop="year">
+          <el-date-picker v-model="form.year" type="year" :placeholder="$t('thesis.select')" :picker-options="pickerOptions"></el-date-picker>
+        </el-form-item>
+        <el-form-item v-if="this.form.type === '0' || this.form.type === '1'" :label="$t('thesis.volume')" prop="volume">
+          <el-input v-model="form.volume" clearable></el-input>
+        </el-form-item>
+        <el-form-item v-if="this.form.type === '0'" :label="$t('thesis.issue')" prop="issue">
+          <el-input v-model="form.issue" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.pages')" prop="pages">
+          <el-input v-model="form.pages" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="DOI" prop="doi">
+          <el-input v-model="form.doi" clearable></el-input>
+        </el-form-item>
+        <el-form-item label="ISBN" prop="isbn">
+          <el-input v-model="form.isbn" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.onlinePublisher')" prop="onlinePublisher">
+          <el-select v-model="form.onlinePublisher" filterable allow-create clearable placeholder="" style="width: 100%;">
+            <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.onlineUrl')" prop="onlinePublishUrl">
+          <el-input v-model="form.onlinePublishUrl" clearable></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.copyright')" prop="copyrightStatus">
+          <el-radio-group v-model="form.copyrightStatus">
+            <el-radio label="0">{{ $t('thesis.copyrightReserved') }}</el-radio>
+            <el-radio label="1">{{ $t('thesis.openAccess') }}</el-radio>
+            <el-radio label="2">{{ $t('thesis.publicDomain') }}</el-radio>
+          </el-radio-group>
+        </el-form-item>
+          <el-form-item :label="$t('thesis.uploadFile')" prop="fileName">
+          <FileUploader @getFileName="getFileName"></FileUploader>
+        </el-form-item>
+        <el-form-item :label="$t('thesis.category')" prop="category">
+          <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="add-thesis-btn">
+      <el-button type="primary" @click="onSubmit" round>{{ $t('thesis.confirm') }}</el-button>
+    </div>
+  </div>
 </template>
 
 <script>
+import {mapState} from "vuex";
+import CategorySelector from "@/components/CategorySelector.vue";
+import FileUploader from "@/components/FileUploader.vue";
+import {authError} from "@/utils/user";
+import i18n from "@/lang";
+
 export default {
-  name: "addThesis"
+  computed: {
+    ...mapState('UserInfo', ['userRights']),
+    options() {
+      return [{
+        value: '中国知网',
+        label: i18n.tc('thesis.cnki')
+      }, {
+        value: '万方数据',
+        label: i18n.tc('thesis.wanfangData')
+      }, {
+        value: '自主出版',
+        label: i18n.tc('thesis.selfPublish')
+      }]
+    }
+  },
+  mounted() {
+    this.checkToken();
+    if(this.userRights < 1) {
+      this.$message.error(i18n.tc('thesis.noPermissionVisit'));
+      this.$router.push("/");
+    }
+  },
+  data() {
+    return {
+      form: {
+        author: '',
+        title: '',
+        publication: '',
+        type: '0',
+        location: '',
+        publisher: '',
+        year: '',
+        volume: '',
+        issue: '',
+        pages: '',
+        doi: '',
+        isbn: '',
+        onlinePublisher: '',
+        onlinePublishUrl: '',
+        copyrightStatus: '0',
+        fileName: ''
+      },
+      pickerOptions: {
+        disabledDate(time) {
+          const _now = Date.now()
+          return time.getTime() > _now
+        }
+      },
+      categories: []
+    }
+  },
+  watch: {
+    'form.type': {
+      handler(newType) {
+        if(newType === '0') {
+          this.form.location = '';
+          this.form.publisher = '';
+        } else if(newType === '1') {
+          this.form.issue = '';
+        } else {
+          this.form.issue = '';
+          this.form.volume = '';
+        }
+      },
+      immediate: true
+    }
+  },
+  components: {
+    CategorySelector,
+    FileUploader
+  },
+  methods: {
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        authError(res.data.code);
+      }
+    },
+    getCategories(val) {
+      this.categories = val;
+    },
+    getFileName(val) {
+      this.form.fileName = val;
+    },
+    onSubmit() {
+      this.addThesis(this.form, this.categories);
+    },
+    async addThesis(thesis, categories) {
+      let parentCat = Array.from(categories).toString();
+      let res = await this.$api.addThesis(thesis, parentCat);
+      if(res.data.code === 200) {
+        console.log("success")
+        await this.$router.push("/thesis");
+      } else if(res.data.code === 401) {
+        await this.$alert(i18n.tc('thesis.inputTitle'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      } else if(res.data.code === 404) {
+        await this.$alert(i18n.tc('thesis.pleaseUploadFile'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      } else if(res.data.code === 406) {
+        await this.$alert(i18n.tc('thesis.thesisExist'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      } else {
+        authError(res.data.code);
+      }
+    }
+  }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.add-thesis-container {
+  margin: 40px 25%;
+}
+.add-thesis-title {
+  text-align: center;
+  font-size: 1.5em;
+}
+.add-thesis-form {
+  margin-top: 20px;
+}
+.add-thesis-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 </style>

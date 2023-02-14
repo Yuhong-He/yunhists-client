@@ -236,8 +236,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('UserInfo', ['userId', 'username', 'email', 'userRights', 'points']),
     ...mapState('Settings', ['lang']),
+    ...mapState('UserInfo', ['userId', 'username', 'email', 'userRights', 'points']),
+    ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     langSetting: {
       get() {
         if(this.lang === "zh") {
@@ -270,12 +271,17 @@ export default {
       }
     }
   },
+  mounted() {
+    this.checkToken();
+  },
   methods: {
-    ...mapMutations('UserInfo', ['setUserId']),
-    ...mapMutations('UserInfo', ['setUsername']),
-    ...mapMutations('UserInfo', ['setEmail']),
-    ...mapMutations('UserInfo', ['setUserRights']),
-    ...mapMutations('UserInfo', ['setPoints']),
+    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        authError(res.data.code);
+      }
+    },
     generateLevelName(points, lang) {
       points = parseInt(points);
       const zhName = ["布衣", "典史（无品）", "巡检（从九品）", "主簿（正九品）", "照磨（从八品）", "县丞（正八品）", "判官（从七品）", "知县（正七品）", "州同（从六品）", "通判（正六品）", "知州（从五品）", "同知（正五品）", "参议（从四品）", "知府（正四品）", "参政（从三品）", "按察使（正三品）", "布政使（从二品）", "都御史（正二品）", "少师（从一品）", "太师（正一品）"];
@@ -312,6 +318,9 @@ export default {
         this.setEmail("");
         this.setUserRights("");
         this.setPoints("");
+        this.setAccessKeyId("");
+        this.setAccessKeySecret("");
+        this.setStsToken("");
         this.deleteAccountPanel = false;
         await this.$router.push('/');
         this.$message({
@@ -340,7 +349,6 @@ export default {
     async doChangeUsername(username) {
       let res = await this.$api.updateUsername({"username": username});
       if(res.data.code === 200) {
-        setToken(res.data.data.token);
         this.setUsername(username);
         this.changeUsernamePanel = false;
         this.$message({
@@ -456,7 +464,6 @@ export default {
     async doChangeEmail(email, password, code) {
       let res = await this.$api.updateEmail({'email': email, 'password': password, 'code': code});
       if(res.data.code === 200) {
-        setToken(res.data.data.token);
         this.setEmail(email);
         this.changeEmailPanel = false;
         this.$message({
@@ -515,7 +522,6 @@ export default {
     async doChangePassword(oldPwd, newPwd, newPwd2) {
       let res = await this.$api.updatePassword({'oldPwd': oldPwd, 'newPwd': newPwd, 'newPwd2': newPwd2});
       if(res.data.code === 200) {
-        setToken(res.data.data.token);
         this.changePasswordPanel = false;
         this.$message({
           type: 'success',

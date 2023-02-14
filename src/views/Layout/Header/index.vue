@@ -70,11 +70,8 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUserId']),
-    ...mapMutations('UserInfo', ['setUsername']),
-    ...mapMutations('UserInfo', ['setEmail']),
-    ...mapMutations('UserInfo', ['setUserRights']),
-    ...mapMutations('UserInfo', ['setPoints']),
+    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     activeMenu() {
       let route = this.$route;
       let {path, meta} = route;
@@ -96,12 +93,15 @@ export default {
         cancelButtonText: i18n.tc('header.cancel'),
         type: 'warning'
       }).then(() => {
+        setToken("");
         this.setUserId("");
         this.setUsername("");
         this.setEmail("");
         this.setUserRights("");
         this.setPoints("");
-        setToken("");
+        this.setAccessKeyId("");
+        this.setAccessKeySecret("");
+        this.setStsToken("");
         this.$router.go(-1);
         this.$message({
           type: 'success',

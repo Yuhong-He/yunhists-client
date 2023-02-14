@@ -5,6 +5,7 @@
       filterable
       remote
       reserve-keyword
+      clearable
       :placeholder="$t('components.categorySelector.searchCategory')"
       @change="getCategory"
       :remote-method="remoteMethod"

@@ -1,6 +1,5 @@
 import axios from 'axios';
 import {getToken} from "@/utils/token";
-import i18n from "@/lang";
 
 const BASE_URL = "http://localhost:9999/api";
 
@@ -17,6 +16,15 @@ const api = {
             url: BASE_URL + "/user/register",
             method: "post",
             params: data
+        })
+    },
+    validateToken() {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/validateToken",
+            method: "get"
         })
     },
     updateLang(data) {
@@ -135,6 +143,20 @@ const api = {
             method: "get",
             params: {
                 ids: ids
+            }
+        })
+    },
+    addThesis(thesis, parentCat) {
+        console.log(parentCat);
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/add",
+            method: "post",
+            data: thesis,
+            params: {
+                category: parentCat
             }
         })
     },

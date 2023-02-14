@@ -242,11 +242,10 @@ export default {
     },
     getCategories(val) {
       this.newCategoriesId = val;
+      this.getNewCategoryNames(val.toString());
     },
     updateCategories() {
       if(!_.isEmpty(this.newCategoriesId)) {
-        const newCatStr = this.newCategoriesId.toString();
-        this.getNewCategoryNames(newCatStr);
         const childCat = [];
         this.selectedCats.forEach(e => {
           childCat.push(e.id);

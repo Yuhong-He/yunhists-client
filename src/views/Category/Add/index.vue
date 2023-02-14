@@ -38,6 +38,7 @@ export default {
     ...mapState('UserInfo', ['userRights'])
   },
   mounted() {
+    this.checkToken();
     if(this.userRights < 1) {
       this.$message.error(i18n.tc('category.noPermissionVisit'));
       this.$router.push("/");
@@ -64,6 +65,12 @@ export default {
     CategorySelector
   },
   methods: {
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        authError(res.data.code);
+      }
+    },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -88,14 +95,12 @@ export default {
       } else if(res.data.code === 301) {
         await this.$alert(i18n.tc('category.zhCatExist'), {
           confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {
-          }
+          callback: () => {}
         });
       } else if(res.data.code === 302) {
         await this.$alert(i18n.tc('category.enCatExist'), {
           confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {
-          }
+          callback: () => {}
         });
       } else {
         authError(res.data.code);

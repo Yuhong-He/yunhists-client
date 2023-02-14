@@ -1,28 +1,26 @@
 <template>
   <div>
-    <button @click="countDown">click</button>
-    <span>{{countDownNum}}</span>
+    <FileUploader @getFileName="getFileName"></FileUploader>
   </div>
 </template>
 
 <script>
+
+import FileUploader from "@/components/FileUploader.vue";
+
 export default {
   data(){
     return{
-      countDownNum:60,
-      timer:null
+      fileName: ''
     }
   },
+  components: {
+    FileUploader
+  },
   methods:{
-    countDown:function(){
-      clearInterval(this.timer);
-      this.countDownNum = 60;
-      this.timer=setInterval(() => {
-        this.countDownNum--;
-        if(this.countDownNum<=0){
-          clearInterval(this.timer);
-        }
-      },1000);
+    getFileName(val) {
+      this.fileName = val;
+      console.log(this.fileName);
     }
   }
 }

@@ -174,17 +174,17 @@ const routes = [
     }
   },
   {
-    path: '/:pathMatch(.*)*',
-    name: 'NotFound',
-    component: NotFound
-  },
-  {
     path: '/test',
     name: 'Test',
     component: Test,
     meta: {
       title: 'Test'
     }
+  },
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFound',
+    component: NotFound
   }
 ]
 
