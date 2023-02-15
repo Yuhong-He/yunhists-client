@@ -1,10 +1,13 @@
 <template>
   <div class="add-thesis-container">
+    <div class="open-parsing-btn-area">
+      <el-button type="info" class="open-parsing-btn" @click="semiAutoParse" plain>{{ $t('thesis.autoInput') }}</el-button>
+    </div>
     <div class="add-thesis-title">
       <h2>{{ $t('thesis.addThesis') }}</h2>
     </div>
     <div class="add-thesis-form">
-      <el-form ref="form" :model="form" label-width="120px">
+      <el-form ref="form" :model="form" label-width="20%">
         <el-form-item :label="$t('thesis.author')" prop="author">
           <el-input v-model="form.author" clearable></el-input>
         </el-form-item>
@@ -42,7 +45,7 @@
         <el-form-item label="DOI" prop="doi">
           <el-input v-model="form.doi" clearable></el-input>
         </el-form-item>
-        <el-form-item label="ISBN" prop="isbn">
+        <el-form-item v-if="this.form.type === '1' || this.form.type === '2'" label="ISBN" prop="isbn">
           <el-input v-model="form.isbn" clearable></el-input>
         </el-form-item>
         <el-form-item :label="$t('thesis.onlinePublisher')" prop="onlinePublisher">
@@ -71,13 +74,15 @@
     <div class="add-thesis-btn">
       <el-button type="primary" @click="onSubmit" round>{{ $t('thesis.confirm') }}</el-button>
     </div>
+    <AutoParsingHelper :openPanel="openPanel" @getForm="getForm"></AutoParsingHelper>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
+import {mapMutations, mapState} from "vuex";
 import CategorySelector from "@/components/CategorySelector.vue";
 import FileUploader from "@/components/FileUploader.vue";
+import AutoParsingHelper from "@/components/AutoParsingHelper.vue";
 import {authError} from "@/utils/user";
 import i18n from "@/lang";
 
@@ -89,8 +94,8 @@ export default {
         value: '中国知网',
         label: i18n.tc('thesis.cnki')
       }, {
-        value: '万方数据',
-        label: i18n.tc('thesis.wanfangData')
+        value: '维普资讯',
+        label: i18n.tc('thesis.cqvip')
       }, {
         value: '自主出版',
         label: i18n.tc('thesis.selfPublish')
@@ -130,7 +135,8 @@ export default {
           return time.getTime() > _now
         }
       },
-      categories: []
+      categories: [],
+      openPanel: false
     }
   },
   watch: {
@@ -151,9 +157,11 @@ export default {
   },
   components: {
     CategorySelector,
-    FileUploader
+    FileUploader,
+    AutoParsingHelper
   },
   methods: {
+    ...mapMutations('UserInfo', ['setPoints']),
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code !== 200) {
@@ -173,7 +181,11 @@ export default {
       let parentCat = Array.from(categories).toString();
       let res = await this.$api.addThesis(thesis, parentCat);
       if(res.data.code === 200) {
-        console.log("success")
+        this.setPoints(res.data.data.points);
+        this.$message({
+          message: i18n.tc('thesis.addSuccess'),
+          type: 'success'
+        });
         await this.$router.push("/thesis");
       } else if(res.data.code === 401) {
         await this.$alert(i18n.tc('thesis.inputTitle'), {
@@ -193,6 +205,40 @@ export default {
       } else {
         authError(res.data.code);
       }
+    },
+    semiAutoParse() {
+      this.form = {
+        author: '',
+        title: '',
+        publication: '',
+        type: '0',
+        location: '',
+        publisher: '',
+        year: '',
+        volume: '',
+        issue: '',
+        pages: '',
+        doi: '',
+        isbn: '',
+        onlinePublisher: '',
+        onlinePublishUrl: '',
+        copyrightStatus: '0',
+        fileName: ''
+      };
+      this.openPanel = true;
+    },
+    getForm(val) {
+      if(!_.isEmpty(val)) {
+        for(const valKey in val) { // loop json from component
+          for(const formKey in this.form) { // loop json for this form
+            if(valKey === formKey) { // if key name match
+              this.form[formKey] = val[valKey]; // assign value
+              break;
+            }
+          }
+        }
+      }
+      this.openPanel = false;
     }
   }
 }
@@ -213,5 +259,9 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.open-parsing-btn-area {
+  position: absolute;
+  margin-left: 55%;
 }
 </style>

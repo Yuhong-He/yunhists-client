@@ -202,10 +202,20 @@ export default {
         category: "Category",
         noPermissionVisit: "You don't have permission to this page",
         cnki: "CNKI",
-        wanfangData: "Wanfang Data",
+        cqvip: "CQVIP",
         selfPublish: "Self Publish",
         inputTitle: "Please input thesis title",
         pleaseUploadFile: "Please upload the file",
-        thesisExist: "Thesis already exists"
+        thesisExist: "Thesis already exists",
+        parseJSON: "Parse JSON",
+        pleaseUse: "Please use the ",
+        tampermonkey: "Tampermonkey script ",
+        inputGeneratedJSON: "to generate JSON, then input in the textarea",
+        inputJson: "Input JSON",
+        cancel: "Cancel",
+        parse: "Parse",
+        jsonFormatError: "Json Format Error",
+        autoInput: "Auto Input",
+        addSuccess: "Add Success"
     }
 };

@@ -11,6 +11,9 @@ function authError(errorCode) {
     store.state.UserInfo.email = "";
     store.state.UserInfo.userRights = "";
     store.state.UserInfo.points = "";
+    store.state.Aliyun.accessKeyId = "";
+    store.state.Aliyun.accessKeySecret = "";
+    store.state.Aliyun.stsToken = "";
     router.push('/login').then(() => printErrorMsg(errorCode));
 }
 

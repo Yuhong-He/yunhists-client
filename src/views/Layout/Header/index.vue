@@ -109,11 +109,8 @@ export default {
         });
       }).catch(() => {});
     },
-    async updateDatabaseLang(lang) {
-      let res = await this.$api.updateLang({'lang': lang});
-      if(res.data.code === 200) {
-        setToken(res.data.data.token);
-      }
+    updateDatabaseLang(lang) {
+      this.$api.updateLang({'lang': lang});
     }
   }
 }

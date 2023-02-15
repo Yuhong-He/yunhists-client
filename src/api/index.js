@@ -27,6 +27,15 @@ const api = {
             method: "get"
         })
     },
+    refreshSTS() {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/refreshSTS",
+            method: "get"
+        })
+    },
     updateLang(data) {
         return axios({
             headers: {
@@ -147,7 +156,6 @@ const api = {
         })
     },
     addThesis(thesis, parentCat) {
-        console.log(parentCat);
         return axios({
             headers: {
                 "token": getToken()

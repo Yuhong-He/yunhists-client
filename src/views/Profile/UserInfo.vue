@@ -106,6 +106,7 @@
       </el-col>
       <el-col :span="8"></el-col>
     </el-row>
+
     <el-dialog
         :title="$t('profile.confirmDeleteAccount')"
         :visible.sync="deleteAccountPanel"
@@ -117,6 +118,7 @@
         <el-button type="danger" @click="deleteAccount">{{ $t('profile.confirm') }}</el-button>
       </span>
     </el-dialog>
+
     <el-dialog
         :title="$t('profile.changeUsername')"
         :visible.sync="changeUsernamePanel"

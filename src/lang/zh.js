@@ -202,10 +202,20 @@ export default {
         category: "分类",
         noPermissionVisit: "您没有权限访问本页面",
         cnki: "中国知网",
-        wanfangData: "万方数据",
+        cqvip: "维普资讯",
         selfPublish: "自主出版",
         inputTitle: "请输入论文标题",
         pleaseUploadFile: "请上传论文",
-        thesisExist: "论文已存在"
+        thesisExist: "论文已存在",
+        parseJSON: "解析JSON",
+        pleaseUse: "请使用",
+        tampermonkey: "本站配套的Tampermonkey脚本",
+        inputGeneratedJSON: "生成JSON，并将JSON贴入输入框",
+        inputJson: "输入JSON",
+        cancel: "取消",
+        parse: "解析",
+        jsonFormatError: "JSON格式错误",
+        autoInput: "自动填入",
+        addSuccess: "新增成功"
     }
 };
