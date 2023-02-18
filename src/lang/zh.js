@@ -215,6 +215,7 @@ export default {
         parse: "解析",
         jsonFormatError: "JSON格式错误",
         autoInput: "自动填入",
-        addSuccess: "新增成功"
+        addSuccess: "新增成功",
+        invalidCatId: "警告：以下分类ID失效，可能已被删除："
     }
 };

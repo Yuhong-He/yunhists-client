@@ -215,6 +215,7 @@ export default {
         parse: "Parse",
         jsonFormatError: "Json Format Error",
         autoInput: "Auto Input",
-        addSuccess: "Add Success"
+        addSuccess: "Add Success",
+        invalidCatId: "Warning: following category ID invalid, may have been recently deleted: "
     }
 };

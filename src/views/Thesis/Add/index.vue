@@ -188,7 +188,8 @@ export default {
         });
         await this.$router.push("/thesis");
       } else if(res.data.code === 303) {
-        await this.$alert("警告：以下分类ID失效，可能已被删除：" + res.data.data.failedCatId, {
+        this.setPoints(res.data.data.points);
+        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
           confirmButtonText: i18n.tc('thesis.confirm'),
           callback: () => {}
         });
