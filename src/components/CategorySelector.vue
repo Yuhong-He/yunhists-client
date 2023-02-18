@@ -1,22 +1,26 @@
 <template>
-  <el-select
-      v-model="categories"
-      multiple
-      filterable
-      remote
-      reserve-keyword
-      clearable
-      :placeholder="$t('components.categorySelector.searchCategory')"
-      @change="getCategory"
-      :remote-method="remoteMethod"
-      :loading="loading">
-    <el-option
-        v-for="item in options"
-        :key="item.value"
-        :label="item.label"
-        :value="item.value">
-    </el-option>
-  </el-select>
+  <div class="category-selector">
+    <el-select
+        v-model="categories"
+        multiple
+        filterable
+        remote
+        reserve-keyword
+        clearable
+        :style="selectStyle"
+        :placeholder="$t('components.categorySelector.searchCategory')"
+        @change="getCategory"
+        :remote-method="remoteMethod"
+        :loading="loading">
+      <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+      </el-option>
+    </el-select>
+    <el-button style="width: 15%; min-width: 68px; height: 41px" @click="newAddCatPage" v-if="userRights >= 1" plain>新增</el-button>
+  </div>
 </template>
 
 <script>
@@ -25,13 +29,22 @@ import {mapState} from "vuex";
 
 export default {
   computed: {
-    ...mapState('Settings', ['lang'])
+    ...mapState('Settings', ['lang']),
+    ...mapState('UserInfo', ['userRights'])
   },
   data() {
     return {
       options: [],
       categories: [],
-      loading: false
+      loading: false,
+      selectStyle: ""
+    }
+  },
+  mounted() {
+    if(this.userRights < 1) {
+      this.selectStyle = "width: 100%";
+    } else {
+      this.selectStyle = "width: 85%";
     }
   },
   methods: {
@@ -64,11 +77,16 @@ export default {
       } else {
         console.log("Unexpected error");
       }
+    },
+    newAddCatPage() {
+      window.open("/category/add", '_blank')
     }
   }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.category-selector {
+  display: inline-flex;
+}
 </style>

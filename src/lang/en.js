@@ -142,7 +142,6 @@ export default {
         addSuccess: "Add Success",
         zhCatExist: "This Chinese category already exists",
         enCatExist: "This English category already exists",
-        newAddPage: "New Add Category Page",
         catList: "Category List",
         searchCatName: "Please search the English name",
         operate: "Operate",

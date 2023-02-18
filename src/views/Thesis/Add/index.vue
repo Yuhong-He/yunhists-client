@@ -187,6 +187,12 @@ export default {
           type: 'success'
         });
         await this.$router.push("/thesis");
+      } else if(res.data.code === 303) {
+        await this.$alert("警告：以下分类ID失效，可能已被删除：" + res.data.data.failedCatId, {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+        await this.$router.push("/thesis");
       } else if(res.data.code === 401) {
         await this.$alert(i18n.tc('thesis.inputTitle'), {
           confirmButtonText: i18n.tc('thesis.confirm'),

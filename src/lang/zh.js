@@ -142,7 +142,6 @@ export default {
         addSuccess: "添加成功",
         zhCatExist: "该中文分类已存在",
         enCatExist: "该英文分类已存在",
-        newAddPage: "新开一个新增页面",
         catList: "分类列表",
         searchCatName: "请搜索分类中文名",
         operate: "操作",

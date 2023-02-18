@@ -1,26 +1,25 @@
 <template>
   <div>
-    <FileUploader @getFileName="getFileName"></FileUploader>
+    <CategorySelector @getCategories="getCategories"></CategorySelector>
   </div>
 </template>
 
 <script>
 
-import FileUploader from "@/components/FileUploader.vue";
+import CategorySelector from "@/components/CategorySelector.vue";
 
 export default {
   data(){
     return{
-      fileName: ''
+      categories: []
     }
   },
   components: {
-    FileUploader
+    CategorySelector
   },
   methods:{
-    getFileName(val) {
-      this.fileName = val;
-      console.log(this.fileName);
+    getCategories(val) {
+      this.form.categories = val;
     }
   }
 }

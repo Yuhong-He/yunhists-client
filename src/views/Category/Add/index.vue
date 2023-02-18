@@ -1,28 +1,23 @@
 <template>
-  <div>
-    <div class="add-category-new-btn-area">
-      <el-button type="info" class="add-category-new-btn" @click="newAddCatPage" plain>{{ $t('category.newAddPage') }}</el-button>
+  <div class="add-category-container">
+    <div class="add-category-title">
+      <h2>{{ $t('category.addCategory') }}</h2>
     </div>
-    <div class="add-category-container">
-      <div class="add-category-title">
-        <h2>{{ $t('category.addCategory') }}</h2>
-      </div>
-      <div class="add-category-form">
-        <el-form ref="form" :model="form" :rules="rules" label-width="120px">
-          <el-form-item :label="$t('category.zhName')" prop="zhName">
-            <el-input v-model="form.zhName"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('category.enName')" prop="enName">
-            <el-input v-model="form.enName"></el-input>
-          </el-form-item>
-          <el-form-item :label="$t('category.parentCat')">
-            <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div class="add-category-btn">
-        <el-button type="primary" @click="onSubmit('form')" round>{{ $t('category.confirm') }}</el-button>
-      </div>
+    <div class="add-category-form">
+      <el-form ref="form" :model="form" :rules="rules" label-width="120px">
+        <el-form-item :label="$t('category.zhName')" prop="zhName">
+          <el-input v-model="form.zhName"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('category.enName')" prop="enName">
+          <el-input v-model="form.enName"></el-input>
+        </el-form-item>
+        <el-form-item :label="$t('category.parentCat')">
+          <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
+        </el-form-item>
+      </el-form>
+    </div>
+    <div class="add-category-btn">
+      <el-button type="primary" @click="onSubmit('form')" round>{{ $t('category.confirm') }}</el-button>
     </div>
   </div>
 </template>
@@ -105,9 +100,6 @@ export default {
       } else {
         authError(res.data.code);
       }
-    },
-    newAddCatPage() {
-      window.open(this.$route.path, '_blank')
     }
   }
 }
@@ -130,14 +122,5 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.add-category-new-btn-area {
-  position: absolute;
-  top: 140px;
-  width: 100%;
-  text-align: right;
-  .add-category-new-btn {
-    margin-right: 50px;
-  }
 }
 </style>

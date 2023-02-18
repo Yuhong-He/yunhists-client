@@ -102,7 +102,7 @@ export default {
         this.setAccessKeyId("");
         this.setAccessKeySecret("");
         this.setStsToken("");
-        this.$router.go(-1);
+        this.$router.push("/");
         this.$message({
           type: 'success',
           message: i18n.tc('header.logoutSuccess')

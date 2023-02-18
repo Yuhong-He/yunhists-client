@@ -155,9 +155,6 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setCategoryListTips']),
-    router() {
-      return router
-    },
     async getCategoryList() {
       if(Object.getOwnPropertyNames(this.$route.query).length === 0) {
         this.refreshRoute();
@@ -231,6 +228,7 @@ export default {
       this.refreshRoute();
     },
     openOperateDrawer() {
+      this.checkToken();
       if(!_.isEmpty(this.selectedCats)) {
         this.operateCats = true;
       } else {
@@ -238,6 +236,12 @@ export default {
           message: i18n.tc('category.selectCategory'),
           type: 'warning'
         });
+      }
+    },
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        authError(res.data.code);
       }
     },
     getCategories(val) {
@@ -400,11 +404,10 @@ export default {
   .category-list-choose-operate {
     margin-top: 10px;
     .category-list-operate-drawer-select {
-      line-height: 50px;
       margin: 10px;
     }
     .category-list-operate-drawer-btn {
-      line-height: 50px;
+      margin-top: 20px;
     }
   }
 }
