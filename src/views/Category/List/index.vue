@@ -94,7 +94,6 @@ import _ from "lodash";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {authError} from "@/utils/user";
-import router from "@/router";
 
 export default {
   data() {

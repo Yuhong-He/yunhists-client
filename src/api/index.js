@@ -168,6 +168,20 @@ const api = {
             }
         })
     },
+    getThesisList(page, pageSize, query, sortCol, sortOrder) {
+        return axios({
+            url: BASE_URL + "/thesis/list/" + page + "/" + pageSize,
+            method: "get",
+            params: {
+                author: query.author,
+                title: query.title,
+                publication: query.publication,
+                year: query.year,
+                sortCol: sortCol,
+                sortOrder: sortOrder
+            }
+        })
+    },
 }
 
 export default api;
