@@ -18,6 +18,7 @@ import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
 import MyFavorite from "@/views/Profile/MyFavorite.vue";
+import Share from "@/views/Share/index.vue";
 
 Vue.use(VueRouter)
 
@@ -60,6 +61,15 @@ const routes = [
             component: ThesisAdd,
             meta: {
               title: 'Add Thesis',
+              activeMenu: '/thesis/list'
+            }
+          },
+          {
+            path: 'share',
+            name: 'Share',
+            component: Share,
+            meta: {
+              title: 'Share Thesis',
               activeMenu: '/thesis/list'
             }
           }

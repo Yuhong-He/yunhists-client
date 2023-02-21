@@ -182,6 +182,36 @@ const api = {
             }
         })
     },
+    getReference(id) {
+        return axios({
+            url: BASE_URL + "/thesis/cite/" + id,
+            method: "get"
+        })
+    },
+    getOnlinePublishInfo(id) {
+        return axios({
+            url: BASE_URL + "/thesis/onlinePublishInfo/" + id,
+            method: "get"
+        })
+    },
+    getDownloadNum() {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/getDownloadNum",
+            method: "get"
+        })
+    },
+    getFileName(id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/file/" + id,
+            method: "get"
+        })
+    }
 }
 
 export default api;

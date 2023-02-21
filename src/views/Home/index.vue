@@ -25,8 +25,7 @@ export default {
       }
       if(event.key === "Enter") {
         if(input && input.length > 0) {
-          console.log(input);
-          router.push({path:'/thesis/list'});
+          router.push({path:'thesis/list?lang=zh&page=1&size=10&author=&title=' + input + '&publication=&year=&sortCol=&sortOrder='});
         }
       }
     }, true);

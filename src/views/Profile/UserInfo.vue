@@ -406,6 +406,8 @@ export default {
         });
       } else if(res.data.code === 212) {
         this.$message.error(i18n.tc('profile.sendEmailFail'));
+      } else if(res.data.code === 215) {
+        this.$message.error(i18n.tc('profile.emailRegistered'));
       } else {
         authError(res.data.code);
       }

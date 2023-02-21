@@ -306,11 +306,6 @@ export default{
           confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
-      } else if (res.data.code === 215) {
-        await this.$alert(i18n.tc('login.emailRegistered'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
       } else if (res.data.code === 214) {
         await this.$alert(i18n.tc('login.incorrectCode'), {
           confirmButtonText: i18n.tc('login.confirm'),
@@ -360,6 +355,11 @@ export default{
         this.$message({
           type: 'warning',
           message: i18n.tc('login.sendEmailFail')
+        });
+      } else if (res.data.code === 215) {
+        await this.$alert(i18n.tc('login.emailRegistered'), {
+          confirmButtonText: i18n.tc('login.confirm'),
+          callback: () => {}
         });
       }
     },

@@ -14,7 +14,9 @@ function authError(errorCode) {
     store.state.Aliyun.accessKeyId = "";
     store.state.Aliyun.accessKeySecret = "";
     store.state.Aliyun.stsToken = "";
-    router.push('/login').then(() => printErrorMsg(errorCode));
+    if(router.currentRoute.path !== '/login') {
+        router.push('/login').then(() => printErrorMsg(errorCode));
+    }
 }
 
 function printErrorMsg(errorCode) {

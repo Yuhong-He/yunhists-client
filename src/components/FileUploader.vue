@@ -60,7 +60,7 @@ export default {
           'content-disposition': `attachment; filename=${encodeURIComponent(file.name)}`
         }
         const url = new OSS(oss).signatureUrl(this.fileName, {response});
-        window.open(url, '_blank')
+        window.open(url, '_blank');
       }
     },
 

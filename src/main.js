@@ -7,6 +7,7 @@ import 'element-ui/lib/theme-chalk/index.css';
 import './assets/css/reset.css'
 import i18n from './lang/index'
 import api from './api'
+import VueClipboard from 'vue-clipboard2'
 
 // Fontawesome
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -47,6 +48,8 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
+
+Vue.use(VueClipboard);
 
 router.beforeEach((to, from, next) => {
     if (to.meta.title) {
