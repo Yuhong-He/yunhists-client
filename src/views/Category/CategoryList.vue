@@ -2,13 +2,11 @@
   <div class="category-list">
     <div class="category-header">
       <el-row>
-        <el-col :span="4">
-          <span class="category-list-title">{{ $t('category.catList') }}</span>
-        </el-col>
-        <el-col :span="8">
+        <el-col :span="12" class="category-btn-left">
           <el-input v-model="catName" :placeholder="$t('category.searchCatName')" @change="changeQuery(catName)" clearable>
             <el-button slot="append" icon="el-icon-search" @click="searchTitle"></el-button>
           </el-input>
+          <el-button type="primary" class="home-cat-btn" @click="$router.push('/category/id/1')" plain>{{ $t('category.homeCat') }}</el-button>
         </el-col>
         <el-col :span="12" class="category-btn-right">
           <el-button v-if="this.userRights >= 1" type="warning" @click="openOperateDrawer" plain>
@@ -343,9 +341,11 @@ export default {
 }
 .category-header {
   line-height: 50px;
-  .category-list-title {
-    font-size: 2em;
-    font-weight: bold;
+  .category-btn-left {
+    display: inline-flex;
+    .home-cat-btn {
+      margin-left: 10px;
+    }
   }
   .category-btn-right {
     text-align: right;

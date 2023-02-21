@@ -4,21 +4,21 @@ import Layout from '@/views/Layout'
 import Login from '@/views/Login'
 import Home from '@/views/Home'
 import Thesis from '@/views/Thesis'
-import ThesisList from '@/views/Thesis/List'
-import ThesisAdd from '@/views/Thesis/Add'
+import ThesisList from '@/views/Thesis/ThesisList.vue'
+import ThesisAdd from '@/views/Thesis/AddThesis.vue'
 import Category from '@/views/Category'
-import CategoryList from '@/views/Category/List'
-import CategoryAdd from '@/views/Category/Add'
-import CategoryDetail from '@/views/Category/Detail'
+import CategoryList from '@/views/Category/CategoryList.vue'
+import CategoryAdd from '@/views/Category/AddCategory.vue'
+import CategoryDetail from '@/views/Category/CategoryDetail.vue'
 import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
-import Approve from '@/views/Admin/Approve'
+import Approve from '@/views/Share/ApproveList.vue'
 import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
 import MyFavorite from "@/views/Profile/MyFavorite.vue";
-import Share from "@/views/Share/index.vue";
+import Share from "@/views/Share/UserShare.vue";
 
 Vue.use(VueRouter)
 

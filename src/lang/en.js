@@ -143,7 +143,6 @@ export default {
         addSuccess: "Add Success",
         zhCatExist: "This Chinese category already exists",
         enCatExist: "This English category already exists",
-        catList: "Category List",
         searchCatName: "Please search the English name",
         operate: "Operate",
         add: "Add",
@@ -167,7 +166,8 @@ export default {
         relationExist: "The relationship already exist",
         noData: "No Data",
         tips: "Tips",
-        clickGoToDetailPage: "Click on the category name to enter the details page"
+        clickGoToDetailPage: "Click on the category name to enter the details page",
+        homeCat: "Home Category"
     },
     thesis: {
         dragOr: "Drag file here, or",

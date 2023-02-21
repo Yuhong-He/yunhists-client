@@ -143,7 +143,6 @@ export default {
         addSuccess: "添加成功",
         zhCatExist: "该中文分类已存在",
         enCatExist: "该英文分类已存在",
-        catList: "分类列表",
         searchCatName: "请搜索分类中文名",
         operate: "操作",
         add: "新增",
@@ -167,7 +166,8 @@ export default {
         relationExist: "该从属关系已存在",
         noData: "暂无数据",
         tips: "提示",
-        clickGoToDetailPage: "点击分类名可以进入详情页哦"
+        clickGoToDetailPage: "点击分类名可以进入详情页哦",
+        homeCat: "总目"
     },
     thesis: {
         dragOr: "将文件拖到此处，或",
