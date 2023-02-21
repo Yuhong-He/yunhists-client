@@ -29,22 +29,7 @@
       </el-row>
     </div>
     <div class="category-table">
-      <el-table :data="tableData" border style="width: 100%" :empty-text="$t('category.noData')"
-                @selection-change="changeSelection" @sort-change="changeTableSort">
-        <el-table-column v-if="this.userRights >= 1" type="selection" width="39"></el-table-column>
-        <el-table-column prop="zhName" :label="$t('category.zhName')">
-          <template v-slot="scope">
-            <el-link :underline="false" @click="$router.push('/category/id/' + scope.row.id)">{{ scope.row.zhName }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="enName" :label="$t('category.enName')">
-          <template v-slot="scope">
-            <el-link :underline="false" @click="$router.push('/category/id/' + scope.row.id)">{{ scope.row.enName }}</el-link>
-          </template>
-        </el-table-column>
-        <el-table-column prop="catTheses" :label="$t('category.thesesCount')" width="110" sortable="custom"></el-table-column>
-        <el-table-column prop="catSubCats" :label="$t('category.subCatsCount')" width="120" sortable="custom"></el-table-column>
-      </el-table>
+      <CategoryTable :tableData="tableData" :loading="loading" @getSelection="getSelection" @getSortCol="getSortCol"></CategoryTable>
     </div>
     <div class="category-pagination">
       <Pagination :total="total" :pageSize="parseInt(pageSize)" :currentPage="parseInt(page)"
@@ -91,6 +76,7 @@
 import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import _ from "lodash";
+import CategoryTable from "@/components/CategoryTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {authError} from "@/utils/user";
@@ -98,6 +84,7 @@ import {authError} from "@/utils/user";
 export default {
   data() {
     return {
+      loading: true,
       tableData: [],
       total: 0,
       page: 1,
@@ -114,6 +101,7 @@ export default {
     }
   },
   components: {
+    CategoryTable,
     Pagination,
     CategorySelector
   },
@@ -165,6 +153,7 @@ export default {
         if(res.data.code === 200) {
           this.tableData = res.data.data.records;
           this.total = res.data.data.total;
+          this.loading = false;
         }
       }
     },
@@ -192,19 +181,6 @@ export default {
         });
         this.getCategoryList();
       }
-    },
-    changeSelection(selection) {
-      this.selectedCats = selection;
-    },
-    changeTableSort(column) {
-      this.sortCol = column.prop;
-      if(column.order === "ascending") {
-        this.sortOrder = "ASC";
-      } else {
-        this.sortOrder = "DESC";
-      }
-      this.page = 1;
-      this.refreshRoute();
     },
     searchTitle() {
       this.page = 1;
@@ -344,6 +320,15 @@ export default {
         duration: 0
       });
       this.setCategoryListTips("ok");
+    },
+    getSelection(val) {
+      this.selectedCats = val;
+    },
+    getSortCol(val) {
+      this.sortCol = val.sortCol;
+      this.sortOrder = val.sortOrder;
+      this.page = 1;
+      this.refreshRoute();
     }
   }
 }
@@ -409,5 +394,8 @@ export default {
       margin-top: 20px;
     }
   }
+}
+/deep/ .el-table .cell {
+  word-break: normal;
 }
 </style>

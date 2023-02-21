@@ -64,7 +64,7 @@
           </el-radio-group>
         </el-form-item>
           <el-form-item :label="$t('thesis.uploadFile')" prop="fileName">
-          <FileUploader @getFileName="getFileName"></FileUploader>
+          <FileUploader @getFileName="getFileName" :action="'Add'"></FileUploader>
         </el-form-item>
         <el-form-item :label="$t('thesis.category')" prop="category">
           <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>

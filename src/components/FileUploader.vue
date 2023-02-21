@@ -32,6 +32,7 @@ import i18n from "@/lang";
 import {oss} from "@/utils/oss";
 
 export default {
+  props: ['action'],
   data() {
     return {
       fileList: [],
@@ -98,7 +99,13 @@ export default {
             temporary + 1,
             fileNameLength
         )
-        that.fileName = "/default/" + getFileNameUUID() + '.' + fileFormat;
+        if(that.action === "Add") {
+          that.fileName = "/default/" + getFileNameUUID() + '.' + fileFormat;
+        } else if(that.action === "Share") {
+          that.fileName = "/temp/" + getFileNameUUID() + '.' + fileFormat;
+        } else {
+          console.log("Something went wrong.")
+        }
 
         new OSS(oss).multipartUpload(that.fileName, file.file, {
           progress: function(plan) {
