@@ -154,7 +154,7 @@ export default {
         cancel: "取消",
         rows: "行",
         selectCategory: "请勾选要操作的分类",
-        selectParentCat: "请选择要添加的共同分类",
+        selectParentCat: "请选择要添加的上级分类",
         batchSuccess: "批量操作成功",
         error: "错误",
         followingFails: "以下更新失败",
