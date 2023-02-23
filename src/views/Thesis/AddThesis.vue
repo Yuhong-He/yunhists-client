@@ -100,7 +100,7 @@
 
 <script>
 import {mapMutations, mapState} from "vuex";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
@@ -186,7 +186,7 @@ export default {
           await this.$router.push("/");
         }
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     getFileName(val) {
@@ -229,7 +229,7 @@ export default {
           callback: () => {}
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     validate(val) {

@@ -111,7 +111,7 @@
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
 
@@ -216,7 +216,7 @@ export default {
         this.remain = res.data.data.remain;
         this.confirmDownloadPanel = true;
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     toSharePage() {
@@ -252,7 +252,7 @@ export default {
           callback: () => {}
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     updateThesis(id) {

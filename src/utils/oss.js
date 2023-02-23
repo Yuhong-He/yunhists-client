@@ -1,6 +1,6 @@
 import store from "@/store";
 import api from "@/api";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 
 export const oss = {
     region: "oss-cn-hongkong",
@@ -20,7 +20,7 @@ export const oss = {
                 stsToken: res.data.data.sts.stsToken,
             };
         } else {
-            authError(res.data.code);
+            generalError(res.data);
         }
     }
 };

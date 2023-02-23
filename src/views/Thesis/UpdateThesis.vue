@@ -77,7 +77,7 @@
 <script>
 import {mapState} from "vuex";
 import i18n from "@/lang";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 
@@ -161,7 +161,7 @@ export default {
           await this.$router.push("/");
         }
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     getFileName(val) {
@@ -211,7 +211,7 @@ export default {
           this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
           this.$router.push("/thesis/list");
         } else {
-          authError(res.data.code);
+          generalError(res.data);
         }
       }).catch(() => {
         this.$message.error(i18n.tc('thesis.invalidId'));
@@ -276,7 +276,7 @@ export default {
           callback: () => {}
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     }
   }

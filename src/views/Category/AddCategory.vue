@@ -25,7 +25,7 @@
 <script>
 import CategorySelector from "@/components/CategorySelector.vue";
 import {mapState} from "vuex";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 import i18n from "@/lang";
 
 export default {
@@ -64,7 +64,7 @@ export default {
           await this.$router.push("/");
         }
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     onSubmit(formName) {
@@ -99,7 +99,7 @@ export default {
           callback: () => {}
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     }
   }

@@ -217,7 +217,7 @@
 
 <script>
 import {mapMutations, mapState} from "vuex";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 import {setToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
@@ -281,7 +281,7 @@ export default {
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code !== 200) {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     generateLevelName(points, lang) {
@@ -330,7 +330,7 @@ export default {
           message: i18n.tc('profile.accountDeleted')
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     openChangeUsernamePanel() {
@@ -358,7 +358,7 @@ export default {
           message: i18n.tc('profile.changeSuccess')
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     openChangeEmailPanel() {
@@ -409,7 +409,7 @@ export default {
       } else if(res.data.code === 215) {
         this.$message.error(i18n.tc('profile.emailRegistered'));
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     countDown() {
@@ -483,7 +483,7 @@ export default {
       } else if (res.data.code === 218) {
         this.$message.error(i18n.tc('profile.noVerificationCodeSend'));
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     openChangePasswordPanel() {
@@ -534,7 +534,7 @@ export default {
       } else if (res.data.code === 206) {
         this.$message.error(i18n.tc('profile.incorrectPwd'));
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     }
   }

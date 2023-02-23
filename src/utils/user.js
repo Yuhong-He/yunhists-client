@@ -4,18 +4,27 @@ import Vue from "vue";
 import i18n from "@/lang";
 import {setToken} from "@/utils/token";
 
-function authError(errorCode) {
-    setToken("");
-    store.state.UserInfo.userId = "";
-    store.state.UserInfo.username = "";
-    store.state.UserInfo.email = "";
-    store.state.UserInfo.userRights = "";
-    store.state.UserInfo.points = "";
-    store.state.Aliyun.accessKeyId = "";
-    store.state.Aliyun.accessKeySecret = "";
-    store.state.Aliyun.stsToken = "";
-    if(router.currentRoute.path !== '/login') {
-        router.push('/login').then(() => printErrorMsg(errorCode));
+function generalError(data) {
+    if(data.code === 201) {
+        console.log(data.data);
+        Vue.prototype.$alert("Unexpected Error", {
+            confirmButtonText: i18n.tc('header.confirm'),
+            customClass: 'unexpected-alert-box',
+            callback: () => {}
+         }).then(() => {});
+    } else {
+        setToken("");
+        store.state.UserInfo.userId = "";
+        store.state.UserInfo.username = "";
+        store.state.UserInfo.email = "";
+        store.state.UserInfo.userRights = "";
+        store.state.UserInfo.points = "";
+        store.state.Aliyun.accessKeyId = "";
+        store.state.Aliyun.accessKeySecret = "";
+        store.state.Aliyun.stsToken = "";
+        if(router.currentRoute.path !== '/login') {
+            router.push('/login').then(() => printErrorMsg(data.code));
+        }
     }
 }
 
@@ -35,4 +44,4 @@ function printErrorMsg(errorCode) {
     }
 }
 
-export {authError};
+export {generalError};

@@ -30,7 +30,7 @@
 import OSS from "ali-oss";
 import i18n from "@/lang";
 import {oss} from "@/utils/oss";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 
 export default {
   props: ['action', 'fileList'],
@@ -100,7 +100,7 @@ export default {
           callback: () => {}
         });
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     doDeleteFile(url) {

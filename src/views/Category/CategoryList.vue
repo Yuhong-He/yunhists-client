@@ -77,7 +77,7 @@ import _ from "lodash";
 import CategoryTable from "@/components/CategoryTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {authError} from "@/utils/user";
+import {generalError} from "@/utils/user";
 
 export default {
   data() {
@@ -218,7 +218,7 @@ export default {
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code !== 200) {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     getCategories(val) {
@@ -261,7 +261,7 @@ export default {
           await this.getCategoryList();
         }
       } else {
-        authError(res.data.code);
+        generalError(res.data);
       }
     },
     async getNewCategoryNames(val) {
