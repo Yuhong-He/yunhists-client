@@ -99,7 +99,7 @@ export default {
         inputNewPwd: "请输入新密码",
         inputNewPwd2: "请再次输入新密码",
         usernameSame: "用户名相同，无修改",
-        usernameLength: "用户名2-15位字符",
+        usernameLength: "用户名1-15位字符",
         changeSuccess: "修改成功",
         emailSame: "邮箱相同，无修改",
         invalidEmail :"邮箱格式错误",
@@ -255,6 +255,13 @@ export default {
         downloadChance: "次下载机会，是否确定下载？",
         youCanIncreaseDownload: "您可以通过",
         shareThesis: "分享论文",
-        youCanIncreaseDownload2: "增加每天的下载机会。"
+        youCanIncreaseDownload2: "增加每天的下载机会。",
+        noFileInDatabase: "数据库内找不到这个文件，可能已被删除",
+        fileMissing: "该论文的文件已遗失，请联系管理员",
+        invalidParamInPath: "路径包含无效参数",
+        updateThesis: "修改论文",
+        thesisIdNotExist: "论文ID不存在",
+        invalidId: "无效ID",
+        updateSuccess: "更新成功",
     }
 };

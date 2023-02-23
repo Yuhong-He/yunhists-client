@@ -1,12 +1,9 @@
 <template>
-  <div class="add-thesis-container">
-    <div class="open-parsing-btn-area">
-      <el-button type="info" class="open-parsing-btn" @click="semiAutoParse" plain>{{ $t('thesis.autoInput') }}</el-button>
+  <div class="update-thesis-container">
+    <div class="update-thesis-title">
+      <h2>{{ $t('thesis.updateThesis') }}</h2>
     </div>
-    <div class="add-thesis-title">
-      <h2>{{ $t('thesis.addThesis') }}</h2>
-    </div>
-    <div class="add-thesis-form">
+    <div class="update-thesis-form">
       <el-form ref="form" :model="form" label-width="20%">
         <el-form-item :label="$t('thesis.author')" prop="author">
           <el-input v-model="form.author" clearable></el-input>
@@ -64,49 +61,31 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('thesis.uploadFile')" prop="fileName">
-          <FileUploader @getFileName="getFileName" :action="'Add'"></FileUploader>
+          <FileUploader @getFileName="getFileName" :action="'Update'" :fileList="fileList"></FileUploader>
         </el-form-item>
         <el-form-item :label="$t('thesis.category')" prop="category">
-          <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
+          <CategorySelector style="width: 100%;" @getCategories="getCategories" :catList="catList"></CategorySelector>
         </el-form-item>
       </el-form>
     </div>
-    <div class="add-thesis-btn">
+    <div class="update-thesis-btn">
       <el-button type="primary" @click="onSubmit" round>{{ $t('thesis.confirm') }}</el-button>
     </div>
-    <el-dialog
-        :title="$t('thesis.parseJSON')"
-        :visible.sync="openPanel"
-        width="30%"
-        :show-close="false"
-        :close-on-click-modal="false"
-        center>
-      <p class="parsing-info">{{ $t('thesis.pleaseUse') }}<a href="https://greasyfork.org/zh-CN/scripts/460087-thesis-metadata-json-helper" target="_blank">{{ $t('thesis.tampermonkey') }}</a>{{ $t('thesis.inputGeneratedJSON') }}</p>
-      <el-input
-          type="textarea"
-          autosize
-          :autosize="{ minRows: 3, maxRows: 15}"
-          :placeholder="$t('thesis.inputJson')"
-          v-model="jsonObj"
-          clearable>
-      </el-input>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelParsing">{{ $t('thesis.cancel') }}</el-button>
-        <el-button type="primary" @click="parsing">{{ $t('thesis.parse') }}</el-button>
-      </span>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
-import {authError} from "@/utils/user";
+import {mapState} from "vuex";
 import i18n from "@/lang";
+import {authError} from "@/utils/user";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
-import $ from "jquery";
 
 export default {
+  components: {
+    CategorySelector,
+    FileUploader
+  },
   computed: {
     ...mapState('UserInfo', ['userRights']),
     options() {
@@ -140,15 +119,10 @@ export default {
   },
   mounted() {
     this.checkToken();
+    this.getThesisDetails();
   },
   data() {
     return {
-      pickerOptions: {
-        disabledDate(time) {
-          const _now = Date.now()
-          return time.getTime() > _now
-        }
-      },
       form: {
         author: '',
         title: '',
@@ -167,17 +141,18 @@ export default {
         copyrightStatus: '0',
         fileName: ''
       },
-      categories: [],
-      openPanel: false,
-      jsonObj: ''
+      pickerOptions: {
+        disabledDate(time) {
+          const _now = Date.now()
+          return time.getTime() > _now
+        }
+      },
+      fileList: [],
+      catList: [],
+      categories: []
     }
   },
-  components: {
-    CategorySelector,
-    FileUploader
-  },
   methods: {
-    ...mapMutations('UserInfo', ['setPoints']),
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code === 200) {
@@ -195,6 +170,54 @@ export default {
     getCategories(val) {
       this.categories = val;
     },
+    async getThesisDetails() {
+      const id = this.$route.params.id;
+      await this.$api.getThesisById(id).then(res => {
+        if (res.data.code === 200) {
+          const json = res.data.data.thesis;
+          if (!_.isEmpty(json)) {
+            for (const valKey in json) { // loop json from server
+              for (const formKey in this.form) { // loop json for this form
+                if (valKey === formKey) { // if key name match
+                  if (json[valKey] === null || json[valKey].length === 0) { // case null or empty
+                    this.form[formKey] = "";
+                  } else {
+                    this.form[formKey] = json[valKey];
+                  }
+                  if (['year', 'volume', 'type', 'copyrightStatus'].includes(formKey)) { // case int type
+                    this.form[formKey] = this.form[formKey].toString();
+                  }
+                  break;
+                }
+              }
+            }
+          }
+          if (this.form.fileName.length > 0) {
+            const suffix = this.form.fileName.substring(this.form.fileName.lastIndexOf('.') + 1);
+            const obj = {
+              name: this.form.title + "." + suffix,
+              url: this.form.fileName
+            };
+            this.fileList.push(obj);
+          }
+
+          this.categories = res.data.data.categories;
+          let arr = [];
+          for (let obj of this.categories) {
+            arr.push(obj);
+          }
+          this.catList = arr;
+        } else if (res.data.code === 407) {
+          this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
+          this.$router.push("/thesis/list");
+        } else {
+          authError(res.data.code);
+        }
+      }).catch(() => {
+        this.$message.error(i18n.tc('thesis.invalidId'));
+        this.$router.push("/thesis/list");
+      });
+    },
     onSubmit() {
       const regexNewLine = /\t|\n/gi;
       const regexAuthor = /，|、|；|;/gi;
@@ -203,33 +226,7 @@ export default {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
       if(this.validate(this.form)) {
-        this.addThesis(this.form, this.categories);
-      }
-    },
-    async addThesis(thesis, categories) {
-      let parentCat = Array.from(categories).toString();
-      let res = await this.$api.addThesis(thesis, parentCat);
-      if(res.data.code === 200) {
-        this.setPoints(res.data.data.points);
-        this.$message({
-          message: i18n.tc('thesis.addSuccess'),
-          type: 'success'
-        });
-        await this.$router.push("/thesis");
-      } else if(res.data.code === 303) {
-        this.setPoints(res.data.data.points);
-        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        await this.$router.push("/thesis");
-      } else if(res.data.code === 406) {
-        await this.$alert(i18n.tc('thesis.thesisExist'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else {
-        authError(res.data.code);
+        this.updateThesis(this.form, this.categories);
       }
     },
     validate(val) {
@@ -258,104 +255,48 @@ export default {
       }
       return true;
     },
-    semiAutoParse() {
-      this.form = {
-        author: '',
-        title: '',
-        publication: '',
-        type: '0',
-        location: '',
-        publisher: '',
-        year: '',
-        volume: '',
-        issue: '',
-        pages: '',
-        doi: '',
-        isbn: '',
-        onlinePublisher: '',
-        onlinePublishUrl: '',
-        copyrightStatus: '0',
-        fileName: ''
-      };
-      this.openPanel = true;
-    },
-    parsing() {
-      let json = {};
-      if(this.jsonObj && this.jsonObj.length > 0) {
-        try {
-          json = $.parseJSON(this.jsonObj);
-          if(!_.isEmpty(json)) {
-            for(const valKey in json) { // loop json from parsing
-              for(const formKey in this.form) { // loop json for this form
-                if(valKey === formKey) { // if key name match
-                  if(valKey === "publication") {
-                    if(json[valKey].includes(":")) {
-                      json[valKey] = json[valKey].replace(":","（");
-                      json[valKey] = json[valKey] + "）";
-                    } else {
-                      json[valKey] = json[valKey].replace("(","（");
-                      json[valKey] = json[valKey].replace(")","）");
-                    }
-                  }
-                  this.form[formKey] = json[valKey]; // assign value
-                  break;
-                }
-              }
-            }
-          }
-          this.openPanel = false;
-          this.jsonObj = "";
-        } catch (e) {
-          this.$alert(i18n.tc('thesis.jsonFormatError'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-        }
+    async updateThesis(thesis, categories) {
+      let parentCat = Array.from(categories).toString();
+      let res = await this.$api.updateThesis(thesis, parentCat, this.$route.params.id);
+      if(res.data.code === 200) {
+        this.$message({
+          message: i18n.tc('thesis.updateSuccess'),
+          type: 'success'
+        });
+        await this.$router.go(-1);
+      } else if(res.data.code === 303) {
+        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+        await this.$router.push("/thesis");
+      } else if(res.data.code === 406) {
+        await this.$alert(i18n.tc('thesis.thesisExist'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      } else {
+        authError(res.data.code);
       }
-    },
-    cancelParsing() {
-      this.openPanel = false;
-      this.jsonObj = "";
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.add-thesis-container {
+.update-thesis-container {
   margin: 40px 25%;
 }
-.add-thesis-title {
+.update-thesis-title {
   text-align: center;
   font-size: 1.5em;
 }
-.add-thesis-form {
+.update-thesis-form {
   margin-top: 20px;
 }
-.add-thesis-btn {
+.update-thesis-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.open-parsing-btn-area {
-  position: absolute;
-  margin-left: 55%;
-}
-.parsing-info {
-  a {
-    text-decoration: none;
-  }
-  a:link {
-    color: blue;
-  }
-  a:visited {
-    color: blue;
-  }
-  a:hover {
-    color: dodgerblue;
-  }
-  a:active {
-    color: darkorange;
-  }
 }
 </style>

@@ -27,7 +27,7 @@
         <template v-slot="scope">
           <el-button size="mini" icon="el-icon-s-management" @click="citeThesis(scope.row.id)" plain circle></el-button>
           <el-button size="mini" icon="el-icon-download" @click="thesisOnlinePublishInfo(scope.row.id)" type="success" plain circle></el-button>
-          <el-button v-if="userRights >= 1" size="mini" icon="el-icon-edit" type="primary" plain circle></el-button>
+          <el-button v-if="userRights >= 1" size="mini" icon="el-icon-edit" @click="updateThesis(scope.row.id)" type="primary" plain circle></el-button>
           <el-button v-if="userRights >= 1" size="mini" icon="el-icon-delete" type="danger" plain circle></el-button>
         </template>
       </el-table-column>
@@ -241,6 +241,11 @@ export default {
           confirmButtonText: i18n.tc('thesis.confirm'),
           callback: () => {}
         });
+      } else if(res.data.code === 404) {
+        await this.$alert(i18n.tc('thesis.fileMissing'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
       } else if(res.data.code === 407) {
         await this.$alert(i18n.tc('thesis.oops'), {
           confirmButtonText: i18n.tc('thesis.confirm'),
@@ -249,6 +254,9 @@ export default {
       } else {
         authError(res.data.code);
       }
+    },
+    updateThesis(id) {
+      this.$router.push("/thesis/update/" + id);
     }
   }
 }

@@ -28,9 +28,17 @@
 import {mapState} from "vuex";
 
 export default {
+  props: ['catList'],
   computed: {
     ...mapState('Settings', ['lang']),
     ...mapState('UserInfo', ['userRights'])
+  },
+  watch: {
+    catList(val) {
+      if(val && val.length > 0) {
+        this.echoCat(val);
+      }
+    }
   },
   data() {
     return {
@@ -80,6 +88,20 @@ export default {
     },
     newAddCatPage() {
       window.open("/category/add", '_blank')
+    },
+    echoCat(val) {
+      val.forEach(cat => {
+        let catOption = {};
+        catOption.value = cat.id;
+        if(this.lang === "zh") {
+          catOption.label = cat.zhName;
+        } else {
+          catOption.label = cat.enName;
+        }
+        this.options.push(catOption);
+        this.categories.push(cat.id);
+      });
+      this.$emit('getCategories', this.categories);
     }
   }
 }

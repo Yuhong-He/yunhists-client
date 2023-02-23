@@ -99,7 +99,7 @@ export default {
         inputNewPwd: "Please input new password",
         inputNewPwd2: "Please input new password again",
         usernameSame: "Username same",
-        usernameLength: "Username length between 2 - 15",
+        usernameLength: "Username length between 1 - 15",
         changeSuccess: "Change success",
         emailSame: "Email same",
         invalidEmail :"Invalid email",
@@ -255,6 +255,13 @@ export default {
         downloadChance: " chances to download today, are you sure to download?",
         youCanIncreaseDownload: "You can increase your daily download chances by ",
         shareThesis: "sharing thesis",
-        youCanIncreaseDownload2: "."
+        youCanIncreaseDownload2: ".",
+        noFileInDatabase: "The file was not found in the database, it may have been deleted",
+        fileMissing: "The file for this thesis is missing, please contact the administrator",
+        invalidParamInPath: "Path contains invalid param",
+        updateThesis: "Update Thesis",
+        thesisIdNotExist: "Thesis ID not exist",
+        invalidId: "Invalid ID",
+        updateSuccess: "Update Success",
     }
 };

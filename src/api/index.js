@@ -211,7 +211,42 @@ const api = {
             url: BASE_URL + "/thesis/file/" + id,
             method: "get"
         })
-    }
+    },
+    getThesisById(id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/id/" + id,
+            method: "get"
+        })
+    },
+    deleteThesisFile(file) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/deleteFile",
+            method: "post",
+            params: {
+                file: file
+            }
+        })
+    },
+    updateThesis(thesis, parentCat, id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/update",
+            method: "post",
+            data: thesis,
+            params: {
+                id: id,
+                category: parentCat
+            }
+        })
+    },
 }
 
 export default api;

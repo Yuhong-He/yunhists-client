@@ -338,7 +338,7 @@ export default {
       this.changeUsernamePanel = true;
     },
     changeUsername() {
-      if(this.newUsername && this.newUsername.trim().length >= 2 && this.newUsername.trim().length <= 15) {
+      if(this.newUsername && this.newUsername.trim().length > 0 && this.newUsername.trim().length < 15) {
         if(this.newUsername !== this.username) {
           this.doChangeUsername(this.newUsername.trim());
         } else {

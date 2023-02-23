@@ -19,6 +19,7 @@ import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
 import MyFavorite from "@/views/Profile/MyFavorite.vue";
 import Share from "@/views/Share/UserShare.vue";
+import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 
 Vue.use(VueRouter)
 
@@ -61,6 +62,15 @@ const routes = [
             component: ThesisAdd,
             meta: {
               title: 'Add Thesis',
+              activeMenu: '/thesis/list'
+            }
+          },
+          {
+            path: 'update/:id',
+            name: 'UpdateThesis',
+            component: UpdateThesis,
+            meta: {
+              title: 'Update Thesis',
               activeMenu: '/thesis/list'
             }
           },

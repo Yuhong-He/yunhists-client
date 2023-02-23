@@ -30,12 +30,12 @@
 import OSS from "ali-oss";
 import i18n from "@/lang";
 import {oss} from "@/utils/oss";
+import {authError} from "@/utils/user";
 
 export default {
-  props: ['action'],
+  props: ['action', 'fileList'],
   data() {
     return {
-      fileList: [],
       showProgress: false,
       progress: 0,
       fileName: ''
@@ -48,40 +48,76 @@ export default {
         type: 'warning'
       })
     },
-
     beforeRemove(file, fileList) {
-      if(this.progress !== 100) {
+      if(this.action === "Add" && this.progress !== 100) {
+        return false;
+      } else if(this.action === "Update" && this.fileName.length > 0 && this.progress !== 100) {
         return false;
       }
+      return true;
     },
-
     handlePreview(file) {
-      if(this.progress === 100) {
-        const response = {
-          'content-disposition': `attachment; filename=${encodeURIComponent(file.name)}`
+      if(this.action === "Add") {
+        if(this.progress === 100) {
+          this.doDownloadFile(this.fileName, file.name);
         }
-        const url = new OSS(oss).signatureUrl(this.fileName, {response});
-        window.open(url, '_blank');
+      } else if(this.action === "Update") {
+        if(this.fileName.length > 0) {
+          if(this.progress === 100) {
+            this.doDownloadFile(this.fileName, file.name); // file upload
+          }
+        } else {
+          this.doDownloadFile(file.url, file.name); // file from database
+        }
+      } else {
+        console.log("Unexpected Action!!!");
       }
     },
-
+    doDownloadFile(path, name) {
+      const response = {
+        'content-disposition': `attachment; filename=${encodeURIComponent(name)}`
+      }
+      const url = new OSS(oss).signatureUrl(path, {response});
+      window.open(url, '_blank');
+    },
     handleRemove(file, fileList) {
-      if(this.progress === 100) {
-        new OSS(oss).delete(this.fileName).then(() => {
-          this.$message({
-            message: i18n.tc('thesis.removeSuccess'),
-            type: 'success'
-          })
-        }).catch(error => {
-          this.$alert(error, i18n.tc('thesis.error'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            type: 'error',
-            callback: () => {}
-          });
-        })
+      if(this.action === "Add" || (this.action === "Update" && this.fileName.length > 0)) { // file url generated when upload
+        this.doDeleteFile(this.fileName);
+      } else if(this.action === "Update" && this.fileName.length === 0) { // file url from database
+        this.deleteThesisFile(file.url)
+      } else {
+        console.log("Unexpected Action!!!");
       }
     },
-
+    async deleteThesisFile(path) {
+      let res = await this.$api.deleteThesisFile(path);
+      if(res.data.code === 200) {
+        this.doDeleteFile(path);
+      } else if(res.data.code === 408) {
+        await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          type: 'error',
+          callback: () => {}
+        });
+      } else {
+        authError(res.data.code);
+      }
+    },
+    doDeleteFile(url) {
+      new OSS(oss).delete(url).then(() => {
+        this.$message({
+          message: i18n.tc('thesis.removeSuccess'),
+          type: 'success'
+        })
+        this.$emit('getFileName', "");
+      }).catch(error => {
+        this.$alert(error, i18n.tc('thesis.error'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          type: 'error',
+          callback: () => {}
+        });
+      })
+    },
     handleUploadFile(file) {
       let that = this
 
@@ -99,12 +135,12 @@ export default {
             temporary + 1,
             fileNameLength
         )
-        if(that.action === "Add") {
+        if(that.action === "Add" || that.action === "Update") {
           that.fileName = "/default/" + getFileNameUUID() + '.' + fileFormat;
         } else if(that.action === "Share") {
           that.fileName = "/temp/" + getFileNameUUID() + '.' + fileFormat;
         } else {
-          console.log("Something went wrong.")
+          console.log("Something went wrong.");
         }
 
         new OSS(oss).multipartUpload(that.fileName, file.file, {
@@ -117,8 +153,8 @@ export default {
             message: i18n.tc('thesis.uploadSuccess'),
             type: 'success'
           })
-          that.showProgress = false
-          that.$emit('getFileName', that.fileName)
+          that.showProgress = false;
+          that.$emit('getFileName', that.fileName);
         }).catch(error => {
           that.$alert(error, i18n.tc('thesis.error'), {
             confirmButtonText: i18n.tc('thesis.confirm'),

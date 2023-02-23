@@ -146,13 +146,17 @@ export default {
       } else {
         this.initialData();
         this.refreshRoute();
-        let res = await this.$api.getCategoryList(i18n.locale, this.page,
-            this.pageSize, this.catName, this.sortCol, this.sortOrder);
-        if(res.data.code === 200) {
-          this.tableData = res.data.data.records;
-          this.total = res.data.data.total;
-          this.loading = false;
-        }
+        await this.$api.getCategoryList(i18n.locale, this.page,
+            this.pageSize, this.catName, this.sortCol, this.sortOrder).then(res => {
+          if(res.data.code === 200) {
+            this.tableData = res.data.data.records;
+            this.total = res.data.data.total;
+            this.loading = false;
+          }
+        }).catch(() => {
+          this.$message.error(i18n.tc('thesis.invalidParamInPath'));
+          this.$router.push("/");
+        });
       }
     },
     initialData() {
