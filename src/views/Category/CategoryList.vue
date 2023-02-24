@@ -223,7 +223,9 @@ export default {
     },
     getCategories(val) {
       this.newCategoriesId = val;
-      this.getNewCategoryNames(val.toString());
+      if(!_.isEmpty(this.newCategoriesId)) {
+        this.getNewCategoryNames(val.toString());
+      }
     },
     updateCategories() {
       if(!_.isEmpty(this.newCategoriesId)) {

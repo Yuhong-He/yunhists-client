@@ -57,6 +57,38 @@
         <el-button type="primary" @click="advancedSearch">{{ $t('thesis.confirm') }}</el-button>
       </div>
     </el-dialog>
+
+    <el-drawer
+        :visible.sync="operateTheses"
+        direction="rtl"
+        ref="drawer"
+    >
+      <div class="thesis-list-operate-drawer">
+        <div class="thesis-list-operate-drawer-header">
+          <span>批量操作</span>
+        </div>
+        <div class="thesis-list-operate-drawer-info">
+          <p style="font-weight: bold;">为以下论文：</p>
+          <ul>
+            <li v-for="item in this.selectedTheses">{{ item.title }}</li>
+          </ul>
+        </div>
+        <div class="thesis-list-choose-operate">
+          <el-collapse v-model="chooseOperate" accordion>
+            <el-collapse-item title="添加共同上级分类" name="1">
+              <div class="thesis-list-operate-drawer-select">
+                <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
+              </div>
+              <div class="thesis-list-operate-drawer-btn">
+                <el-button @click="operateTheses = false">{{ $t('thesis.cancel') }}</el-button>
+                <el-button type="primary" @click="updateTheses">{{ $t('category.confirm') }}</el-button>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -66,6 +98,8 @@ import i18n from "@/lang";
 import _ from "lodash";
 import ThesisTable from "@/components/ThesisTable.vue";
 import Pagination from "@/components/Pagination.vue";
+import {generalError} from "@/utils/user";
+import CategorySelector from "@/components/CategorySelector.vue";
 
 export default {
   computed: {
@@ -90,6 +124,7 @@ export default {
     }
   },
   components: {
+    CategorySelector,
     ThesisTable,
     Pagination
   },
@@ -123,7 +158,11 @@ export default {
         harvard: "",
         gbt7714: "",
         wikipedia: ""
-      }
+      },
+      operateTheses: false,
+      newCategoriesId: [],
+      newCategories: [],
+      chooseOperate: 1
     }
   },
   created() {
@@ -203,9 +242,6 @@ export default {
       this.page = 1;
       this.refreshRoute();
     },
-    openOperateDrawer() {
-      console.log("openOperateDrawer()");
-    },
     toAddPage() {
       this.$router.push("/thesis/add");
     },
@@ -233,15 +269,133 @@ export default {
       this.openAdvancedSearch = false;
       this.refreshRoute();
     },
-    getSelection(val) {
-      this.selectedTheses = val;
-      console.log(this.selectedTheses);
-    },
     getSortCol(val) {
       this.sortCol = val.sortCol;
       this.sortOrder = val.sortOrder;
       this.page = 1;
       this.refreshRoute();
+    },
+    getSelection(val) {
+      this.selectedTheses = val;
+    },
+    openOperateDrawer() {
+      this.checkToken();
+      if(!_.isEmpty(this.selectedTheses)) {
+        this.operateTheses = true;
+      } else {
+        this.$message({
+          message: "请选择要操作的论文",
+          type: 'warning'
+        });
+      }
+    },
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        generalError(res.data);
+      }
+    },
+    getCategories(val) {
+      this.newCategoriesId = val;
+      if(!_.isEmpty(this.newCategoriesId)) {
+        this.getNewCategoryNames(val.toString());
+      }
+    },
+    async getNewCategoryNames(val) {
+      let res = await this.$api.getCategoryByIds(val);
+      if(res.data.code === 200) {
+        this.newCategories = res.data.data;
+      }
+    },
+    updateTheses() {
+      if(!_.isEmpty(this.newCategoriesId)) {
+        const childTheses = [];
+        this.selectedTheses.forEach(e => {
+          childTheses.push(e.id);
+        });
+        this.addCatALot(childTheses, this.newCategoriesId);
+      } else {
+        this.$alert("请选择要添加的上级分类", {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      }
+    },
+    async addCatALot(childTheses, parentCat) {
+      let res = await this.$api.addCatALot({"categories": [], "theses": childTheses, "parentCats": parentCat});
+      if(res.data.code === 200) {
+        if(_.isEmpty(res.data.data.failed)) {
+          this.operateTheses = false;
+          this.$message({
+            message: "批量操作成功",
+            type: 'success'
+          });
+          await this.getThesisList();
+        } else {
+          this.operateTheses = false;
+          const errorMsg = this.generateErrorMsg(res.data.data.failed);
+          this.$notify.error({
+            title: "错误",
+            dangerouslyUseHTMLString: true,
+            duration: 0,
+            message: errorMsg
+          });
+          await this.getThesisList();
+        }
+      } else {
+        generalError(res.data);
+      }
+    },
+    generateErrorMsg(val) {
+      let msg = "<p><span style='font-weight: bold'>以下更新失败</span></p><p><ul style='list-style-type: circle;'>";
+      val.forEach(ele => {
+        if(ele.reason === 5) { // thesis not exist
+          const thesis = this.getThesisName(ele.catFromId, this.selectedTheses);
+          msg += "<li>选中的论文<span style='font-weight: bold; color: darkgreen;'>" +
+              thesis + "</span>数据库中不存在。</li>";
+        } else if (ele.reason === 2) { // parent cat not exist
+          const parentCat = this.getCatName(ele.catToId, this.newCategories);
+          msg += "<li>选中的分类<span style='font-weight: bold; color: darkgreen;'>" +
+              parentCat + "</span>数据库中不存在。</li>";
+        } else {
+          const thesis = this.getThesisName(ele.catFromId, this.selectedTheses);
+          const parentCat = this.getCatName(ele.catToId, this.newCategories);
+          const reason = this.generateFailReason(ele.reason);
+          msg += "<li><span style='font-weight: bold; color: darkgreen;'>" + thesis + "</span>连接至<span style='font-weight: bold; color: darkgreen;'>" +
+              parentCat + "</span>失败，原因：" + reason + "</li>";
+        }
+      });
+      msg += "</ul></p>";
+      return msg;
+    },
+    getThesisName(val, obj) {
+      let name = "ERROR";
+      for(const ele of obj) {
+        if(ele.id === val) {
+          name = ele.title;
+          break;
+        }
+      }
+      return name;
+    },
+    getCatName(val, obj) {
+      let name = "ERROR";
+      for(const ele of obj) {
+        if(ele.id === val) {
+          if(i18n.locale === "zh") {
+            name = ele.zhName;
+          } else {
+            name = ele.enName;
+          }
+          break;
+        }
+      }
+      return name;
+    },
+    generateFailReason(val) {
+      if(val === 4) {
+        return "该从属关系已存在";
+      }
     }
   }
 }
@@ -282,5 +436,34 @@ export default {
 }
 .el-dialog__body div {
   word-break: normal;
+}
+.thesis-list-operate-drawer {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-left: 10%;
+  padding-right: 10%;
+  .thesis-list-operate-drawer-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 50px;
+  }
+  .thesis-list-operate-drawer-info {
+    text-align: left;
+    font-size: 1.2em;
+    line-height: 25px;
+    ul {
+      list-style-type: circle;
+    }
+  }
+  .thesis-list-choose-operate {
+    margin-top: 10px;
+    .thesis-list-operate-drawer-select {
+      margin: 10px;
+    }
+    .thesis-list-operate-drawer-btn {
+      margin-top: 20px;
+    }
+  }
 }
 </style>
