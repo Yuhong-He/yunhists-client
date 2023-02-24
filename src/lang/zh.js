@@ -270,5 +270,11 @@ export default {
         repeatThesis: "论文重复",
         delete: "删除",
         deleteSuccess: "删除成功",
+        selectThesis: "请勾选要操作的论文",
+        selectParentCat: "请选择要添加的上级分类",
+        batchSuccess: "批量操作成功",
+        addNewCommonParentCats: "添加共同上级分类",
+        batchOperate: "批量操作",
+        forFollowingTheses: "为以下论文：",
     }
 };

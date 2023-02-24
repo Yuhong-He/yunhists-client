@@ -270,5 +270,11 @@ export default {
         repeatThesis: "Repeat thesis",
         delete: "Delete",
         deleteSuccess: "Delete Success",
+        selectThesis: "Please select the thesis you want to operate",
+        selectParentCat: "Please select the common parent category you want add to",
+        batchSuccess: "Batch Operate Success",
+        addNewCommonParentCats: "Add common parent category(s)",
+        batchOperate: "Batch Operate",
+        forFollowingTheses: "For the following thesis(s):",
     }
 };

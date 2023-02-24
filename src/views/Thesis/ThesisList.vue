@@ -65,17 +65,17 @@
     >
       <div class="thesis-list-operate-drawer">
         <div class="thesis-list-operate-drawer-header">
-          <span>批量操作</span>
+          <span>{{ $t('thesis.batchOperate') }}</span>
         </div>
         <div class="thesis-list-operate-drawer-info">
-          <p style="font-weight: bold;">为以下论文：</p>
+          <p style="font-weight: bold;">{{ $t('thesis.forFollowingTheses') }}</p>
           <ul>
             <li v-for="item in this.selectedTheses">{{ item.title }}</li>
           </ul>
         </div>
         <div class="thesis-list-choose-operate">
           <el-collapse v-model="chooseOperate" accordion>
-            <el-collapse-item title="添加共同上级分类" name="1">
+            <el-collapse-item :title="$t('thesis.addNewCommonParentCats')" name="1">
               <div class="thesis-list-operate-drawer-select">
                 <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
               </div>
@@ -100,6 +100,7 @@ import ThesisTable from "@/components/ThesisTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import {generalError} from "@/utils/user";
 import CategorySelector from "@/components/CategorySelector.vue";
+import {generateErrorMsg} from "@/utils/category";
 
 export default {
   computed: {
@@ -284,7 +285,7 @@ export default {
         this.operateTheses = true;
       } else {
         this.$message({
-          message: "请选择要操作的论文",
+          message: i18n.tc('thesis.selectThesis'),
           type: 'warning'
         });
       }
@@ -315,7 +316,7 @@ export default {
         });
         this.addCatALot(childTheses, this.newCategoriesId);
       } else {
-        this.$alert("请选择要添加的上级分类", {
+        this.$alert(i18n.tc('thesis.selectParentCat'), {
           confirmButtonText: i18n.tc('thesis.confirm'),
           callback: () => {}
         });
@@ -327,15 +328,15 @@ export default {
         if(_.isEmpty(res.data.data.failed)) {
           this.operateTheses = false;
           this.$message({
-            message: "批量操作成功",
+            message: i18n.tc('thesis.batchSuccess'),
             type: 'success'
           });
           await this.getThesisList();
         } else {
           this.operateTheses = false;
-          const errorMsg = this.generateErrorMsg(res.data.data.failed);
+          const errorMsg = generateErrorMsg(res.data.data.failed, {}, this.selectedTheses, this.newCategories);
           this.$notify.error({
-            title: "错误",
+            title: i18n.tc('thesis.error'),
             dangerouslyUseHTMLString: true,
             duration: 0,
             message: errorMsg
@@ -344,57 +345,6 @@ export default {
         }
       } else {
         generalError(res.data);
-      }
-    },
-    generateErrorMsg(val) {
-      let msg = "<p><span style='font-weight: bold'>以下更新失败</span></p><p><ul style='list-style-type: circle;'>";
-      val.forEach(ele => {
-        if(ele.reason === 5) { // thesis not exist
-          const thesis = this.getThesisName(ele.catFromId, this.selectedTheses);
-          msg += "<li>选中的论文<span style='font-weight: bold; color: darkgreen;'>" +
-              thesis + "</span>数据库中不存在。</li>";
-        } else if (ele.reason === 2) { // parent cat not exist
-          const parentCat = this.getCatName(ele.catToId, this.newCategories);
-          msg += "<li>选中的分类<span style='font-weight: bold; color: darkgreen;'>" +
-              parentCat + "</span>数据库中不存在。</li>";
-        } else {
-          const thesis = this.getThesisName(ele.catFromId, this.selectedTheses);
-          const parentCat = this.getCatName(ele.catToId, this.newCategories);
-          const reason = this.generateFailReason(ele.reason);
-          msg += "<li><span style='font-weight: bold; color: darkgreen;'>" + thesis + "</span>连接至<span style='font-weight: bold; color: darkgreen;'>" +
-              parentCat + "</span>失败，原因：" + reason + "</li>";
-        }
-      });
-      msg += "</ul></p>";
-      return msg;
-    },
-    getThesisName(val, obj) {
-      let name = "ERROR";
-      for(const ele of obj) {
-        if(ele.id === val) {
-          name = ele.title;
-          break;
-        }
-      }
-      return name;
-    },
-    getCatName(val, obj) {
-      let name = "ERROR";
-      for(const ele of obj) {
-        if(ele.id === val) {
-          if(i18n.locale === "zh") {
-            name = ele.zhName;
-          } else {
-            name = ele.enName;
-          }
-          break;
-        }
-      }
-      return name;
-    },
-    generateFailReason(val) {
-      if(val === 4) {
-        return "该从属关系已存在";
       }
     }
   }

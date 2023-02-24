@@ -78,6 +78,7 @@ import CategoryTable from "@/components/CategoryTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {generalError} from "@/utils/user";
+import {generateErrorMsg} from "@/utils/category";
 
 export default {
   data() {
@@ -253,7 +254,7 @@ export default {
           await this.getCategoryList();
         } else {
           this.operateCats = false;
-          const errorMsg = this.generateErrorMsg(res.data.data.failed);
+          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedCats, {}, this.newCategories);
           this.$notify.error({
             title: i18n.tc('category.error'),
             dangerouslyUseHTMLString: true,
@@ -270,51 +271,6 @@ export default {
       let res = await this.$api.getCategoryByIds(val);
       if(res.data.code === 200) {
         this.newCategories = res.data.data;
-      }
-    },
-    generateErrorMsg(val) {
-      let msg = "<p><span style='font-weight: bold'>" + i18n.tc('category.followingFails') +
-          "</span>" + "</p><p><ul style='list-style-type: circle;'>";
-      val.forEach(ele => {
-        if(ele.reason === 1) { // child cat not exist
-          const childCat = this.getCatName(ele.catFromId, this.selectedCats);
-          msg += "<li>" + i18n.tc('category.selectedCat') + "<span style='font-weight: bold; color: darkgreen;'>" +
-              childCat + "</span>" + i18n.tc('category.notInDatabase') + "</li>";
-        } else if (ele.reason === 2) { // parent cat not exist
-          const parentCat = this.getCatName(ele.catToId, this.newCategories);
-          msg += "<li>" + i18n.tc('category.selectedCat') + "<span style='font-weight: bold; color: darkgreen;'>" +
-              parentCat + "</span>" + i18n.tc('category.notInDatabase') + "</li>";
-        } else {
-          const childCat = this.getCatName(ele.catFromId, this.selectedCats);
-          const parentCat = this.getCatName(ele.catToId, this.newCategories);
-          const reason = this.generateFailReason(ele.reason);
-          msg += "<li><span style='font-weight: bold; color: darkgreen;'>" + childCat + "</span>" +
-              i18n.tc('category.connectTo') + "<span style='font-weight: bold; color: darkgreen;'>" +
-              parentCat + "</span>" + i18n.tc('category.failedBecause') + reason + "</li>";
-        }
-      });
-      msg += "</ul></p>";
-      return msg;
-    },
-    getCatName(val, obj) {
-      let name = "ERROR";
-      for(const ele of obj) {
-        if(ele.id === val) {
-          if(i18n.locale === "zh") {
-            name = ele.zhName;
-          } else {
-            name = ele.enName;
-          }
-          break;
-        }
-      }
-      return name;
-    },
-    generateFailReason(val) {
-      if(val === 3) {
-        return i18n.tc('category.canNotBeCatItself');
-      } else if(val === 4) {
-        return i18n.tc('category.relationExist');
       }
     },
     showTips() {

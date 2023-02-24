@@ -19,7 +19,8 @@
           :value="item.value">
       </el-option>
     </el-select>
-    <el-button style="width: 15%; min-width: 68px; height: 41px" @click="newAddCatPage" v-if="userRights >= 1" plain>新增</el-button>
+    <el-button style="width: 15%; min-width: 68px; height: 41px" @click="newAddCatPage" v-if="userRights >= 1" plain>
+      {{ $t('category.add') }}</el-button>
   </div>
 </template>
 
