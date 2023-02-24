@@ -247,6 +247,16 @@ const api = {
             }
         })
     },
+    deleteThesis(id, reason) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/thesis/delete/" + id,
+            method: "post",
+            data: reason
+        })
+    },
 }
 
 export default api;

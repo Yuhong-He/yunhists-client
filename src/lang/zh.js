@@ -263,5 +263,12 @@ export default {
         thesisIdNotExist: "论文ID不存在",
         invalidId: "无效ID",
         updateSuccess: "更新成功",
+        confirmDelete: "确认删除",
+        pleaseInputReason: "请输入理由：",
+        involveCopyrightIssues: "涉及版权问题",
+        notMeetInclusionCriteria: "不符合收录标准",
+        repeatThesis: "论文重复",
+        delete: "删除",
+        deleteSuccess: "删除成功",
     }
 };

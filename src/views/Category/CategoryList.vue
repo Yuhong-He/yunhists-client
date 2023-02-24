@@ -131,7 +131,8 @@ export default {
   watch: {
     '$i18n.locale'() {
       this.refreshRoute();
-    }
+    },
+    '$route': 'getCategoryList'
   },
   mounted() {
     if(this.categoryListTips === "") {
@@ -181,7 +182,6 @@ export default {
           path: '/category/list',
           query: obj
         });
-        this.getCategoryList();
       }
     },
     searchTitle() {

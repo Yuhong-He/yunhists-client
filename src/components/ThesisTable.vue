@@ -28,7 +28,7 @@
           <el-button size="mini" icon="el-icon-s-management" @click="citeThesis(scope.row.id)" plain circle></el-button>
           <el-button size="mini" icon="el-icon-download" @click="thesisOnlinePublishInfo(scope.row.id)" type="success" plain circle></el-button>
           <el-button v-if="userRights >= 1" size="mini" icon="el-icon-edit" @click="updateThesis(scope.row.id)" type="primary" plain circle></el-button>
-          <el-button v-if="userRights >= 1" size="mini" icon="el-icon-delete" type="danger" plain circle></el-button>
+          <el-button v-if="userRights >= 1" size="mini" icon="el-icon-delete" @click="deleteThesis(scope.row.id, scope.row.title)" type="danger" plain circle></el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -103,6 +103,31 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="$t('thesis.confirmDelete')" :lock-scroll="false" :append-to-body="true" :visible.sync="confirmDeletePanel" :close-on-click-modal="false" width="30%">
+      <div style="font-weight: bold; color: red">{{ this.confirmDeleteTitle }}</div>
+      <div style="margin-top: 10px;">{{ $t('thesis.pleaseInputReason') }}</div>
+      <div>
+        <el-input
+          type="textarea"
+          :rows="4"
+          v-model="reason">
+      </el-input>
+      </div>
+      <div style="margin-top: 10px">
+        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.involveCopyrightIssues'))" type="info">{{ $t('thesis.involveCopyrightIssues') }}</el-tag>
+      </div>
+      <div style="margin-top: 10px">
+        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.notMeetInclusionCriteria'))" type="info">{{ $t('thesis.notMeetInclusionCriteria') }}</el-tag>
+      </div>
+      <div style="margin-top: 10px">
+        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.repeatThesis'))" type="info">{{ $t('thesis.repeatThesis') }}</el-tag>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="confirmDeletePanel = false">{{ $t('thesis.cancel') }}</el-button>
+        <el-button type="danger" :loading="isDeleting" @click="doDelete">{{ $t('thesis.delete') }}</el-button>
+      </div>
+    </el-dialog>
+
     <el-backtop></el-backtop>
   </div>
 </template>
@@ -143,7 +168,12 @@ export default {
       copyrightStatus: 0,
       confirmDownloadPanel: false,
       downloadThesisId: 0,
-      remain: 0
+      remain: 0,
+      confirmDeletePanel: false,
+      confirmDeleteId: null,
+      confirmDeleteTitle: "",
+      isDeleting: false,
+      reason: ""
     }
   },
   methods: {
@@ -257,6 +287,35 @@ export default {
     },
     updateThesis(id) {
       this.$router.push("/thesis/update/" + id);
+    },
+    deleteThesis(id, title) {
+      this.reason = "";
+      this.confirmDeleteId = id;
+      this.confirmDeleteTitle = title;
+      this.confirmDeletePanel = true;
+    },
+    inputReason(reason) {
+      this.reason = reason;
+    },
+    async doDelete() {
+      this.isDeleting = true;
+      if(this.reason.length === 0) {
+        this.reason = "<--- NULL --->";
+      }
+      let res = await this.$api.deleteThesis(this.confirmDeleteId, this.reason);
+      if(res.data.code === 200) {
+        this.isDeleting = false;
+        this.confirmDeletePanel = false;
+        this.$message.success(i18n.tc('thesis.deleteSuccess'));
+        this.$emit('refreshList');
+      } else if(res.data.code === 407) {
+        await this.$alert(i18n.tc('thesis.oops'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          callback: () => {}
+        });
+      } else {
+        generalError(res.data);
+      }
     }
   }
 }

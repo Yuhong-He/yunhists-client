@@ -263,5 +263,12 @@ export default {
         thesisIdNotExist: "Thesis ID not exist",
         invalidId: "Invalid ID",
         updateSuccess: "Update Success",
+        confirmDelete: "Confirm Delete",
+        pleaseInputReason: "Please input the reason:",
+        involveCopyrightIssues: "Involving copyright issues",
+        notMeetInclusionCriteria: "Does not meet the inclusion criteria",
+        repeatThesis: "Repeat thesis",
+        delete: "Delete",
+        deleteSuccess: "Delete Success",
     }
 };

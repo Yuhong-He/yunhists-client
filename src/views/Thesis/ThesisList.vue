@@ -30,7 +30,7 @@
       </el-row>
     </div>
     <div class="thesis-table">
-      <ThesisTable :tableData="tableData" :loading="loading" @getSelection="getSelection" @getSortCol="getSortCol"></ThesisTable>
+      <ThesisTable :tableData="tableData" :loading="loading" @getSelection="getSelection" @getSortCol="getSortCol" @refreshList="getThesisList"></ThesisTable>
     </div>
     <div class="thesis-pagination">
       <Pagination :total="total" :pageSize="parseInt(pageSize)" :currentPage="parseInt(page)"
@@ -133,6 +133,7 @@ export default {
     '$i18n.locale'() {
       this.refreshRoute();
     },
+    '$route': 'getThesisList'
   },
   methods: {
     i18n() {
@@ -185,7 +186,6 @@ export default {
           path: '/thesis/list',
           query: obj
         });
-        this.getThesisList();
       }
     },
     changeQuery(val) {
