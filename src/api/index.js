@@ -257,6 +257,38 @@ const api = {
             data: reason
         })
     },
+    getCategoryInfo(id) {
+        return axios({
+            url: BASE_URL + "/category/id/" + id,
+            method: "get"
+        })
+    },
+    getCategoryParentCats(id) {
+        return axios({
+            url: BASE_URL + "/category/parentCats/" + id,
+            method: "get"
+        })
+    },
+    getCategoryChildCats(id, sortCol, sortOrder) {
+        return axios({
+            url: BASE_URL + "/category/childCat/" + id,
+            method: "get",
+            params: {
+                sortCol: sortCol,
+                sortOrder: sortOrder
+            }
+        })
+    },
+    getCategoryTheses(id, sortCol, sortOrder) {
+        return axios({
+            url: BASE_URL + "/thesis/categoryTheses/" + id,
+            method: "get",
+            params: {
+                sortCol: sortCol,
+                sortOrder: sortOrder
+            }
+        })
+    },
 }
 
 export default api;

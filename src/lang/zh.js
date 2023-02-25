@@ -167,7 +167,9 @@ export default {
         noData: "暂无数据",
         tips: "提示",
         clickGoToDetailPage: "点击分类名可以进入详情页哦",
-        homeCat: "总目"
+        homeCat: "总目",
+        categoryIdNotExist: "分类ID不存在",
+        invalidId: "无效ID",
     },
     thesis: {
         dragOr: "将文件拖到此处，或",
