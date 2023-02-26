@@ -174,7 +174,8 @@ export default {
         save: "保存",
         selectedCategoryExist: "所选上级分类已存在",
         canNotBeCatItselfDetailPage_1: "添加至",
-        canNotBeCatItselfDetailPage_2: "分类下失败，原因：不能成为自己的子分类"
+        canNotBeCatItselfDetailPage_2: "分类下失败，原因：不能成为自己的子分类",
+        delete: "删除"
     },
     thesis: {
         dragOr: "将文件拖到此处，或",

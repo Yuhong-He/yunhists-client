@@ -8,9 +8,11 @@
           <span>{{ $i18n.locale === 'zh' ? obj.zhName : obj.enName }}</span>
         </el-tag>
         <span class="category-parent-cat-edit-btn" v-if="this.userRights >= 1">
-          <span class="edit-bracket">[</span>
-          <el-link type="primary" :underline="false" @click="updateParentCat = true">{{ $t('category.edit') }}</el-link>
-          <span class="edit-bracket">]</span>
+          <span class="text-nowrap">
+            <span class="edit-bracket">[</span>
+            <el-link type="primary" :underline="false" @click="updateParentCat = true">{{ $t('category.edit') }}</el-link>
+            <span class="edit-bracket">]</span>
+          </span>
         </span>
       </template>
       <template v-if="updateParentCat === true">
@@ -33,12 +35,16 @@
         </el-autocomplete>
         <el-button v-else class="button-new-tag" size="small" @click="showSelectNewParentCat">+ {{ $t('category.add') }}</el-button>
         <span class="category-parent-cat-edit-btn">
-          <span class="edit-bracket">[</span>
-          <el-link type="info" :underline="false" @click="cancelUpdateParentTag">{{ $t('category.cancel') }}</el-link>
-          <span class="edit-bracket">]</span>
-          <span class="edit-bracket">[</span>
-          <el-link type="primary" :underline="false" @click="saveUpdateParentTag">{{ $t('category.save') }}</el-link>
-          <span class="edit-bracket">]</span>
+          <span class="text-nowrap">
+            <span class="edit-bracket">[</span>
+            <el-link type="info" :underline="false" @click="cancelUpdateParentTag">{{ $t('category.cancel') }}</el-link>
+            <span class="edit-bracket">]</span>
+          </span>
+          <span class="text-nowrap">
+            <span class="edit-bracket">[</span>
+            <el-link type="primary" :underline="false" @click="saveUpdateParentTag">{{ $t('category.save') }}</el-link>
+            <span class="edit-bracket">]</span>
+          </span>
         </span>
       </template>
     </div>
@@ -57,8 +63,13 @@
           <h4 style="padding-top: 5px">{{ this.subTitle }}</h4>
         </el-col>
         <el-col :span="6" class="category-detail-header-right">
-          <el-button v-if="this.userRights >= 1" type="warning" @click="openOperateDrawer" plain>
+          <el-button v-if="this.userRights >= 1 && (this.subCatCount > 0 || this.subThesisCount > 0)"
+                     type="warning" @click="openOperateDrawer" plain>
             {{ $t('category.operate') }}
+          </el-button>
+          <el-button v-if="this.userRights >= 1 && (this.subCatCount === 0 && this.subThesisCount === 0)"
+                     type="danger" @click="deleteCategory" plain>
+            {{ $t('category.delete') }}
           </el-button>
           <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
             {{ $t('thesis.share') }}
@@ -93,9 +104,9 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-    <el-button @click="updateCatNamePanel = false">{{ $t('category.cancel') }}</el-button>
-    <el-button type="primary" @click="updateCatName">{{ $t('category.confirm') }}</el-button>
-  </span>
+        <el-button @click="updateCatNamePanel = false">{{ $t('category.cancel') }}</el-button>
+        <el-button type="primary" @click="updateCatName">{{ $t('category.confirm') }}</el-button>
+      </span>
     </el-dialog>
   </div>
 </template>
@@ -219,6 +230,9 @@ export default {
     },
     openOperateDrawer() {
       console.log("openOperateDrawer()");
+    },
+    deleteCategory() {
+      console.log("deleteCategory()");
     },
     toSharePage() {
       this.$router.push("/thesis/share");
@@ -420,6 +434,9 @@ export default {
   .sub-thesis-table {
     margin-top: 25px;
   }
+}
+.text-nowrap {
+  white-space: nowrap;
 }
 /deep/ .el-divider--horizontal {
   margin: 8px 0;
