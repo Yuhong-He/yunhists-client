@@ -77,13 +77,13 @@
         </el-col>
       </el-row>
     </div>
-    <div class="sub-cat-table-area" v-if="this.subCatCount > 0">
+    <div class="sub-cat-table-area">
       <h3>{{ $t('category.subCats') }}（{{ this.subCatCount }}）</h3>
       <div class="sub-cat-table">
         <CategoryTable :tableData="subCatTableData" :loading="subCatLoading" @getSelection="getSubCatSelection" @getSortCol="getSubCatSortCol"></CategoryTable>
       </div>
     </div>
-    <div class="sub-thesis-table-area" v-if="this.subThesisCount > 0">
+    <div class="sub-thesis-table-area">
       <h3>{{ $t('category.theses') }}（{{ this.subThesisCount }}）</h3>
       <div class="sub-thesis-table">
         <ThesisTable :tableData="subThesisTableData" :loading="subThesisLoading" @getSelection="getSubThesisSelection" @getSortCol="getSubThesisSortCol" @refreshList="getCategoryTheses"></ThesisTable>
@@ -143,6 +143,18 @@
                 <el-button @click="operateThesesSubCats = false">{{ $t('category.cancel') }}</el-button>
                 <el-button type="primary" @click="addCatALot">{{ $t('category.confirm') }}</el-button>
               </div>
+            </el-collapse-item>
+            <el-collapse-item :title="$t('category.removeFromCurrentCat')" name="2">
+              <div class="category-detail-operate-drawer-msg">
+                {{ $t('category.confirmRemove1') }}<span style="font-weight: bold; color: darkgreen;">{{ this.mainTitle }}</span>{{ $t('category.confirmRemove2') }}
+              </div>
+              <div class="category-detail-operate-drawer-btn">
+                <el-button @click="operateThesesSubCats = false">{{ $t('category.cancel') }}</el-button>
+                <el-button type="danger" @click="removeFromCurrentCat">{{ $t('category.confirm') }}</el-button>
+              </div>
+            </el-collapse-item>
+            <el-collapse-item :title="$t('category.moveToAnotherCat')" name="3">
+              bbb
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -473,6 +485,56 @@ export default {
       } else {
         generalError(res.data);
       }
+    },
+    removeFromCurrentCat() {
+      const childCat = [];
+      if(!_.isEmpty(this.selectedSubCats)) {
+        this.selectedSubCats.forEach(e => {
+          childCat.push(e.id);
+        });
+      }
+      const childTheses = [];
+      if(!_.isEmpty(this.selectedSubTheses)) {
+        this.selectedSubTheses.forEach(e => {
+          childTheses.push(e.id);
+        });
+      }
+      this.doRemoveFromCurrentCat(this.catId, childCat, childTheses);
+    },
+    async doRemoveFromCurrentCat(id, subCats, subTheses) {
+      let res = await this.$api.removeFromCat(id, subCats.toString(), subTheses.toString());
+      if(res.data.code === 200) {
+        if(_.isEmpty(res.data.data.failed)) {
+          this.operateThesesSubCats = false;
+          this.$message({
+            message: i18n.tc('category.batchSuccess'),
+            type: 'success'
+          });
+          await this.getCategoryInfo();
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        } else {
+          this.operateThesesSubCats = false;
+          const parentCat = [];
+          const obj = {};
+          obj.id = this.catId;
+          obj.zhName = this.catZhName;
+          obj.enName = this.catEnName;
+          parentCat.push(obj);
+          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, parentCat);
+          this.$notify.error({
+            title: i18n.tc('category.error'),
+            dangerouslyUseHTMLString: true,
+            duration: 0,
+            message: errorMsg
+          });
+          await this.getCategoryInfo();
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        }
+      } else {
+        generalError(res.data);
+      }
     }
   }
 }
@@ -579,6 +641,13 @@ export default {
     margin-top: 10px;
     .category-detail-operate-drawer-select {
       margin: 10px;
+    }
+    .category-detail-operate-drawer-msg {
+      margin-top: 20px;
+      text-align: left;
+      padding-left: 10px;
+      padding-right: 10px;
+      font-size: 1.1em;
     }
     .category-detail-operate-drawer-btn {
       margin-top: 20px;

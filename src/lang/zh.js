@@ -177,6 +177,11 @@ export default {
         canNotBeCatItselfDetailPage_2: "分类下失败，原因：不能成为自己的子分类",
         delete: "删除",
         selectSubCatsAndTheses: "请选择要操作的子分类或论文",
+        selectedTheses: "选中的论文",
+        removeFromCurrentCat: "从本分类移除",
+        confirmRemove1: "确认从分类",
+        confirmRemove2: "中移除？",
+        moveToAnotherCat: "移动至另一分类",
     },
     thesis: {
         dragOr: "将文件拖到此处，或",

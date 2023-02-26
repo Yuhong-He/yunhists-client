@@ -11,7 +11,7 @@ export function generateErrorMsg(val, selectedCats, selectedTheses, newCategorie
                     parentCat + "</span>" + i18n.tc('category.notInDatabase') + "</li>";
             } else if(ele.reason === 5) { // thesis not exist
                 const thesis = getThesisName(ele.catFromId, selectedTheses);
-                msg += "<li>选中的论文<span style='font-weight: bold; color: darkgreen;'>" +
+                msg += "<li>" + i18n.tc('category.selectedTheses') + "<span style='font-weight: bold; color: darkgreen;'>" +
                     thesis + "</span>" + i18n.tc('category.notInDatabase') + "</li>";
             } else {
                 const thesis = getThesisName(ele.catFromId, selectedTheses);

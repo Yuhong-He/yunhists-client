@@ -177,6 +177,11 @@ export default {
         canNotBeCatItselfDetailPage_2: " category. Reason: Can not be the category of itself",
         delete: "Delete",
         selectSubCatsAndTheses: "Please select the subcats or theses you want to operate",
+        selectedTheses: "Selected theses ",
+        removeFromCurrentCat: "Remove from current category",
+        confirmRemove1: "Confirm remove above items from category ",
+        confirmRemove2: "?",
+        moveToAnotherCat: "Move to another category",
     },
     thesis: {
         dragOr: "Drag file here, or",

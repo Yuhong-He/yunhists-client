@@ -315,6 +315,19 @@ const api = {
             }
         })
     },
+    removeFromCat(id, subCats, subTheses) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/removeFromCat/" + id,
+            method: "post",
+            params: {
+                subCats: subCats,
+                subTheses: subTheses
+            }
+        })
+    },
 }
 
 export default api;
