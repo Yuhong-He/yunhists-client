@@ -111,7 +111,7 @@
           type="textarea"
           :rows="4"
           v-model="reason">
-      </el-input>
+        </el-input>
       </div>
       <div style="margin-top: 10px">
         <el-tag style="cursor: pointer" @click="inputReason($t('thesis.involveCopyrightIssues'))" type="info">{{ $t('thesis.involveCopyrightIssues') }}</el-tag>

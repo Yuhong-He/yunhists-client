@@ -126,11 +126,6 @@ export default {
             noPermission: "You Don't Have Permission!"
         }
     },
-    components: {
-        categorySelector: {
-            searchCategory: "Please search category"
-        }
-    },
     category: {
         addCategory: "Add Category",
         zhName: "Chinese Name",
@@ -170,6 +165,16 @@ export default {
         homeCat: "Top Category",
         categoryIdNotExist: "Category ID not exist",
         invalidId: "Invalid ID",
+        edit: "Edit",
+        updateCatName: "Edit Category Name",
+        updateSuccess: "Update Success",
+        theses: "Theses",
+        subCats: "SubCats",
+        searchCategory: "Please search category",
+        save: "Save",
+        selectedCategoryExist: "Selected parent category is already exist",
+        canNotBeCatItselfDetailPage_1: "Failed to add to ",
+        canNotBeCatItselfDetailPage_2: " category. Reason: Can not be the category of itself"
     },
     thesis: {
         dragOr: "Drag file here, or",

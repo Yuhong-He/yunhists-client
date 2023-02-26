@@ -126,11 +126,6 @@ export default {
             noPermission: "您没有权限！"
         }
     },
-    components: {
-        categorySelector: {
-            searchCategory: "请搜索分类"
-        }
-    },
     category: {
         addCategory: "添加分类",
         zhName: "中文名",
@@ -170,6 +165,16 @@ export default {
         homeCat: "总目",
         categoryIdNotExist: "分类ID不存在",
         invalidId: "无效ID",
+        edit: "编辑",
+        updateCatName: "修改分类名称",
+        updateSuccess: "修改成功",
+        theses: "论文",
+        subCats: "子分类",
+        searchCategory: "请搜索分类",
+        save: "保存",
+        selectedCategoryExist: "所选上级分类已存在",
+        canNotBeCatItselfDetailPage_1: "添加至",
+        canNotBeCatItselfDetailPage_2: "分类下失败，原因：不能成为自己的子分类"
     },
     thesis: {
         dragOr: "将文件拖到此处，或",

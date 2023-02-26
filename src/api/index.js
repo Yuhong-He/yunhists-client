@@ -289,6 +289,32 @@ const api = {
             }
         })
     },
+    updateCategoryName(id, zhName, enName) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/updateCatName/" + id,
+            method: "post",
+            params: {
+                zhName: zhName,
+                enName: enName
+            }
+        })
+    },
+    updateCatParentCat(id, lang, categories) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/updateCatParentCat/" + id,
+            method: "post",
+            params: {
+                lang: lang,
+                categories: categories
+            }
+        })
+    },
 }
 
 export default api;
