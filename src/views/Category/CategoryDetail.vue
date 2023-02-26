@@ -108,6 +108,46 @@
         <el-button type="primary" @click="updateCatName">{{ $t('category.confirm') }}</el-button>
       </span>
     </el-dialog>
+
+    <el-drawer
+        :visible.sync="operateThesesSubCats"
+        direction="rtl"
+        ref="drawer"
+    >
+      <div class="category-detail-operate-drawer">
+        <div class="category-detail-operate-drawer-header">
+          <span>{{ $t('category.batchOperate') }}</span>
+        </div>
+        <div class="category-detail-operate-drawer-info">
+          <div v-if="this.selectedSubCats.length > 0">
+            <p style="font-weight: bold;">{{ $t('category.forFollowingCats') }}</p>
+            <ul>
+              <li v-for="item in this.selectedSubCats" v-if="$i18n.locale === 'zh'">{{ item.zhName }}</li>
+              <li v-for="item in this.selectedSubCats" v-if="$i18n.locale === 'en'">{{ item.enName }}</li>
+            </ul>
+          </div>
+          <div v-if="this.selectedSubTheses.length > 0">
+            <p style="font-weight: bold;">{{ $t('thesis.forFollowingTheses') }}</p>
+            <ul>
+              <li v-for="item in this.selectedSubTheses">{{ item.title }}</li>
+            </ul>
+          </div>
+        </div>
+        <div class="category-detail-choose-operate">
+          <el-collapse v-model="chooseOperate" accordion>
+            <el-collapse-item :title="$t('category.addNewCommonParentCats')" name="1">
+              <div class="category-detail-operate-drawer-select">
+                <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
+              </div>
+              <div class="category-detail-operate-drawer-btn">
+                <el-button @click="operateThesesSubCats = false">{{ $t('category.cancel') }}</el-button>
+                <el-button type="primary" @click="addCatALot">{{ $t('category.confirm') }}</el-button>
+              </div>
+            </el-collapse-item>
+          </el-collapse>
+        </div>
+      </div>
+    </el-drawer>
   </div>
 </template>
 
@@ -118,9 +158,12 @@ import i18n from "@/lang";
 import ThesisTable from "@/components/ThesisTable.vue";
 import {generalError} from "@/utils/user";
 import _ from "lodash";
+import CategorySelector from "@/components/CategorySelector.vue";
+import {generateErrorMsg} from "@/utils/category";
 
 export default {
   components: {
+    CategorySelector,
     ThesisTable,
     CategoryTable
   },
@@ -161,10 +204,20 @@ export default {
       updateParentCat: false,
       selectNewParentCat: false,
       newParentCat: "",
-      categories: []
+      newParentCategory: [],
+      operateThesesSubCats: false,
+      chooseOperate: 1,
+      newCategoriesId: [],
+      newCategories: [],
     }
   },
   methods: {
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code !== 200) {
+        generalError(res.data);
+      }
+    },
     generateCategoryDetails() {
       this.updateCatNamePanel = false;
       this.updateParentCat = false;
@@ -229,7 +282,15 @@ export default {
       }
     },
     openOperateDrawer() {
-      console.log("openOperateDrawer()");
+      this.checkToken();
+      if(!_.isEmpty(this.selectedSubTheses) || !_.isEmpty(this.selectedSubCats)) {
+        this.operateThesesSubCats = true;
+      } else {
+        this.$message({
+          message: i18n.tc('category.selectSubCatsAndTheses'),
+          type: 'warning'
+        });
+      }
     },
     deleteCategory() {
       console.log("deleteCategory()");
@@ -333,12 +394,12 @@ export default {
       this.newParentCat = "";
     },
     querySearchAsync(queryString, cb) {
-      if(!_.isEmpty(this.categories)) {
-        cb(this.categories);
+      if(!_.isEmpty(this.newParentCategory)) {
+        cb(this.newParentCategory);
       }
     },
     async searchCategory(str) {
-      this.categories = [];
+      this.newParentCategory = [];
       if(str && str.length > 0) {
         let res = await this.$api.getCategoryOption(str, i18n.locale);
         if(res.data.code === 200) {
@@ -349,11 +410,68 @@ export default {
             } else {
               catOption.value = cat.enName;
             }
-            this.categories.push(catOption);
+            this.newParentCategory.push(catOption);
           });
         } else {
           console.log("Unexpected error");
         }
+      }
+    },
+    getCategories(val) {
+      this.newCategoriesId = val;
+      if(!_.isEmpty(this.newCategoriesId)) {
+        this.getNewCategoryNames(val.toString());
+      }
+    },
+    async getNewCategoryNames(val) {
+      let res = await this.$api.getCategoryByIds(val);
+      if(res.data.code === 200) {
+        this.newCategories = res.data.data;
+      }
+    },
+    addCatALot() {
+      if(!_.isEmpty(this.newCategoriesId)) {
+        const childCat = [];
+        this.selectedSubCats.forEach(e => {
+          childCat.push(e.id);
+        });
+        const childTheses = [];
+        this.selectedSubTheses.forEach(e => {
+          childTheses.push(e.id);
+        });
+        this.doAddCatALot(childCat, childTheses, this.newCategoriesId);
+      } else {
+        this.$alert(i18n.tc('category.selectParentCat'), {
+          confirmButtonText: i18n.tc('category.confirm'),
+          callback: () => {}
+        });
+      }
+    },
+    async doAddCatALot(childCat, childTheses, parentCat) {
+      let res = await this.$api.addCatALot({"categories": childCat, "theses": childTheses, "parentCats": parentCat});
+      if(res.data.code === 200) {
+        if(_.isEmpty(res.data.data.failed)) {
+          this.operateThesesSubCats = false;
+          this.$message({
+            message: i18n.tc('category.batchSuccess'),
+            type: 'success'
+          });
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        } else {
+          this.operateThesesSubCats = false;
+          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
+          this.$notify.error({
+            title: i18n.tc('category.error'),
+            dangerouslyUseHTMLString: true,
+            duration: 0,
+            message: errorMsg
+          });
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        }
+      } else {
+        generalError(res.data);
       }
     }
   }
@@ -437,6 +555,35 @@ export default {
 }
 .text-nowrap {
   white-space: nowrap;
+}
+.category-detail-operate-drawer {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 20px;
+  padding-left: 10%;
+  padding-right: 10%;
+  .category-detail-operate-drawer-header {
+    font-size: 1.5em;
+    font-weight: bold;
+    line-height: 50px;
+  }
+  .category-detail-operate-drawer-info {
+    text-align: left;
+    font-size: 1.2em;
+    line-height: 25px;
+    ul {
+      list-style-type: circle;
+    }
+  }
+  .category-detail-choose-operate {
+    margin-top: 10px;
+    .category-detail-operate-drawer-select {
+      margin: 10px;
+    }
+    .category-detail-operate-drawer-btn {
+      margin-top: 20px;
+    }
+  }
 }
 /deep/ .el-divider--horizontal {
   margin: 8px 0;

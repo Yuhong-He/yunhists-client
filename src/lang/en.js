@@ -175,7 +175,8 @@ export default {
         selectedCategoryExist: "Selected parent category is already exist",
         canNotBeCatItselfDetailPage_1: "Failed to add to ",
         canNotBeCatItselfDetailPage_2: " category. Reason: Can not be the category of itself",
-        delete: "Delete"
+        delete: "Delete",
+        selectSubCatsAndTheses: "Please select the subcats or theses you want to operate",
     },
     thesis: {
         dragOr: "Drag file here, or",

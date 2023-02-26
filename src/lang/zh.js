@@ -175,7 +175,8 @@ export default {
         selectedCategoryExist: "所选上级分类已存在",
         canNotBeCatItselfDetailPage_1: "添加至",
         canNotBeCatItselfDetailPage_2: "分类下失败，原因：不能成为自己的子分类",
-        delete: "删除"
+        delete: "删除",
+        selectSubCatsAndTheses: "请选择要操作的子分类或论文",
     },
     thesis: {
         dragOr: "将文件拖到此处，或",
