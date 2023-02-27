@@ -17,7 +17,6 @@ import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
-import MyFavorite from "@/views/Profile/MyFavorite.vue";
 import Share from "@/views/Share/UserShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 
@@ -150,15 +149,6 @@ const routes = [
             component: MySharing,
             meta: {
               title: 'My Sharing',
-              activeMenu: '/profile'
-            }
-          },
-          {
-            path: 'myFavorite',
-            name: 'MyFavorite',
-            component: MyFavorite,
-            meta: {
-              title: 'My Favorite',
               activeMenu: '/profile'
             }
           }
