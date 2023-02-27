@@ -182,6 +182,7 @@ export default {
         confirmRemove1: "Confirm remove above items from category ",
         confirmRemove2: "?",
         moveToAnotherCat: "Move to another category",
+        noNeedMove: "Selected item is already under this category, no need to move"
     },
     thesis: {
         dragOr: "Drag file here, or",

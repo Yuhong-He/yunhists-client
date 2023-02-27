@@ -31,6 +31,8 @@ export function generateErrorMsg(val, selectedCats, selectedTheses, newCategorie
                 const parentCat = getCatName(ele.catToId, newCategories);
                 msg += "<li>" + i18n.tc('category.selectedCat') + "<span style='font-weight: bold; color: darkgreen;'>" +
                     parentCat + "</span>" + i18n.tc('category.notInDatabase') + "</li>";
+            } else if (ele.reason === 6) {
+                msg += "<li>" + i18n.tc('category.noNeedMove') + "</li>";
             } else {
                 const childCat = getCatName(ele.catFromId, selectedCats);
                 const parentCat = getCatName(ele.catToId, newCategories);

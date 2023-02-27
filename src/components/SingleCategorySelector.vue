@@ -56,7 +56,7 @@ export default {
       }
     },
     getCategory(val) {
-      this.$emit('getCategories', val);
+      this.$emit('getCategory', val);
     },
     async doGetCategoryOptions(query) {
       this.options = [];

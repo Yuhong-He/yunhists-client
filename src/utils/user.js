@@ -9,7 +9,6 @@ function generalError(data) {
         console.log(data.data);
         Vue.prototype.$alert("Unexpected Error", {
             confirmButtonText: i18n.tc('header.confirm'),
-            customClass: 'unexpected-alert-box',
             callback: () => {}
          }).then(() => {});
     } else {

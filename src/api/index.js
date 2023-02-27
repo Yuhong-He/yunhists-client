@@ -328,6 +328,21 @@ const api = {
             }
         })
     },
+    moveTo(originId, destId, subCats, subTheses) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/moveTo",
+            method: "post",
+            params: {
+                originId: originId,
+                destId: destId,
+                subCats: subCats,
+                subTheses: subTheses
+            }
+        })
+    },
 }
 
 export default api;

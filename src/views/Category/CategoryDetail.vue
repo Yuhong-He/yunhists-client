@@ -26,6 +26,7 @@
             v-model="newParentCat"
             :fetch-suggestions="querySearchAsync"
             :highlight-first-item="true"
+            :trigger-on-focus="false"
             :placeholder="$t('category.searchCategory')"
             ref="saveTagInput"
             size="small"
@@ -155,7 +156,7 @@
             </el-collapse-item>
             <el-collapse-item :title="$t('category.moveToAnotherCat')" name="3">
               <div class="category-detail-operate-drawer-select">
-                <SingleCategorySelector style="width: 100%;" @getCategories="getDestinationCat"></SingleCategorySelector>
+                <SingleCategorySelector style="width: 100%;" @getCategory="getDestinationCat"></SingleCategorySelector>
               </div>
               <div class="category-detail-operate-drawer-btn">
                 <el-button @click="operateThesesSubCats = false">{{ $t('category.cancel') }}</el-button>
@@ -552,10 +553,53 @@ export default {
       }
     },
     moveToAnotherCat() {
-      console.log(this.destinationCatId);
-      console.log(this.newCategories);
-      console.log(this.selectedSubCats);
-      console.log(this.selectedSubTheses);
+      const childCat = [];
+      if(!_.isEmpty(this.selectedSubCats)) {
+        this.selectedSubCats.forEach(e => {
+          childCat.push(e.id);
+        });
+      }
+      const childTheses = [];
+      if(!_.isEmpty(this.selectedSubTheses)) {
+        this.selectedSubTheses.forEach(e => {
+          childTheses.push(e.id);
+        });
+      }
+      this.doMoveToAnotherCat(this.catId, this.destinationCatId, childCat, childTheses);
+    },
+    async doMoveToAnotherCat(origin, dest, subCats, subTheses) {
+      let res = await this.$api.moveTo(origin, dest, subCats.toString(), subTheses.toString());
+      if(res.data.code === 200) {
+        if(_.isEmpty(res.data.data.failed)) {
+          this.operateThesesSubCats = false;
+          this.$message({
+            message: i18n.tc('category.batchSuccess'),
+            type: 'success'
+          });
+          await this.getCategoryInfo();
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        } else {
+          this.operateThesesSubCats = false;
+          const origin = {};
+          origin.id = this.catId;
+          origin.zhName = this.catZhName;
+          origin.enName = this.catEnName;
+          this.newCategories.push(origin); // dest cat already inside
+          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
+          this.$notify.error({
+            title: i18n.tc('category.error'),
+            dangerouslyUseHTMLString: true,
+            duration: 0,
+            message: errorMsg
+          });
+          await this.getCategoryInfo();
+          await this.getCategorySubCats();
+          await this.getCategoryTheses();
+        }
+      } else {
+        generalError(res.data);
+      }
     }
   }
 }
