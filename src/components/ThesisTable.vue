@@ -15,7 +15,7 @@
         <template v-slot="scope">
           <ul>
             <li v-for="category of scope.row.categories">
-              <el-link :href="'/category/id/' + category.id">
+              <el-link @click="toCategoryDetailPage('/category/id/' + category.id)">
                 <span v-if="$i18n.locale === 'zh'">{{ category.zhName }}</span>
                 <span v-if="$i18n.locale === 'en'">{{ category.enName }}</span>
               </el-link>
@@ -139,6 +139,7 @@ import i18n from "@/lang";
 import {generalError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
+import router from "@/router";
 
 export default {
   props: ["tableData", "loading"],
@@ -315,6 +316,13 @@ export default {
         });
       } else {
         generalError(res.data);
+      }
+    },
+    toCategoryDetailPage(url) {
+      if(this.$router.currentRoute.path !== url) {
+        this.$router.push(url);
+      } else {
+        this.$message(i18n.tc('category.alreadyInThisCatDetailPage'));
       }
     }
   }

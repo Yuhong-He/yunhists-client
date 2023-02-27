@@ -182,7 +182,8 @@ export default {
         confirmRemove1: "确认从分类",
         confirmRemove2: "中移除？",
         moveToAnotherCat: "移动至另一分类",
-        noNeedMove: "所选项已在本分类下，无需移动"
+        noNeedMove: "所选项已在本分类下，无需移动",
+        alreadyInThisCatDetailPage: "已经在这个分类页了哦"
     },
     thesis: {
         dragOr: "将文件拖到此处，或",
