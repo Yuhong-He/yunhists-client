@@ -154,7 +154,13 @@
               </div>
             </el-collapse-item>
             <el-collapse-item :title="$t('category.moveToAnotherCat')" name="3">
-              bbb
+              <div class="category-detail-operate-drawer-select">
+                <SingleCategorySelector style="width: 100%;" @getCategories="getDestinationCat"></SingleCategorySelector>
+              </div>
+              <div class="category-detail-operate-drawer-btn">
+                <el-button @click="operateThesesSubCats = false">{{ $t('category.cancel') }}</el-button>
+                <el-button type="primary" @click="moveToAnotherCat">{{ $t('category.confirm') }}</el-button>
+              </div>
             </el-collapse-item>
           </el-collapse>
         </div>
@@ -172,9 +178,11 @@ import {generalError} from "@/utils/user";
 import _ from "lodash";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {generateErrorMsg} from "@/utils/category";
+import SingleCategorySelector from "@/components/SingleCategorySelector.vue";
 
 export default {
   components: {
+    SingleCategorySelector,
     CategorySelector,
     ThesisTable,
     CategoryTable
@@ -221,6 +229,7 @@ export default {
       chooseOperate: 1,
       newCategoriesId: [],
       newCategories: [],
+      destinationCatId: null
     }
   },
   methods: {
@@ -435,6 +444,12 @@ export default {
         this.getNewCategoryNames(val.toString());
       }
     },
+    getDestinationCat(val) {
+      this.destinationCatId = val;
+      if(this.destinationCatId && this.destinationCatId > 0) {
+        this.getNewCategoryNames(val.toString());
+      }
+    },
     async getNewCategoryNames(val) {
       let res = await this.$api.getCategoryByIds(val);
       if(res.data.code === 200) {
@@ -535,6 +550,12 @@ export default {
       } else {
         generalError(res.data);
       }
+    },
+    moveToAnotherCat() {
+      console.log(this.destinationCatId);
+      console.log(this.newCategories);
+      console.log(this.selectedSubCats);
+      console.log(this.selectedSubTheses);
     }
   }
 }

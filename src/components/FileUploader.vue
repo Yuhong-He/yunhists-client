@@ -136,9 +136,9 @@ export default {
             fileNameLength
         )
         if(that.action === "Add" || that.action === "Update") {
-          that.fileName = "/default/" + getFileNameUUID() + '.' + fileFormat;
+          that.fileName = "default/" + getFileNameUUID() + '.' + fileFormat;
         } else if(that.action === "Share") {
-          that.fileName = "/temp/" + getFileNameUUID() + '.' + fileFormat;
+          that.fileName = "temp/" + getFileNameUUID() + '.' + fileFormat;
         } else {
           console.log("Something went wrong.");
         }

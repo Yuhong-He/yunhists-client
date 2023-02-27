@@ -1,12 +1,12 @@
 <template>
   <div>
-    <CategorySelector @getCategories="getCategories"></CategorySelector>
+    <SingleCategorySelector @getCategories="getCategories"></SingleCategorySelector>
   </div>
 </template>
 
 <script>
 
-import CategorySelector from "@/components/CategorySelector.vue";
+import SingleCategorySelector from "@/components/SingleCategorySelector.vue";
 
 export default {
   data(){
@@ -15,11 +15,11 @@ export default {
     }
   },
   components: {
-    CategorySelector
+    SingleCategorySelector
   },
   methods:{
     getCategories(val) {
-      this.form.categories = val;
+      console.log(val)
     }
   }
 }
