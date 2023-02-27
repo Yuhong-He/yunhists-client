@@ -69,7 +69,7 @@
             {{ $t('category.operate') }}
           </el-button>
           <el-button v-if="this.userRights >= 1 && (this.subCatCount === 0 && this.subThesisCount === 0)"
-                     type="danger" @click="deleteCategory" plain>
+                     type="danger" @click="openConfirmDeletePanel = true" plain>
             {{ $t('category.delete') }}
           </el-button>
           <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
@@ -167,6 +167,20 @@
         </div>
       </div>
     </el-drawer>
+
+    <el-dialog
+        :title="$t('category.confirmDeleteCat')"
+        :visible.sync="openConfirmDeletePanel"
+        :close-on-click-modal="false"
+        center
+        width="30%">
+      <p style="font-size: 1.1em; font-weight: bold; text-align: center">{{ this.catZhName }}</p>
+      <p style="font-size: 1.1em; font-weight: bold; text-align: center">{{ this.catEnName }}</p>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="openConfirmDeletePanel = false">{{ $t('category.cancel') }}</el-button>
+        <el-button type="danger" @click="deleteCategory">{{ $t('category.confirm') }}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -230,7 +244,8 @@ export default {
       chooseOperate: 1,
       newCategoriesId: [],
       newCategories: [],
-      destinationCatId: null
+      destinationCatId: null,
+      openConfirmDeletePanel: false
     }
   },
   methods: {
@@ -314,9 +329,6 @@ export default {
           type: 'warning'
         });
       }
-    },
-    deleteCategory() {
-      console.log("deleteCategory()");
     },
     toSharePage() {
       this.$router.push("/thesis/share");
@@ -598,6 +610,15 @@ export default {
           await this.getCategorySubCats();
           await this.getCategoryTheses();
         }
+      } else {
+        generalError(res.data);
+      }
+    },
+    async deleteCategory() {
+      let res = await this.$api.deleteCat(this.catId);
+      if(res.data.code === 200) {
+        this.openConfirmDeletePanel = false;
+        this.$router.go(-1);
       } else {
         generalError(res.data);
       }

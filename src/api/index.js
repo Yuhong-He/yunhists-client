@@ -343,6 +343,15 @@ const api = {
             }
         })
     },
+    deleteCat(catId) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/category/delete/" + catId,
+            method: "post"
+        })
+    },
 }
 
 export default api;
