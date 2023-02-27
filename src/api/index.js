@@ -352,6 +352,16 @@ const api = {
             method: "post"
         })
     },
+    shareThesis(share) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/add",
+            method: "post",
+            data: share
+        })
+    }
 }
 
 export default api;

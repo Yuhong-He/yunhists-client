@@ -6,7 +6,6 @@ import {setToken} from "@/utils/token";
 
 function generalError(data) {
     if(data.code === 201) {
-        console.log(data.data);
         Vue.prototype.$alert("Unexpected Error", {
             confirmButtonText: i18n.tc('header.confirm'),
             callback: () => {}

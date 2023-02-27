@@ -76,7 +76,7 @@ export default {
         email: "邮箱",
         onlyEmailRegisteredCanChange: "只有邮箱注册的用户可以改绑邮箱，谷歌注册的用户不可以。",
         password: "密码",
-        changeLangAtNavbar: "请在导航栏右侧修改语言。",
+        changeLangAtNavbar: "请在导航栏右侧修改语言，本站的电子邮件通知将以您选择的语言发送。",
         langSetting: "语言设置",
         userRightsGroup: "权限组",
         pointsLevel: "积分等级",
@@ -293,5 +293,9 @@ export default {
         addNewCommonParentCats: "添加共同上级分类",
         batchOperate: "批量操作",
         forFollowingTheses: "为以下论文：",
+        shareNewThesis: "分享新论文",
+        newCategory: "新建分类",
+        newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考",
+        shareSuccess: "分享成功，审批结果会通过邮件通知您"
     }
 };

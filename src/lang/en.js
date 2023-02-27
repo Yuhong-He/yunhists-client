@@ -76,7 +76,7 @@ export default {
         email: "Email",
         onlyEmailRegisteredCanChange: "Only email-registered user can change their email address, and Google-registered user cannot.",
         password: "Password",
-        changeLangAtNavbar: "Please change the language on the right side of the navigation bar.",
+        changeLangAtNavbar: "Please modify the language on the right side of the navigation bar, and the email notification of this site will be sent in the language you choose.",
         langSetting: "Language",
         userRightsGroup: "User Rights Group",
         pointsLevel: "Points & Level",
@@ -293,5 +293,9 @@ export default {
         addNewCommonParentCats: "Add common parent category(s)",
         batchOperate: "Batch Operate",
         forFollowingTheses: "For the following thesis(s):",
+        shareNewThesis: "Share New Thesis",
+        newCategory: "New Category",
+        newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference",
+        shareSuccess: "The sharing is successful, and the approval result will notify you by email"
     }
 };
