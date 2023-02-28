@@ -75,7 +75,7 @@
       </el-form>
     </div>
     <div class="user-share-btn">
-      <el-button type="primary" @click="onSubmit" round>{{ $t('thesis.confirm') }}</el-button>
+      <el-button type="primary" @click="onSubmit" :loading="isSubmitting" round>{{ $t('thesis.confirm') }}</el-button>
     </div>
     <el-dialog
         :title="$t('thesis.parseJSON')"
@@ -158,7 +158,8 @@ export default {
           return time.getTime() > _now
         }
       },
-      jsonObj: ''
+      jsonObj: '',
+      isSubmitting: false
     }
   },
   methods: {
@@ -179,9 +180,9 @@ export default {
         onlinePublisher: '',
         onlinePublishUrl: '',
         copyrightStatus: '0',
-        fileName: '',
-        category: '',
-        newCategory: ''
+        fileName: this.form.fileName,
+        category: this.form.category,
+        newCategory: this.form.newCategory
       };
       this.openPanel = true;
     },
@@ -199,14 +200,16 @@ export default {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
       if(this.validate(this.form)) {
+        this.isSubmitting = true;
         this.shareThesis(this.form);
       }
     },
     async shareThesis(share) {
       let res = await this.$api.shareThesis(share);
       if(res.data.code === 200) {
+        this.isSubmitting = false;
         this.$message({
-          duration: 0,
+          duration: 10000,
           showClose: true,
           message: i18n.tc('thesis.shareSuccess'),
           type: 'success'

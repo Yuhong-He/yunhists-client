@@ -361,6 +361,27 @@ const api = {
             method: "post",
             data: share
         })
+    },
+    listMySharing(page, title) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/list/" + page,
+            method: "get",
+            params: {
+                title: title
+            }
+        })
+    },
+    deleteMySharing(id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/delete/" + id,
+            method: "post"
+        })
     }
 }
 

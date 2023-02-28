@@ -297,5 +297,12 @@ export default {
         newCategory: "New Category",
         newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference",
         shareSuccess: "The sharing is successful, and the approval result will notify you by email"
+    },
+    share: {
+        pleaseSearchTitle: "Please search title",
+        status: "Status",
+        waitingApprove: "Waiting Approve",
+        approved: "Approved",
+        failed: "Failed",
     }
 };

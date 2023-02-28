@@ -1,5 +1,5 @@
 <template>
-  <h2>Approve Page</h2>
+  <h2>Share List</h2>
 </template>
 
 <script>

@@ -297,5 +297,12 @@ export default {
         newCategory: "新建分类",
         newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考",
         shareSuccess: "分享成功，审批结果会通过邮件通知您"
+    },
+    share: {
+        pleaseSearchTitle: "请搜索标题",
+        status: "状态",
+        waitingApprove: "待审批",
+        approved: "已通过",
+        failed: "未通过",
     }
 };

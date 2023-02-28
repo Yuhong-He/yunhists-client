@@ -12,13 +12,14 @@ import CategoryAdd from '@/views/Category/AddCategory.vue'
 import CategoryDetail from '@/views/Category/CategoryDetail.vue'
 import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
-import Approve from '@/views/Share/ApproveList.vue'
+import ShareList from '@/views/Share/ShareList.vue'
 import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
 import Share from "@/views/Share/UserShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
+import UpdateShare from "@/views/Share/UpdateShare.vue";
 
 Vue.use(VueRouter)
 
@@ -161,17 +162,26 @@ const routes = [
         meta: {
           title: 'Admin'
         },
-        redirect: '/admin/approve',
+        redirect: '/admin/shareList',
         children: [
           {
-            path: 'approve',
-            name: 'Approve',
-            component: Approve,
+            path: 'shareList',
+            name: 'ShareList',
+            component: ShareList,
             meta: {
-              title: 'Approve'
+              title: 'Share List'
             }
           }
         ]
+      },
+      {
+        path: 'updateMySharing/:id',
+        name: 'UpdateShare',
+        component: UpdateShare,
+        meta: {
+          title: 'Update My Sharing',
+          activeMenu: '/profile'
+        }
       }
     ]
   },

@@ -275,7 +275,7 @@ export default {
         onlinePublisher: '',
         onlinePublishUrl: '',
         copyrightStatus: '0',
-        fileName: ''
+        fileName: this.form.fileName
       };
       this.openPanel = true;
     },
