@@ -295,14 +295,18 @@ export default {
         forFollowingTheses: "For the following thesis(s):",
         shareNewThesis: "Share New Thesis",
         newCategory: "New Category",
-        newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference",
-        shareSuccess: "The sharing is successful, and the approval result will notify you by email"
+        newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference"
     },
     share: {
+        shareSuccess: "The sharing is successful, and the approval result will notify you by email",
         pleaseSearchTitle: "Please search title",
         status: "Status",
         waitingApprove: "Waiting Approve",
         approved: "Approved",
         failed: "Failed",
+        updateSharing: "Update Shared Thesis",
+        notYourSharing: "This is not the thesis you shared",
+        updateSuccess: "Update Success",
+        approvedSharingCanNotUpdate: "This share has been approved and cannot be modified"
     }
 };

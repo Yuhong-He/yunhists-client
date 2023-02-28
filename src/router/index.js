@@ -17,7 +17,7 @@ import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
-import Share from "@/views/Share/UserShare.vue";
+import Share from "@/views/Share/AddShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 import UpdateShare from "@/views/Share/UpdateShare.vue";
 
@@ -180,7 +180,7 @@ const routes = [
         component: UpdateShare,
         meta: {
           title: 'Update My Sharing',
-          activeMenu: '/profile'
+          activeMenu: '/thesis/list'
         }
       }
     ]

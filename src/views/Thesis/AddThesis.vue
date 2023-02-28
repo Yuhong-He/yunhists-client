@@ -101,6 +101,7 @@
 <script>
 import {mapMutations, mapState} from "vuex";
 import {generalError} from "@/utils/user";
+import {validateThesis} from "@/utils/thesis";
 import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
@@ -202,7 +203,7 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
-      if(this.validate(this.form)) {
+      if(validateThesis(this.form)) {
         this.addThesis(this.form, this.categories);
       }
     },
@@ -232,32 +233,6 @@ export default {
         generalError(res.data);
       }
     },
-    validate(val) {
-      if(!val.title.length > 0) {
-        this.$alert(i18n.tc('thesis.inputTitle'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      if(val.volume !== "") {
-        if(isNaN(Number(val.volume))) {
-          this.$alert(i18n.tc('thesis.volumeIsNum'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-          return false;
-        }
-      }
-      if(!(val.fileName && val.fileName.length > 0)) {
-        this.$alert(i18n.tc('thesis.pleaseUploadFile'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      return true;
-    },
     semiAutoParse() {
       this.form = {
         author: '',
@@ -280,10 +255,9 @@ export default {
       this.openPanel = true;
     },
     parsing() {
-      let json = {};
       if(this.jsonObj && this.jsonObj.length > 0) {
         try {
-          json = $.parseJSON(this.jsonObj);
+          let json = $.parseJSON(this.jsonObj);
           if(!_.isEmpty(json)) {
             for(const valKey in json) { // loop json from parsing
               for(const formKey in this.form) { // loop json for this form

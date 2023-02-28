@@ -108,6 +108,7 @@ import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import $ from "jquery";
 import {generalError} from "@/utils/user";
+import {validateThesis} from "@/utils/thesis";
 
 export default {
   computed: {
@@ -128,6 +129,9 @@ export default {
   components: {
     CategorySelector,
     FileUploader
+  },
+  mounted() {
+    this.checkToken();
   },
   data() {
     return {
@@ -163,6 +167,17 @@ export default {
     }
   },
   methods: {
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code === 200) {
+        if(this.userRights < 0) {
+          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
+          await this.$router.push("/");
+        }
+      } else {
+        generalError(res.data);
+      }
+    },
     semiAutoParse() {
       this.form = {
         author: '',
@@ -199,7 +214,7 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
-      if(this.validate(this.form)) {
+      if(validateThesis(this.form)) {
         this.isSubmitting = true;
         this.shareThesis(this.form);
       }
@@ -211,7 +226,7 @@ export default {
         this.$message({
           duration: 10000,
           showClose: true,
-          message: i18n.tc('thesis.shareSuccess'),
+          message: i18n.tc('share.shareSuccess'),
           type: 'success'
         });
         await this.$router.push("/profile/mySharing");
@@ -219,37 +234,10 @@ export default {
         generalError(res.data);
       }
     },
-    validate(val) {
-      if(!val.title.length > 0) {
-        this.$alert(i18n.tc('thesis.inputTitle'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      if(val.volume !== "") {
-        if(isNaN(Number(val.volume))) {
-          this.$alert(i18n.tc('thesis.volumeIsNum'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-          return false;
-        }
-      }
-      if(!(val.fileName && val.fileName.length > 0)) {
-        this.$alert(i18n.tc('thesis.pleaseUploadFile'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      return true;
-    },
     parsing() {
-      let json = {};
       if(this.jsonObj && this.jsonObj.length > 0) {
         try {
-          json = $.parseJSON(this.jsonObj);
+          let json = $.parseJSON(this.jsonObj);
           if(!_.isEmpty(json)) {
             for(const valKey in json) { // loop json from parsing
               for(const formKey in this.form) { // loop json for this form

@@ -382,7 +382,38 @@ const api = {
             url: BASE_URL + "/share/delete/" + id,
             method: "post"
         })
-    }
+    },
+    getMyShareById(id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/id/" + id,
+            method: "get"
+        })
+    },
+    deleteShareFile(file) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/deleteFile",
+            method: "post",
+            params: {
+                file: file
+            }
+        })
+    },
+    updateThesisSharing(id, share) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/update/" + id,
+            method: "post",
+            data: share
+        })
+    },
 }
 
 export default api;

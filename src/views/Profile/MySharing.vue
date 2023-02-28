@@ -80,7 +80,7 @@ export default {
       page: 1,
       total: 0,
       pageSize: 10,
-      loading: false,
+      loading: true,
       confirmDeleteId: null,
       confirmDeleteTitle: "",
       confirmDeletePanel: false,
@@ -123,6 +123,11 @@ export default {
         this.isDeleting = false;
         this.confirmDeletePanel = false;
         this.$message.success(i18n.tc('thesis.deleteSuccess'));
+      } else if(res.data.code === 503) {
+        await this.generateTable();
+        this.isDeleting = false;
+        this.confirmDeletePanel = false;
+        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
       } else {
         generalError(res.data);
       }

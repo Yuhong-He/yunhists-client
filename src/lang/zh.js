@@ -295,14 +295,18 @@ export default {
         forFollowingTheses: "为以下论文：",
         shareNewThesis: "分享新论文",
         newCategory: "新建分类",
-        newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考",
-        shareSuccess: "分享成功，审批结果会通过邮件通知您"
+        newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考"
     },
     share: {
+        shareSuccess: "分享成功，审批结果会通过邮件通知您",
         pleaseSearchTitle: "请搜索标题",
         status: "状态",
         waitingApprove: "待审批",
         approved: "已通过",
         failed: "未通过",
+        updateSharing: "修改分享的论文",
+        notYourSharing: "这不是你分享的论文",
+        updateSuccess: "修改成功",
+        approvedSharingCanNotUpdate: "此分享已被审批，不能修改"
     }
 };

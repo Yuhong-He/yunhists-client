@@ -78,6 +78,7 @@
 import {mapState} from "vuex";
 import i18n from "@/lang";
 import {generalError} from "@/utils/user";
+import {validateThesis} from "@/utils/thesis";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 
@@ -192,6 +193,7 @@ export default {
               }
             }
           }
+
           if (this.form.fileName.length > 0) {
             const suffix = this.form.fileName.substring(this.form.fileName.lastIndexOf('.') + 1);
             const obj = {
@@ -207,6 +209,7 @@ export default {
             arr.push(obj);
           }
           this.catList = arr;
+
         } else if (res.data.code === 407) {
           this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
           this.$router.push("/thesis/list");
@@ -225,35 +228,9 @@ export default {
       for (let key in this.form) {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
-      if(this.validate(this.form)) {
+      if(validateThesis(this.form)) {
         this.updateThesis(this.form, this.categories);
       }
-    },
-    validate(val) {
-      if(!val.title.length > 0) {
-        this.$alert(i18n.tc('thesis.inputTitle'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      if(val.volume !== "") {
-        if(isNaN(Number(val.volume))) {
-          this.$alert(i18n.tc('thesis.volumeIsNum'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-          return false;
-        }
-      }
-      if(!(val.fileName && val.fileName.length > 0)) {
-        this.$alert(i18n.tc('thesis.pleaseUploadFile'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        return false;
-      }
-      return true;
     },
     async updateThesis(thesis, categories) {
       let parentCat = Array.from(categories).toString();

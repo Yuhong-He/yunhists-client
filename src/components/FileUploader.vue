@@ -55,6 +55,8 @@ export default {
         return false;
       } else if(this.action === "Update" && this.fileName.length > 0 && this.progress !== 100) {
         return false;
+      } else if(this.action === "UpdateShare" && this.fileName.length > 0 && this.progress !== 100) {
+        return false;
       }
       return true;
     },
@@ -63,7 +65,7 @@ export default {
         if(this.progress === 100) {
           this.doDownloadFile(this.fileName, file.name);
         }
-      } else if(this.action === "Update") {
+      } else if(this.action === "Update" || this.action === "UpdateShare") {
         if(this.fileName.length > 0) {
           if(this.progress === 100) {
             this.doDownloadFile(this.fileName, file.name); // file upload
@@ -83,10 +85,14 @@ export default {
       window.open(url, '_blank');
     },
     handleRemove(file, fileList) {
-      if(this.action === "Add" || this.action === "Share" || (this.action === "Update" && this.fileName.length > 0)) { // file url generated when upload
-        this.doDeleteFile(this.fileName);
+      if(this.action === "Add" || this.action === "Share" ||
+          (this.action === "Update" && this.fileName.length > 0) ||
+          (this.action === "UpdateShare" && this.fileName.length > 0)) {
+        this.doDeleteFile(this.fileName); // file url generated when upload
       } else if(this.action === "Update" && this.fileName.length === 0) {
         this.deleteThesisFile(file.url) // file url from database
+      } else if(this.action === "UpdateShare" && this.fileName.length === 0) {
+        this.deleteShareFile(file.url) // file url from database
       } else {
         console.log("Unexpected Action!!!");
       }
@@ -96,6 +102,23 @@ export default {
       if(res.data.code === 200) {
         this.doDeleteFile(path);
       } else if(res.data.code === 408) {
+        await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
+          confirmButtonText: i18n.tc('thesis.confirm'),
+          type: 'error',
+          callback: () => {}
+        });
+      } else {
+        generalError(res.data);
+      }
+    },
+    async deleteShareFile(path) {
+      let res = await this.$api.deleteShareFile(path);
+      if(res.data.code === 200) {
+        this.doDeleteFile(path);
+      } else if(res.data.code === 503) {
+        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+        await this.$router.push("/profile/mySharing");
+      } else if(res.data.code === 504) {
         await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
           confirmButtonText: i18n.tc('thesis.confirm'),
           type: 'error',
@@ -139,7 +162,7 @@ export default {
         )
         if(that.action === "Add" || that.action === "Update") {
           that.fileName = "default/" + getFileNameUUID() + '.' + fileFormat;
-        } else if(that.action === "Share") {
+        } else if(that.action === "Share" || that.action === "UpdateShare") {
           that.fileName = "temp/" + getFileNameUUID() + '.' + fileFormat;
         } else {
           console.log("Something went wrong.");
