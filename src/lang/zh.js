@@ -307,6 +307,11 @@ export default {
         updateSharing: "修改分享的论文",
         notYourSharing: "这不是你分享的论文",
         updateSuccess: "修改成功",
-        approvedSharingCanNotUpdate: "此分享已被审批，不能修改"
+        approvedSharingCanNotUpdate: "此分享已被审批，不能修改",
+        shareList: "分享列表",
+        filterUnapproved: "过滤未审批的分享",
+        uploader: "分享人",
+        approver: "审批人",
+        approve: "审批",
     }
 };

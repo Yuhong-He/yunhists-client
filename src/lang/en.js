@@ -307,6 +307,11 @@ export default {
         updateSharing: "Update Shared Thesis",
         notYourSharing: "This is not the thesis you shared",
         updateSuccess: "Update Success",
-        approvedSharingCanNotUpdate: "This share has been approved and cannot be modified"
+        approvedSharingCanNotUpdate: "This share has been approved and cannot be modified",
+        shareList: "Share List",
+        filterUnapproved: "Filter Waiting Approve",
+        uploader: "Uploader",
+        approver: "Approver",
+        approve: "Approve",
     }
 };

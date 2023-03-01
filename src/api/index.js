@@ -367,7 +367,7 @@ const api = {
             headers: {
                 "token": getToken()
             },
-            url: BASE_URL + "/share/list/" + page,
+            url: BASE_URL + "/share/myList/" + page,
             method: "get",
             params: {
                 title: title
@@ -412,6 +412,19 @@ const api = {
             url: BASE_URL + "/share/update/" + id,
             method: "post",
             data: share
+        })
+    },
+    listAllSharing(page, title, unapproved) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/listAll/" + page,
+            method: "get",
+            params: {
+                title: title,
+                unapproved: unapproved
+            }
         })
     },
 }

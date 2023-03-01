@@ -190,6 +190,7 @@ export default {
             this.tableData = res.data.data.records;
             this.total = res.data.data.total;
             this.loading = false;
+            window.scrollTo(0, 0);
           }
         }).catch(() => {
           this.$message.error(i18n.tc('thesis.invalidParamInPath'));

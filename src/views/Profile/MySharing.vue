@@ -7,8 +7,11 @@
         </el-input>
       </el-col>
       <el-col :span="16" class="my-sharing-btn-right">
-        <el-button type="warning" @click="$router.push('/thesis/share')" plain>
+        <el-button v-if="userRights === 0" type="warning" @click="$router.push('/thesis/share')" plain>
           {{ $t('thesis.share') }}
+        </el-button>
+        <el-button v-if="userRights > 0" type="primary" @click="$router.push('/thesis/add')" plain>
+          {{ $t('thesis.add') }}
         </el-button>
       </el-col>
     </div>
@@ -17,7 +20,11 @@
         <el-table-column prop="author" :label="$t('thesis.author')" width="120"></el-table-column>
         <el-table-column prop="title" :label="$t('thesis.title')"></el-table-column>
         <el-table-column prop="publication" :label="$t('thesis.publication')"></el-table-column>
-        <el-table-column prop="year" :label="$t('thesis.yearIssue')" width="90"></el-table-column>
+        <el-table-column prop="thesisIssue" :label="$t('thesis.yearIssue')" width="90">
+          <template v-slot="scope">
+            {{ handleThesisIssue(scope.row.thesisIssue) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="status" :label="$t('share.status')" width="61" align="center" header-align="left">
           <template v-slot="scope">
             <span v-if="scope.row.status === 0" style="color: dimgrey">
@@ -64,8 +71,13 @@
 import Pagination from "@/components/Pagination.vue";
 import {generalError} from "@/utils/user";
 import i18n from "@/lang";
+import {mapState} from "vuex";
+import {handleThesisIssue} from "@/utils/thesis";
 
 export default {
+  computed: {
+    ...mapState('UserInfo', ['userRights'])
+  },
   components: {
     Pagination
   },
@@ -88,6 +100,7 @@ export default {
     }
   },
   methods: {
+    handleThesisIssue,
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code !== 200) {

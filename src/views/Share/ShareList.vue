@@ -1,13 +1,182 @@
 <template>
-  <h2>Share List</h2>
+  <div class="share-list">
+    <div class="share-list-header">
+      <el-col :span="3">
+        <span class="share-list-title">{{ $t('share.shareList') }}</span>
+      </el-col>
+      <el-col :span="8">
+        <el-input v-model="title" :placeholder="$t('share.pleaseSearchTitle')" @change="generateTable" size="10" clearable>
+          <el-button slot="append" icon="el-icon-search" @click="generateTable"></el-button>
+        </el-input>
+      </el-col>
+      <el-col :span="13" class="share-list-btn-right">
+        <div style="display: inline-block">
+          <el-switch
+              v-model="turnOnUnapproved"
+              @change="filterUnapproved"
+              :inactive-text="$t('share.filterUnapproved')"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+          </el-switch>
+        </div>
+      </el-col>
+    </div>
+    <div class="share-list-table-area">
+      <el-table :data="tableData" border style="width: 100%" v-loading="loading">
+        <el-table-column prop="author" :label="$t('thesis.author')" width="120"></el-table-column>
+        <el-table-column prop="title" :label="$t('thesis.title')"></el-table-column>
+        <el-table-column prop="publication" :label="$t('thesis.publication')"></el-table-column>
+        <el-table-column prop="thesisIssue" :label="$t('thesis.yearIssue')" width="90">
+          <template v-slot="scope">
+            {{ handleThesisIssue(scope.row.thesisIssue) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="uploader" :label="$t('share.uploader')" width="120"></el-table-column>
+        <el-table-column prop="status" :label="$t('share.status')" width="61" align="center" header-align="left">
+          <template v-slot="scope">
+            <span v-if="scope.row.status === 0" style="color: dimgrey">
+              <el-tooltip class="item" effect="dark" :content="$t('share.waitingApprove')" placement="top">
+                <font-awesome-icon icon="fa-solid fa-circle-minus" />
+              </el-tooltip>
+            </span>
+            <span v-if="scope.row.status === 1" style="color: limegreen">
+              <el-tooltip class="item" effect="dark" :content="$t('share.approved')" placement="top">
+                <font-awesome-icon icon="fa-solid fa-circle-check" />
+              </el-tooltip>
+            </span>
+            <span v-if="scope.row.status === 2" style="color: red">
+              <el-tooltip class="item" effect="dark" :content="$t('share.failed')" placement="top">
+                <font-awesome-icon icon="fa-solid fa-circle-xmark" />
+              </el-tooltip>
+            </span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="approver" :label="$t('share.approver')" width="120"></el-table-column>
+        <el-table-column :label="$t('thesis.operation')" :width="operationColWidth">
+          <template v-slot="scope">
+            <el-button type="primary" v-if="scope.row.status === 0" @click="$router.push('/admin/approveShare/' + scope.row.id)" size="mini">{{ $t('share.approve') }}</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </div>
+    <div class="share-list-pagination">
+      <Pagination :total="total" :pageSize="parseInt(pageSize)" :currentPage="parseInt(page)"
+                  @getPagination="getPagination"></Pagination>
+    </div>
+  </div>
 </template>
 
 <script>
+import Pagination from "@/components/Pagination.vue";
+import {mapState} from "vuex";
+import {generalError} from "@/utils/user";
+import {handleThesisIssue} from "@/utils/thesis";
+import i18n from "@/lang";
+
 export default {
-  name: "index"
+  computed: {
+    ...mapState('UserInfo', ['userRights'])
+  },
+  components: {
+    Pagination
+  },
+  watch: {
+    '$i18n.locale'() {
+      if(i18n.locale === "zh") {
+        this.operationColWidth = 77;
+      } else {
+        this.operationColWidth = 98;
+      }
+    }
+  },
+  mounted() {
+    if(i18n.locale === "zh") {
+      this.operationColWidth = 77;
+    } else {
+      this.operationColWidth = 98;
+    }
+    this.checkToken();
+    this.generateTable();
+  },
+  data() {
+    return {
+      title: "",
+      tableData: [],
+      page: 1,
+      total: 0,
+      pageSize: 10,
+      loading: true,
+      turnOnUnapproved: false,
+      operationColWidth: 98
+    }
+  },
+  methods: {
+    handleThesisIssue,
+    async checkToken() {
+      let res = await this.$api.validateToken();
+      if(res.data.code === 200) {
+        if(this.userRights < 1) {
+          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
+          await this.$router.push("/");
+        }
+      } else {
+        generalError(res.data);
+      }
+    },
+    async generateTable() {
+      this.loading = true;
+      let unapproved = "OFF"
+      if(this.turnOnUnapproved) {
+        unapproved = "ON"
+      }
+      let res = await this.$api.listAllSharing(this.page, this.title, unapproved);
+      if(res.data.code === 200) {
+        this.tableData = res.data.data.records;
+        this.total = res.data.data.total;
+        this.loading = false;
+        window.scrollTo(0, 0);
+      }
+    },
+    getPagination(page) {
+      this.page = page;
+      this.generateTable();
+    },
+    filterUnapproved() {
+      this.page = 1;
+      this.generateTable();
+    }
+  }
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.share-list {
+  min-height: 500px;
+  margin-top: 30px;
+  margin-left:  10%;
+  margin-right: 10%;
+}
+.share-list-header {
+  line-height: 50px;
+  .share-list-title {
+    font-size: 2em;
+    font-weight: bold;
+  }
+  .share-list-btn-right {
+    text-align: right;
+  }
+}
+.share-list-table-area {
+  margin-top: 5px;
+}
+.share-list-pagination {
+  font-size: 1.5em;
+  line-height: 50px;
+  margin-top: 10px;
+  padding-top: 10px;
+  text-align: center;
+}
+/deep/ .el-switch__label.is-active {
+  color: #303133;
+}
 </style>

@@ -20,6 +20,7 @@ import MySharing from "@/views/Profile/MySharing.vue";
 import Share from "@/views/Share/AddShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 import UpdateShare from "@/views/Share/UpdateShare.vue";
+import ApproveShare from "@/views/Share/ApproveShare.vue";
 
 Vue.use(VueRouter)
 
@@ -170,6 +171,15 @@ const routes = [
             component: ShareList,
             meta: {
               title: 'Share List'
+            }
+          },
+          {
+            path: 'approveShare/:id',
+            name: 'ApproveShare',
+            component: ApproveShare,
+            meta: {
+              title: 'Approve Share',
+              activeMenu: '/admin/shareList'
             }
           }
         ]
