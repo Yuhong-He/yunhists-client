@@ -114,13 +114,8 @@
         </el-input>
       </div>
       <div style="margin-top: 10px">
-        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.involveCopyrightIssues'))" type="info">{{ $t('thesis.involveCopyrightIssues') }}</el-tag>
-      </div>
-      <div style="margin-top: 10px">
-        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.notMeetInclusionCriteria'))" type="info">{{ $t('thesis.notMeetInclusionCriteria') }}</el-tag>
-      </div>
-      <div style="margin-top: 10px">
-        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.repeatThesis'))" type="info">{{ $t('thesis.repeatThesis') }}</el-tag>
+        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.notMeetCriteriaBody'))" type="info">{{ $t('thesis.notMeetCriteriaTitle') }}</el-tag>
+        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.repeatThesisBody'))" type="info">{{ $t('thesis.repeatThesisTitle') }}</el-tag>
       </div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="confirmDeletePanel = false">{{ $t('thesis.cancel') }}</el-button>
@@ -139,7 +134,6 @@ import i18n from "@/lang";
 import {generalError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
-import router from "@/router";
 
 export default {
   props: ["tableData", "loading"],
@@ -358,6 +352,9 @@ export default {
 }
 .el-dialog__body div {
   word-break: normal;
+}
+.el-tag + .el-tag {
+  margin-left: 10px;
 }
 /deep/ .el-table .cell {
   word-break: normal;

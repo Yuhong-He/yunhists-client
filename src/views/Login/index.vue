@@ -254,20 +254,24 @@ export default{
         this.setStsToken(res.data.data.sts.stsToken);
         this.setLang(res.data.data.lang);
         this.$i18n.locale = res.data.data.lang;
+        this.loginLoading = false;
         await this.$router.go(-1);
         this.$message({
           type: 'success',
           message: i18n.tc('login.welcome') + " " + res.data.data.username
         });
       } else if (res.data.code === 206) {
+        this.loginLoading = false;
         await this.$alert(i18n.tc('login.incorrectPwd'), {
           confirmButtonText: i18n.tc('login.confirm')
         }).catch(() => {});
       } else if (res.data.code === 208) {
+        this.loginLoading = false;
         await this.$alert(i18n.tc('login.emailNotRegistered'), {
           confirmButtonText: i18n.tc('login.confirm')
         }).catch(() => {});
       } else if (res.data.code === 209) {
+        this.loginLoading = false;
         await this.$alert(i18n.tc('login.googleAccount'), {
           confirmButtonText: i18n.tc('login.confirm')
         }).catch(() => {});

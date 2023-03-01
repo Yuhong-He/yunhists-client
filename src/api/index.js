@@ -388,7 +388,7 @@ const api = {
             headers: {
                 "token": getToken()
             },
-            url: BASE_URL + "/share/id/" + id,
+            url: BASE_URL + "/share/myShare/" + id,
             method: "get"
         })
     },
@@ -424,6 +424,40 @@ const api = {
             params: {
                 title: title,
                 unapproved: unapproved
+            }
+        })
+    },
+    getShareById(id) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/id/" + id,
+            method: "get"
+        })
+    },
+    approveShare(id, share, categories) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/approve/" + id,
+            method: "post",
+            data: share,
+            params: {
+                category: categories
+            }
+        })
+    },
+    rejectShare(id, reason) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/share/reject/" + id,
+            method: "post",
+            params: {
+                reason: reason
             }
         })
     },
