@@ -43,6 +43,7 @@ export default {
         confirm: 'Confirm',
         emailNotRegistered: 'This email hasn\'t been registered',
         googleAccount: 'This account was registered with Google, please login with Google',
+        emailAccount: 'This account was registered with email address, please login with password',
         welcome: 'Welcome',
         missUsername: 'Please enter username',
         usernameLengthNotMatch: 'Length between 2 - 15',

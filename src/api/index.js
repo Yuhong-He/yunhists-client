@@ -11,6 +11,17 @@ const api = {
             params: data
         })
     },
+    google(email, username, lang) {
+        return axios({
+            url: BASE_URL + "/user/google",
+            method: "post",
+            params: {
+                email: email,
+                username: username,
+                lang: lang
+            }
+        })
+    },
     register(data) {
         return axios({
             url: BASE_URL + "/user/register",

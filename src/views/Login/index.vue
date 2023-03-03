@@ -93,6 +93,10 @@ import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import $ from "jquery";
 import {setToken} from "@/utils/token";
+import { initializeApp } from "firebase/app";
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { Loading } from 'element-ui';
+import {firebaseConfig} from "@/utils/firebase";
 
 export default{
   computed: {
@@ -277,8 +281,46 @@ export default{
         }).catch(() => {});
       }
     },
-    google() {
-      console.log("Google Login");
+    async google() {
+      initializeApp(firebaseConfig);
+      const provider = new GoogleAuthProvider();
+      const auth = getAuth();
+      let googleResult = await signInWithPopup(auth, provider);
+      if(googleResult) {
+        let loadingInstance = Loading.service({ fullscreen: true });
+        const user = googleResult.user;
+        let loginResult = await this.$api.google(user.email, user.displayName, i18n.locale);
+        if(loginResult.data.code === 200) {
+          setToken(loginResult.data.data.token);
+          this.setUserId(loginResult.data.data.userId);
+          this.setUsername(loginResult.data.data.username);
+          this.setEmail(loginResult.data.data.email);
+          this.setUserRights(loginResult.data.data.userRights);
+          this.setPoints(loginResult.data.data.points);
+          this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);
+          this.setAccessKeySecret(loginResult.data.data.sts.accessKeySecret);
+          this.setStsToken(loginResult.data.data.sts.stsToken);
+          this.setLang(loginResult.data.data.lang);
+          this.$i18n.locale = loginResult.data.data.lang;
+          this.$message({
+            type: 'success',
+            message: i18n.tc('login.welcome') + " " + loginResult.data.data.username
+          });
+          loadingInstance.close();
+          await this.$router.go(-1);
+        } else if(loginResult.data.code === 215) {
+          loadingInstance.close();
+          this.$alert(i18n.tc('login.emailAccount'), {
+            confirmButtonText: i18n.tc('header.confirm'),
+            callback: () => {}
+          }).then(() => {});
+        }
+      } else {
+        this.$alert("Unexpected Error", {
+          confirmButtonText: i18n.tc('header.confirm'),
+          callback: () => {}
+        }).then(() => {});
+      }
     },
     register(formName){
       this.$refs[formName].validate((valid) => {

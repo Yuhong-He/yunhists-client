@@ -21,6 +21,9 @@ import Share from "@/views/Share/AddShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 import UpdateShare from "@/views/Share/UpdateShare.vue";
 import ApproveShare from "@/views/Share/ApproveShare.vue";
+import About from "@/views/Info/About/index.vue";
+import TermOfService from "@/views/Info/TermOfService/index.vue";
+import PrivacyPolicy from "@/views/Info/PrivacyPolicy/index.vue";
 
 Vue.use(VueRouter)
 
@@ -192,7 +195,34 @@ const routes = [
           title: 'Update My Sharing',
           activeMenu: '/thesis/list'
         }
-      }
+      },
+      {
+        path: '/about',
+        name: 'About',
+        component: About,
+        meta: {
+          title: 'About',
+          activeMenu: '/'
+        }
+      },
+      {
+        path: '/TermOfService',
+        name: 'TermOfService',
+        component: TermOfService,
+        meta: {
+          title: 'Term of Service',
+          activeMenu: '/'
+        }
+      },
+      {
+        path: '/PrivacyPolicy',
+        name: 'PrivacyPolicy',
+        component: PrivacyPolicy,
+        meta: {
+          title: 'Privacy Policy',
+          activeMenu: '/'
+        }
+      },
     ]
   },
   {

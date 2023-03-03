@@ -43,6 +43,7 @@ export default {
         confirm: '确定',
         emailNotRegistered: '该邮箱未注册',
         googleAccount: '该账户由谷歌账户注册，请通过谷歌登录',
+        emailAccount: '该账户通过邮箱注册，请使用密码登录',
         welcome: '欢迎，',
         missUsername: '请输入用户名',
         usernameLengthNotMatch: '长度在2到15个字符',
