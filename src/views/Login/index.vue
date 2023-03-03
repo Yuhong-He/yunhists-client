@@ -285,9 +285,9 @@ export default{
       initializeApp(firebaseConfig);
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
-      let googleResult = await signInWithPopup(auth, provider);
-      if(googleResult) {
+      try {
         let loadingInstance = Loading.service({ fullscreen: true });
+        let googleResult = await signInWithPopup(auth, provider);
         const user = googleResult.user;
         let loginResult = await this.$api.google(user.email, user.displayName, i18n.locale);
         if(loginResult.data.code === 200) {
@@ -315,7 +315,7 @@ export default{
             callback: () => {}
           }).then(() => {});
         }
-      } else {
+      } catch (e) {
         this.$alert("Unexpected Error", {
           confirmButtonText: i18n.tc('header.confirm'),
           callback: () => {}
