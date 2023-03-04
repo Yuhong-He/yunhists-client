@@ -10,7 +10,7 @@
               </span>
               <span class="userinfo-description-text">{{ $t('profile.userId') }}</span>
             </template>
-            <span class="userinfo-description-text">{{ this.userId }}</span>
+            <span class="userinfo-description-text">{{ userInfo.userId }}</span>
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -19,10 +19,10 @@
               </span>
               <span class="userinfo-description-text">{{ $t('profile.username') }}</span>
             </template>
-            <span class="userinfo-description-text">{{ this.username }}</span>
+            <span class="userinfo-description-text">{{ userInfo.username }}</span>
             <span class="userinfo-description-edit" @click="openChangeUsernamePanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
           </el-descriptions-item>
-          <el-descriptions-item>
+          <el-descriptions-item v-if="userInfo.registration === 0">
             <template slot="label">
               <span class="userinfo-description-icon">
                 <font-awesome-icon icon="fa-solid fa-key" />
@@ -48,8 +48,8 @@
                 </span>
               </el-popover>
             </template>
-            <span class="userinfo-description-text">{{ this.email }}</span>
-            <span class="userinfo-description-edit" @click="openChangeEmailPanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
+            <span class="userinfo-description-text">{{ userInfo.email }}</span>
+            <span class="userinfo-description-edit" v-if="userInfo.registration === 0" @click="openChangeEmailPanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -58,7 +58,7 @@
               </span>
               <span class="userinfo-description-text">{{ $t('profile.registration') }}</span>
             </template>
-            <span class="userinfo-description-text">{{ $t('profile.emailRegistration') }}</span>
+            <span class="userinfo-description-text">{{ registration_str }}</span>
           </el-descriptions-item>
           <el-descriptions-item>
             <template slot="label">
@@ -85,7 +85,7 @@
                 </span>
               </el-popover>
             </template>
-            <span class="userinfo-description-text">{{ this.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
+            <span class="userinfo-description-text">{{ userInfo.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
           </el-descriptions-item>
         </el-descriptions>
       </div>
@@ -103,17 +103,12 @@
           <el-table-column prop="desc" :label="$t('profile.description')"></el-table-column>
           <el-table-column prop="setting" :label="$t('profile.operation')" width="160">
             <template v-slot="scope">
-              <el-select v-if="scope.row.id === 1" v-model="selectLang" @change="setLangTo">
-                <el-option
-                    v-for="item in options"
-                    :key="item.value"
-                    :label="item.label"
-                    :value="item.value">
-                </el-option>
+              <el-select v-if="scope.row.id === 1" v-model="selectLang" style="width: 90px" size="mini" @change="setLangTo">
+                <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
               <el-switch v-if="scope.row.id === 2" v-model="openEmailNotification" :active-text="$t('profile.on')"
                          :inactive-text="$t('profile.off')"></el-switch>
-              <el-button v-if="scope.row.id === 3" size="medium" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
+              <el-button v-if="scope.row.id === 3" size="mini" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -229,7 +224,7 @@
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
+import {mapMutations} from "vuex";
 import {generalError} from "@/utils/user";
 import {getToken, setToken} from "@/utils/token";
 import i18n from "@/lang";
@@ -238,6 +233,17 @@ import $ from "jquery";
 export default {
   data() {
     return {
+      userInfo: {
+        userId: null,
+        username: "",
+        email: "",
+        userRights: null,
+        points: null,
+        registration: null
+      },
+      registration_str: "",
+      userRightsGroup: "",
+      userLevel: "",
       deleteAccountPanel: false,
       changeUsernamePanel: false,
       newUsername: "",
@@ -258,41 +264,13 @@ export default {
       }]
     }
   },
+  watch: {
+    '$i18n.locale'() {
+      this.refreshUserInfo();
+    }
+  },
   computed: {
-    ...mapState('Settings', ['lang']),
-    ...mapState('UserInfo', ['userId', 'username', 'email', 'userRights', 'points']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
-    langSetting: {
-      get() {
-        if(this.lang === "zh") {
-          return "中文";
-        } else if (this.lang === "en") {
-          return "English";
-        }
-      }
-    },
-    userRightsGroup: {
-      get() {
-        if(this.userRights === 0) {
-          if(this.lang === "zh") {
-            return "用户";
-          } else if (this.lang === "en") {
-            return "User";
-          }
-        } else if (this.userRights === 1) {
-          if(this.lang === "zh") {
-            return "管理员";
-          } else if (this.lang === "en") {
-            return "Admin";
-          }
-        }
-      }
-    },
-    userLevel: {
-      get() {
-        return this.generateLevelName(this.points, this.lang);
-      }
-    },
     tableData() {
       return [
         {
@@ -323,24 +301,81 @@ export default {
   },
   mounted() {
     this.checkToken();
+    this.generateUserInfo();
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    async generateUserInfo() {
+      let res = await this.$api.getUserInfo();
+      if(res.data.code === 200) {
+        this.userInfo.userId = res.data.data.userId;
+        this.userInfo.username = res.data.data.username;
+        this.userInfo.email = res.data.data.email;
+        this.userInfo.userRights = res.data.data.userRights;
+        this.userInfo.points = res.data.data.points;
+        this.userInfo.registration = res.data.data.registration;
+
+        if(this.userInfo.registration === 0) {
+          this.registration_str = i18n.tc('profile.emailRegistration')
+        } else if(this.userInfo.registration === 1) {
+          this.registration_str = i18n.tc('profile.googleRegistration')
+        }
+
+        if(this.userInfo.userRights === 0) {
+          if(i18n.locale === "zh") {
+            this.userRightsGroup = "用户";
+          } else if (i18n.locale === "en") {
+            this.userRightsGroup = "User";
+          }
+        } else if (this.userInfo.userRights === 1) {
+          if(i18n.locale === "zh") {
+            this.userRightsGroup = "管理员";
+          } else if (i18n.locale === "en") {
+            this.userRightsGroup = "Admin";
+          }
+        }
+
+        this.userLevel = this.generateLevelName(this.userInfo.points);
+      }
+    },
+    refreshUserInfo() {
+      if(this.userInfo.registration === 0) {
+        this.registration_str = i18n.tc('profile.emailRegistration')
+      } else if(this.userInfo.registration === 1) {
+        this.registration_str = i18n.tc('profile.googleRegistration')
+      }
+
+      if(this.userInfo.userRights === 0) {
+        if(i18n.locale === "zh") {
+          this.userRightsGroup = "用户";
+        } else if (i18n.locale === "en") {
+          this.userRightsGroup = "User";
+        }
+      } else if (this.userInfo.userRights === 1) {
+        if(i18n.locale === "zh") {
+          this.userRightsGroup = "管理员";
+        } else if (i18n.locale === "en") {
+          this.userRightsGroup = "Admin";
+        }
+      }
+
+      this.userLevel = this.generateLevelName(this.userInfo.points);
+    },
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code !== 200) {
         generalError(res.data);
       }
     },
-    generateLevelName(points, lang) {
+    generateLevelName(points) {
       points = parseInt(points);
       const zhName = ["布衣", "典史（无品）", "巡检（从九品）", "主簿（正九品）", "照磨（从八品）", "县丞（正八品）", "判官（从七品）", "知县（正七品）", "州同（从六品）", "通判（正六品）", "知州（从五品）", "同知（正五品）", "参议（从四品）", "知府（正四品）", "参政（从三品）", "按察使（正三品）", "布政使（从二品）", "都御史（正二品）", "少师（从一品）", "太师（正一品）"];
       const enName = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10", "Level 11", "Level 12", "Level 13", "Level 14", "Level 15", "Level 16", "Level 17", "Level 18", "Level 19", "Level 20"];
       if(points === 0) {
-        if(lang === "zh") {
+        if(i18n.locale === "zh") {
           return zhName[0];
-        } else if(lang === "en") {
+        } else if(i18n.locale === "en") {
           return enName[0];
         }
       }
@@ -351,9 +386,9 @@ export default {
           break;
         }
       }
-      if(lang === "zh") {
+      if(i18n.locale === "zh") {
         return zhName[i - 1];
-      } else if(lang === "en") {
+      } else if(i18n.locale === "en") {
         return enName[i - 1];
       }
     },
@@ -383,12 +418,12 @@ export default {
       }
     },
     openChangeUsernamePanel() {
-      this.newUsername = this.username;
+      this.newUsername = this.userInfo.username;
       this.changeUsernamePanel = true;
     },
     changeUsername() {
       if(this.newUsername && this.newUsername.trim().length > 0 && this.newUsername.trim().length < 15) {
-        if(this.newUsername !== this.username) {
+        if(this.newUsername !== this.userInfo.username) {
           this.doChangeUsername(this.newUsername.trim());
         } else {
           this.$message(i18n.tc('profile.usernameSame'));
@@ -402,6 +437,7 @@ export default {
       if(res.data.code === 200) {
         this.setUsername(username);
         this.changeUsernamePanel = false;
+        this.userInfo.username = username;
         this.$message({
           type: 'success',
           message: i18n.tc('profile.changeSuccess')
@@ -411,7 +447,7 @@ export default {
       }
     },
     openChangeEmailPanel() {
-      this.newEmail = this.email;
+      this.newEmail = this.userInfo.email;
       this.oldPassword = "";
       this.changeEmailPanel = true;
       this.verificationCode = "";
@@ -421,7 +457,7 @@ export default {
       if(email && email.length > 0) {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         if (regex.test(email)) {
-          if(email !== this.email) {
+          if(email !== this.userInfo.email) {
             this.doSendChangeEmailEmail(email);
           } else {
             this.$message(i18n.tc('profile.emailSame'));
@@ -480,7 +516,7 @@ export default {
     changeEmail() {
       const email = this.newEmail;
       if(email && email.length > 0 && email) {
-        if(email !== this.email) {
+        if(email !== this.userInfo.email) {
           const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
           if(regex.test(email)) {
             if(this.oldPassword && this.oldPassword.length > 0) {
@@ -519,6 +555,7 @@ export default {
       if(res.data.code === 200) {
         this.setEmail(email);
         this.changeEmailPanel = false;
+        this.userInfo.email = email;
         this.$message({
           type: 'success',
           message: i18n.tc('profile.changeSuccess')

@@ -71,6 +71,15 @@ const api = {
             params: data
         })
     },
+    getUserInfo() {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/getUserInfo",
+            method: "get"
+        })
+    },
     deleteAccount() {
         return axios({
             headers: {
