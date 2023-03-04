@@ -631,13 +631,11 @@ export default {
 .setting-area {
   margin-left: 10%;
   margin-right: 10%;
+  margin-bottom: 30px;
 }
 .divider-text {
   margin-left: 10px;
   font-size: 1.2em;
-}
-.el-row {
-  margin-bottom: 20px;
 }
 .popup-text {
   cursor: help;

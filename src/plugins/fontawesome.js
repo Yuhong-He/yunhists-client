@@ -4,7 +4,6 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
 
 import {
     faLanguage,
-    faEllipsisVertical,
     faMagnifyingGlass,
     faBookOpen,
     faHouse,
@@ -35,7 +34,6 @@ import {
 
 library.add(faCopyright);
 library.add(faLanguage);
-library.add(faEllipsisVertical);
 library.add(faMagnifyingGlass);
 library.add(faBookOpen);
 library.add(faHouse);
