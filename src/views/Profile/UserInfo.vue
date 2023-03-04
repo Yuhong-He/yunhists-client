@@ -106,7 +106,7 @@
               <el-select v-if="scope.row.id === 1" v-model="selectLang" style="width: 90px" size="mini" @change="setLangTo">
                 <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
               </el-select>
-              <el-switch v-if="scope.row.id === 2" v-model="openEmailNotification" :active-text="$t('profile.on')"
+              <el-switch v-if="scope.row.id === 2" v-model="openEmailNotification" @change="changeEmailNotification" :active-text="$t('profile.on')"
                          :inactive-text="$t('profile.off')"></el-switch>
               <el-button v-if="scope.row.id === 3" size="mini" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
             </template>
@@ -226,7 +226,7 @@
 <script>
 import {mapMutations} from "vuex";
 import {generalError} from "@/utils/user";
-import {getToken, setToken} from "@/utils/token";
+import {setToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
 
@@ -239,6 +239,7 @@ export default {
         email: "",
         userRights: null,
         points: null,
+        sendEmail: null,
         registration: null
       },
       registration_str: "",
@@ -254,7 +255,7 @@ export default {
       oldPassword: "",
       newPassword: "",
       newPassword2: "",
-      openEmailNotification: true,
+      openEmailNotification: null,
       options: [{
         value: 'zh',
         label: '中文'
@@ -270,7 +271,6 @@ export default {
     }
   },
   computed: {
-    ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     tableData() {
       return [
         {
@@ -306,6 +306,7 @@ export default {
   methods: {
     ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     async generateUserInfo() {
       let res = await this.$api.getUserInfo();
       if(res.data.code === 200) {
@@ -315,6 +316,7 @@ export default {
         this.userInfo.userRights = res.data.data.userRights;
         this.userInfo.points = res.data.data.points;
         this.userInfo.registration = res.data.data.registration;
+        this.userInfo.sendEmail = res.data.data.sendEmail;
 
         if(this.userInfo.registration === 0) {
           this.registration_str = i18n.tc('profile.emailRegistration')
@@ -337,6 +339,8 @@ export default {
         }
 
         this.userLevel = this.generateLevelName(this.userInfo.points);
+
+        this.openEmailNotification = this.userInfo.sendEmail === "ON";
       }
     },
     refreshUserInfo() {
@@ -392,10 +396,7 @@ export default {
         return enName[i - 1];
       }
     },
-    deleteAccount() {
-      this.doDeleteAccount();
-    },
-    async doDeleteAccount() {
+    async deleteAccount() {
       let res = await this.$api.deleteAccount();
       if(res.data.code === 200) {
         setToken("");
@@ -626,12 +627,19 @@ export default {
     setLangTo(val) {
       this.setLang(val);
       this.$i18n.locale = val;
-      if(getToken().length > 0) {
-        this.updateDatabaseLang(val);
-      }
+      this.$api.updateLang({'lang': val});
     },
-    updateDatabaseLang(lang) {
-      this.$api.updateLang({'lang': lang});
+    async changeEmailNotification(val) {
+      const status = val ? "ON" : "OFF";
+      let res = await this.$api.updateEmailNotification(status);
+      if(res.data.code === 200) {
+        this.$message({
+          type: 'success',
+          message: i18n.tc('profile.changeSuccess')
+        });
+      } else {
+        generalError(res.data);
+      }
     }
   }
 }

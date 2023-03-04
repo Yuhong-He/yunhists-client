@@ -129,6 +129,18 @@ const api = {
             params: data
         })
     },
+    updateEmailNotification(status) {
+        return axios({
+            headers: {
+                "token": getToken()
+            },
+            url: BASE_URL + "/user/updateEmailNotification",
+            method: "post",
+            params: {
+                status: status
+            }
+        })
+    },
     getCategoryOption(catName, lang) {
         return axios({
             url: BASE_URL + "/category/option/" + catName + "/" + lang,
