@@ -27,8 +27,9 @@ export default {
 <style lang="less" scoped>
 .profile-layout {
   display: block;
-  width: 90%;
-  margin-left: 5%;
+  width: 80%;
+  margin-left: 10%;
+  margin-right: 10%;
   margin-top: 3%;
 }
 </style>

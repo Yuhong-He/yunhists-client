@@ -12,15 +12,21 @@ import {
     faUser,
     faRightToBracket,
     faGear,
-    faCircleInfo,
-    faCircleQuestion,
+    faQuestion,
     faCircleCheck,
     faCircleMinus,
-    faCircleXmark
+    faCircleXmark,
+    faKey,
+    faEnvelope,
+    faRegistered,
+    faUserGroup,
+    faAward
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
-    faCopyright
+    faCopyright,
+    faAddressCard,
+    faPenToSquare
 } from '@fortawesome/free-regular-svg-icons';
 
 import {
@@ -38,10 +44,16 @@ library.add(faUser);
 library.add(faRightToBracket);
 library.add(faGear);
 library.add(faGoogle);
-library.add(faCircleInfo);
-library.add(faCircleQuestion);
+library.add(faQuestion);
 library.add(faCircleCheck);
 library.add(faCircleMinus);
 library.add(faCircleXmark);
+library.add(faAddressCard);
+library.add(faKey);
+library.add(faEnvelope);
+library.add(faRegistered);
+library.add(faUserGroup);
+library.add(faPenToSquare);
+library.add(faAward);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

@@ -1,110 +1,123 @@
 <template>
   <div class="userinfo">
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">{{ $t('profile.userId') }}</div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ this.userId }}</div>
-      </el-col>
-      <el-col :span="8">
-        <el-button size="medium" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
-      </el-col>
+    <el-row>
+      <div class="userinfo-description">
+        <el-descriptions :title="$t('profile.account')" :column="2">
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-regular fa-address-card" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.userId') }}</span>
+            </template>
+            <span class="userinfo-description-text">{{ this.userId }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-user" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.username') }}</span>
+            </template>
+            <span class="userinfo-description-text">{{ this.username }}</span>
+            <span class="userinfo-description-edit" @click="openChangeUsernamePanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-key" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.password') }}</span>
+            </template>
+            <span class="userinfo-description-text">xxxxxx</span>
+            <span class="userinfo-description-edit" @click="openChangePasswordPanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-envelope" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.email') }}</span>
+              <el-popover
+                  placement="top-start"
+                  width="200"
+                  trigger="hover"
+                  :content="$t('profile.onlyEmailRegisteredCanChange')">
+                <span class="popup-text" slot="reference">
+                  <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-question" /></span>
+                </span>
+              </el-popover>
+            </template>
+            <span class="userinfo-description-text">{{ this.email }}</span>
+            <span class="userinfo-description-edit" @click="openChangeEmailPanel"><font-awesome-icon icon="fa-regular fa-pen-to-square" /></span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-registered" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.registration') }}</span>
+            </template>
+            <span class="userinfo-description-text">{{ $t('profile.emailRegistration') }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-user-group" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.userRightsGroup') }}</span>
+            </template>
+            <span class="userinfo-description-text">{{ userRightsGroup }}</span>
+          </el-descriptions-item>
+          <el-descriptions-item>
+            <template slot="label">
+              <span class="userinfo-description-icon">
+                <font-awesome-icon icon="fa-solid fa-award" />
+              </span>
+              <span class="userinfo-description-text">{{ $t('profile.pointsLevel') }}</span>
+              <el-popover
+                  placement="top-start"
+                  width="200"
+                  trigger="hover"
+                  :content="$t('profile.levelTotal')">
+                <span class="popup-text" slot="reference">
+                  <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-question" /></span>
+                </span>
+              </el-popover>
+            </template>
+            <span class="userinfo-description-text">{{ this.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
+          </el-descriptions-item>
+        </el-descriptions>
+      </div>
     </el-row>
-    <el-divider><font-awesome-icon icon="fa-solid fa-gear" /></el-divider>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">{{ $t('profile.username') }}</div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ this.username }}</div>
-      </el-col>
-      <el-col :span="8">
-        <el-button size="medium" @click="openChangeUsernamePanel">{{ $t('profile.change') }}</el-button>
-      </el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">
-          <el-popover
-              placement="top-start"
-              width="200"
-              trigger="hover"
-              :content="$t('profile.onlyEmailRegisteredCanChange')">
-            <span class="popup-text" slot="reference">
-              <span>{{ $t('profile.email') }}</span>
-              <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-circle-question" /></span>
-            </span>
-          </el-popover>
-        </div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ this.email }}</div>
-      </el-col>
-      <el-col :span="8">
-        <el-button size="medium" @click="openChangeEmailPanel">{{ $t('profile.change') }}</el-button>
-      </el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">{{ $t('profile.password') }}</div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">*********</div>
-      </el-col>
-      <el-col :span="8">
-        <el-button size="medium" @click="openChangePasswordPanel">{{ $t('profile.change') }}</el-button>
-      </el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">
-          <el-popover
-              placement="top-start"
-              width="200"
-              trigger="hover"
-              :content="$t('profile.changeLangAtNavbar')">
-            <span class="popup-text" slot="reference">
-              <span>{{ $t('profile.langSetting') }}</span>
-              <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-circle-question" /></span>
-            </span>
-          </el-popover>
-        </div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ langSetting }}</div>
-      </el-col>
-      <el-col :span="8"></el-col>
-    </el-row>
-    <el-divider><font-awesome-icon icon="fa-solid fa-circle-info" /></el-divider>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">{{ $t('profile.userRightsGroup') }}</div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ userRightsGroup }}</div>
-      </el-col>
-      <el-col :span="8"></el-col>
-    </el-row>
-    <el-row :gutter="40">
-      <el-col class="grid-content" :span="8">
-        <div class="info-title">
-          <el-popover
-              placement="top-start"
-              width="200"
-              trigger="hover"
-              :content="$t('profile.levelTotal')">
-            <span class="popup-text" slot="reference">
-              <span>{{ $t('profile.pointsLevel') }}</span>
-              <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-circle-question" /></span>
-            </span>
-          </el-popover>
-        </div>
-      </el-col>
-      <el-col class="grid-content" :span="8">
-        <div class="info-text">{{ this.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</div>
-      </el-col>
-      <el-col :span="8"></el-col>
+    <el-divider>
+      <font-awesome-icon icon="fa-solid fa-gear" />
+      <span class="divider-text">{{ $t('profile.preferenceSetting') }}</span>
+    </el-divider>
+    <el-row>
+      <div class="setting-area">
+        <el-table
+            :data="tableData"
+            style="width: 100%">
+          <el-table-column prop="item" :label="$t('profile.settings')" width="180"></el-table-column>
+          <el-table-column prop="desc" :label="$t('profile.description')"></el-table-column>
+          <el-table-column prop="setting" :label="$t('profile.operation')" width="160">
+            <template v-slot="scope">
+              <el-select v-if="scope.row.id === 1" v-model="selectLang" @change="setLangTo">
+                <el-option
+                    v-for="item in options"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value">
+                </el-option>
+              </el-select>
+              <el-switch v-if="scope.row.id === 2" v-model="openEmailNotification" :active-text="$t('profile.on')"
+                         :inactive-text="$t('profile.off')"></el-switch>
+              <el-button v-if="scope.row.id === 3" size="medium" type="danger" @click="deleteAccountPanel = true">{{ $t('profile.deleteAccount') }}</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </el-row>
 
     <el-dialog
@@ -218,7 +231,7 @@
 <script>
 import {mapMutations, mapState} from "vuex";
 import {generalError} from "@/utils/user";
-import {setToken} from "@/utils/token";
+import {getToken, setToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
 
@@ -234,7 +247,15 @@ export default {
       changePasswordPanel: false,
       oldPassword: "",
       newPassword: "",
-      newPassword2: ""
+      newPassword2: "",
+      openEmailNotification: true,
+      options: [{
+        value: 'zh',
+        label: '中文'
+      }, {
+        value: 'en',
+        label: 'English'
+      }]
     }
   },
   computed: {
@@ -271,12 +292,40 @@ export default {
       get() {
         return this.generateLevelName(this.points, this.lang);
       }
+    },
+    tableData() {
+      return [
+        {
+          id: 1,
+          item: i18n.tc('profile.lang'),
+          desc: i18n.tc('profile.langDesc')
+        },
+        {
+          id: 2,
+          item: i18n.tc('profile.receiveEmail'),
+          desc: i18n.tc('profile.receiveEmailDesc')
+        },
+        {
+          id: 3,
+          item: i18n.tc('profile.deleteAccount'),
+          desc: i18n.tc('profile.deleteAccountDesc')
+        }
+      ]
+    },
+    selectLang: {
+      get() {
+        return i18n.locale;
+      },
+      set() {
+        return i18n.locale;
+      }
     }
   },
   mounted() {
     this.checkToken();
   },
   methods: {
+    ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
     async checkToken() {
       let res = await this.$api.validateToken();
@@ -536,6 +585,16 @@ export default {
       } else {
         generalError(res.data);
       }
+    },
+    setLangTo(val) {
+      this.setLang(val);
+      this.$i18n.locale = val;
+      if(getToken().length > 0) {
+        this.updateDatabaseLang(val);
+      }
+    },
+    updateDatabaseLang(lang) {
+      this.$api.updateLang({'lang': lang});
     }
   }
 }
@@ -543,32 +602,47 @@ export default {
 
 <style lang="less" scoped>
 .userinfo {
-  width: 90vw;
-  height: 60vh;
+  min-height: 60vh;
 }
-.grid-content {
-  height: 36px;
+.userinfo-description {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 20px;
+  .userinfo-description-icon {
+    width: 25px;
+    font-size: 1.2em;
+    text-align: center;
+  }
+  .userinfo-description-text {
+    font-size: 1.3em;
+  }
+  .userinfo-description-edit {
+    margin-left: 5px;
+    cursor: pointer;
+    color: #0645AD;
+    svg:hover {
+      color: dodgerblue;
+    }
+    svg:active {
+      color: darkorange;
+    }
+  }
+}
+.setting-area {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+.divider-text {
+  margin-left: 10px;
+  font-size: 1.2em;
 }
 .el-row {
   margin-bottom: 20px;
-  &:last-child {
-    margin-bottom: 0;
-  }
-}
-.info-title {
-  line-height: 36px;
-  text-align: right;
-  font-size: 1.8em;
-  font-weight: bold;
-}
-.info-text {
-  line-height: 36px;
-  font-size: 1.8em;
 }
 .popup-text {
   cursor: help;
   .popup-icon {
-    font-size: 0.5em;
+    font-size: 0.7em;
     margin-left: 2px;
   }
 }
@@ -577,5 +651,8 @@ export default {
 }
 .dialog-multi-input {
   padding-top: 10px;
+}
+/deep/ .el-table .cell {
+  word-break: normal;
 }
 </style>

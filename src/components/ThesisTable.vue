@@ -333,10 +333,10 @@ export default {
     font-weight: bold;
   }
   a:link {
-    color: blue;
+    color: #0645AD;
   }
   a:visited {
-    color: blue;
+    color: #0645AD;
   }
   a:hover {
     color: dodgerblue;
@@ -347,7 +347,7 @@ export default {
 }
 .span-link {
   font-weight: bold;
-  color: blue;
+  color: #0645AD;
   cursor: pointer;
 }
 .el-dialog__body div {

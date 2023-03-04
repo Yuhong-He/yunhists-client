@@ -300,10 +300,10 @@ export default {
     text-decoration: none;
   }
   a:link {
-    color: blue;
+    color: #0645AD;
   }
   a:visited {
-    color: blue;
+    color: #0645AD;
   }
   a:hover {
     color: dodgerblue;
