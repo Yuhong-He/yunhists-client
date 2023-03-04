@@ -456,6 +456,10 @@ export default{
         await this.$alert(i18n.tc('login.emailNotRegistered'), {
           confirmButtonText: i18n.tc('login.confirm')
         }).catch(() => {});
+      } else if (res.data.code === 209) {
+        await this.$alert(i18n.tc('login.googleAccount'), {
+          confirmButtonText: i18n.tc('login.confirm')
+        }).catch(() => {});
       } else if(res.data.code === 211) {
         this.$message({
           type: 'warning',
