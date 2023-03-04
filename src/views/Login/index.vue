@@ -85,6 +85,17 @@
         </el-form-item>
       </el-form>
     </el-dialog>
+
+    <el-dialog
+        :title="$t('login.caution')"
+        :visible.sync="readPrivacy"
+        width="30%">
+      <span>{{ $t('login.cautionTxt1') }}<a href="/TermOfService" target="_blank">{{ $t('login.cautionTxt2') }}</a>{{ $t('login.cautionTxt3') }}<a href="/PrivacyPolicy" target="_blank">{{ $t('login.cautionTxt4') }}</a>{{ $t('login.cautionTxt5') }}</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="readPrivacy = false">{{ $t('login.cancel') }}</el-button>
+        <el-button type="success" @click="confirmRegister">{{ $t('login.register') }}</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -210,7 +221,8 @@ export default{
       resetPwdForm: {
         resetPwd_email: ''
       },
-      loginLoading: false
+      loginLoading: false,
+      readPrivacy: false
     }
   },
   methods:{
@@ -325,15 +337,19 @@ export default{
     register(formName){
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.doRegister(
-              this.registerForm.register_email,
-              this.registerForm.register_name,
-              this.registerForm.register_password,
-              this.registerForm.register_confirmPassword,
-              this.registerForm.register_verificationCode
-          );
+          this.readPrivacy = true;
         }
       });
+    },
+    confirmRegister() {
+      this.readPrivacy = false;
+      this.doRegister(
+          this.registerForm.register_email,
+          this.registerForm.register_name,
+          this.registerForm.register_password,
+          this.registerForm.register_confirmPassword,
+          this.registerForm.register_verificationCode
+      );
     },
     async doRegister(email, username, pwd, pwd2, code) {
       let res = await this.$api.register(
@@ -349,6 +365,11 @@ export default{
         this.loginForm.login_password = pwd;
       } else if (res.data.code === 218) {
         await this.$alert(i18n.tc('login.noVerificationCodeSend'), {
+          confirmButtonText: i18n.tc('login.confirm'),
+          callback: () => {}
+        });
+      } else if (res.data.code === 215) {
+        await this.$alert(i18n.tc('login.emailRegistered'), {
           confirmButtonText: i18n.tc('login.confirm'),
           callback: () => {}
         });
@@ -620,5 +641,21 @@ export default{
 
 .el-dialog__body span {
   word-break: normal;
+}
+
+a {
+  text-decoration: none;
+}
+a:link {
+  color: #0645AD;
+}
+a:visited {
+  color: #0645AD;
+}
+a:hover {
+  color: dodgerblue;
+}
+a:active {
+  color: darkorange;
 }
 </style>

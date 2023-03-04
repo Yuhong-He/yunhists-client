@@ -64,7 +64,14 @@ export default {
         resetPwd: "Reset Password",
         reset: "Reset",
         newPwdSent: "New password sent",
-        waitSendEmail: "Email already sent, please re-send after one minute"
+        waitSendEmail: "Email already sent, please re-send after one minute",
+        caution: "Caution",
+        cancel: "Cancel",
+        cautionTxt1: "Please read the ",
+        cautionTxt2: "terms of service",
+        cautionTxt3: " and ",
+        cautionTxt4: "privacy policy",
+        cautionTxt5: ". If you continue to register, you will be deemed to agree and accept the relevant regulations of this site.",
     },
     profile: {
         userInfo: "User Info",

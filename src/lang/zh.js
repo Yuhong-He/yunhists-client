@@ -64,7 +64,14 @@ export default {
         resetPwd: "重置密码",
         reset: "重置",
         newPwdSent: "新密码已发送",
-        waitSendEmail: "邮件已发送，请等一会儿再操作"
+        waitSendEmail: "邮件已发送，请等一会儿再操作",
+        caution: "注意",
+        cancel: "取消",
+        cautionTxt1: "请阅读",
+        cautionTxt2: "服务条款",
+        cautionTxt3: "与",
+        cautionTxt4: "隐私政策",
+        cautionTxt5: "，如您继续注册，将视为同意并接受本站的相关规定。",
     },
     profile: {
         userInfo: "用户信息",
