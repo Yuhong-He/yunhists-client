@@ -29,7 +29,7 @@
             <span class="nav-text">{{ $t('header.manage') }}</span>
           </span>
         </template>
-        <el-menu-item index="/admin/shareList">{{ $t('header.approve') }}</el-menu-item>
+        <el-menu-item index="/admin/UploadList">{{ $t('header.approve') }}</el-menu-item>
       </el-submenu>
       <el-menu-item style="float: right;" v-if="(!this.username || this.username.length === 0)" index="/login">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />

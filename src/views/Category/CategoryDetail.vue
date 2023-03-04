@@ -331,7 +331,7 @@ export default {
       }
     },
     toSharePage() {
-      this.$router.push("/thesis/share");
+      this.$router.push("/thesis/upload");
     },
     getSubCatSelection(val) {
       this.selectedSubCats = val;

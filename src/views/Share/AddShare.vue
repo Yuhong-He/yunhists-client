@@ -229,7 +229,7 @@ export default {
           message: i18n.tc('share.shareSuccess'),
           type: 'success'
         });
-        await this.$router.push("/profile/mySharing");
+        await this.$router.push("/profile/MyUpload");
       } else {
         generalError(res.data);
       }

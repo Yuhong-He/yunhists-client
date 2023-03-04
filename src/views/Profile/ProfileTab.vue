@@ -19,9 +19,9 @@ export default {
   computed: {
     activeName: {
       get() {
-        if(this.$route.path === "/profile/userInfo") {
+        if(this.$route.path === "/profile/UserInfo") {
           return "UserInfo";
-        } else if(this.$route.path === "/profile/mySharing") {
+        } else if(this.$route.path === "/profile/MyUpload") {
           return "MySharing";
         }
       },
@@ -33,9 +33,9 @@ export default {
   methods: {
     handleClick(tab) {
       if(tab.name === "UserInfo") {
-        this.$router.push("/profile/userInfo");
+        this.$router.push("/profile/UserInfo");
       } else if (tab.name === "MySharing") {
-        this.$router.push("/profile/mySharing");
+        this.$router.push("/profile/MyUpload");
       }
     }
   }

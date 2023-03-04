@@ -194,13 +194,13 @@ export default {
 
         } else if (res.data.code === 501) {
           this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-          this.$router.push("/profile/mySharing");
+          this.$router.push("/profile/MyUpload");
         } else if (res.data.code === 502) {
           this.$message.error(i18n.tc('share.notYourSharing'));
-          this.$router.push("/profile/mySharing");
+          this.$router.push("/profile/MyUpload");
         } else if(res.data.code === 503) {
           this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-          this.$router.push("/profile/mySharing");
+          this.$router.push("/profile/MyUpload");
         } else {
           generalError(res.data);
         }
@@ -233,10 +233,10 @@ export default {
           message: i18n.tc('share.updateSuccess'),
           type: 'success'
         });
-        await this.$router.push("/profile/mySharing");
+        await this.$router.push("/profile/MyUpload");
       } else if(res.data.code === 503) {
         this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        await this.$router.push("/profile/mySharing");
+        await this.$router.push("/profile/MyUpload");
       } else {
         generalError(res.data);
       }

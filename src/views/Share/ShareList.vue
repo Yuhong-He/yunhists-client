@@ -54,7 +54,7 @@
         <el-table-column prop="approver" :label="$t('share.approver')" width="120"></el-table-column>
         <el-table-column :label="$t('thesis.operation')" :width="operationColWidth">
           <template v-slot="scope">
-            <el-button type="primary" v-if="scope.row.status === 0" @click="$router.push('/admin/approveShare/' + scope.row.id)" size="mini">{{ $t('share.approve') }}</el-button>
+            <el-button type="primary" v-if="scope.row.status === 0" @click="$router.push('/admin/ApproveUpload/' + scope.row.id)" size="mini">{{ $t('share.approve') }}</el-button>
           </template>
         </el-table-column>
       </el-table>

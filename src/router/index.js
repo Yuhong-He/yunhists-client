@@ -17,7 +17,7 @@ import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
-import Share from "@/views/Share/AddShare.vue";
+import AddShare from "@/views/Share/AddShare.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 import UpdateShare from "@/views/Share/UpdateShare.vue";
 import ApproveShare from "@/views/Share/ApproveShare.vue";
@@ -79,11 +79,11 @@ const routes = [
             }
           },
           {
-            path: 'share',
-            name: 'Share',
-            component: Share,
+            path: 'upload',
+            name: 'AddShare',
+            component: AddShare,
             meta: {
-              title: 'Share Thesis',
+              title: 'Upload Thesis',
               activeMenu: '/thesis/list'
             }
           }
@@ -137,10 +137,10 @@ const routes = [
         meta: {
           title: 'Profile',
         },
-        redirect: '/profile/userInfo',
+        redirect: '/profile/UserInfo',
         children: [
           {
-            path: 'userInfo',
+            path: 'UserInfo',
             name: 'UserInfo',
             component: UserInfo,
             meta: {
@@ -149,11 +149,11 @@ const routes = [
             }
           },
           {
-            path: 'mySharing',
-            name: 'MySharing',
+            path: 'MyUpload',
+            name: 'MyUpload',
             component: MySharing,
             meta: {
-              title: 'My Sharing',
+              title: 'My Upload',
               activeMenu: '/profile'
             }
           }
@@ -166,33 +166,33 @@ const routes = [
         meta: {
           title: 'Admin'
         },
-        redirect: '/admin/shareList',
+        redirect: '/admin/UploadList',
         children: [
           {
-            path: 'shareList',
-            name: 'ShareList',
+            path: 'UploadList',
+            name: 'UploadList',
             component: ShareList,
             meta: {
-              title: 'Share List'
+              title: 'Upload List'
             }
           },
           {
-            path: 'approveShare/:id',
-            name: 'ApproveShare',
+            path: 'ApproveUpload/:id',
+            name: 'ApproveUpload',
             component: ApproveShare,
             meta: {
-              title: 'Approve Share',
-              activeMenu: '/admin/shareList'
+              title: 'Approve Upload',
+              activeMenu: '/admin/UploadList'
             }
           }
         ]
       },
       {
-        path: 'updateMySharing/:id',
-        name: 'UpdateShare',
+        path: 'UpdateUpload/:id',
+        name: 'UpdateUpload',
         component: UpdateShare,
         meta: {
-          title: 'Update My Sharing',
+          title: 'Update Upload',
           activeMenu: '/thesis/list'
         }
       },

@@ -117,7 +117,7 @@ export default {
         this.doDeleteFile(path);
       } else if(res.data.code === 503) {
         this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        await this.$router.push("/profile/mySharing");
+        await this.$router.push("/profile/MyUpload");
       } else if(res.data.code === 504) {
         await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
           confirmButtonText: i18n.tc('thesis.confirm'),

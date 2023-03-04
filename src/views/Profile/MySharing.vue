@@ -7,7 +7,7 @@
         </el-input>
       </el-col>
       <el-col :span="16" class="my-sharing-btn-right">
-        <el-button v-if="userRights === 0" type="warning" @click="$router.push('/thesis/share')" plain>
+        <el-button v-if="userRights === 0" type="warning" @click="$router.push('/thesis/upload')" plain>
           {{ $t('thesis.share') }}
         </el-button>
         <el-button v-if="userRights > 0" type="primary" @click="$router.push('/thesis/add')" plain>
@@ -121,7 +121,7 @@ export default {
       this.generateTable();
     },
     updateShare(id) {
-      this.$router.push("/updateMySharing/" + id);
+      this.$router.push("/UpdateUpload/" + id);
     },
     deleteShare(id, title) {
       this.confirmDeleteId = id;

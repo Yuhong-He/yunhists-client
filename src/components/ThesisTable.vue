@@ -245,7 +245,7 @@ export default {
       }
     },
     toSharePage() {
-      this.$router.push("/thesis/share");
+      this.$router.push("/thesis/upload");
     },
     async doDownload() {
       let res = await this.$api.getFileName(this.downloadThesisId);

@@ -248,7 +248,7 @@ export default {
       this.$router.push("/thesis/add");
     },
     toSharePage() {
-      this.$router.push("/thesis/share");
+      this.$router.push("/thesis/upload");
     },
     changeSize(val) {
       this.page = 1;

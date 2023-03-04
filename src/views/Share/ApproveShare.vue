@@ -232,10 +232,10 @@ export default {
 
         } else if (res.data.code === 501) {
           this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-          this.$router.push("/admin/shareList");
+          this.$router.push("/admin/UploadList");
         } else if(res.data.code === 503) {
           this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-          this.$router.push("/profile/mySharing");
+          this.$router.push("/profile/MyUpload");
         } else {
           generalError(res.data);
         }
@@ -275,14 +275,14 @@ export default {
           type: 'success'
         });
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else if(res.data.code === 303) {
         await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
           confirmButtonText: i18n.tc('thesis.confirm'),
           callback: () => {}
         });
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else if(res.data.code === 406) {
         await this.$alert(i18n.tc('thesis.thesisExist'), {
           confirmButtonText: i18n.tc('thesis.confirm'),
@@ -291,11 +291,11 @@ export default {
       } else if (res.data.code === 501) {
         this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else if(res.data.code === 503) {
         this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else {
         generalError(res.data);
       }
@@ -323,15 +323,15 @@ export default {
         });
         this.isRejecting = false;
         this.confirmRejectPanel = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else if (res.data.code === 501) {
         this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else if(res.data.code === 503) {
         this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
         this.isApproving = false;
-        await this.$router.push("/admin/shareList");
+        await this.$router.push("/admin/UploadList");
       } else {
         generalError(res.data);
       }
