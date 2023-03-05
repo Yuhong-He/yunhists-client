@@ -30,6 +30,7 @@
           </span>
         </template>
         <el-menu-item index="/admin/UploadList">{{ $t('header.approve') }}</el-menu-item>
+        <el-menu-item index="/admin/maintain">{{ $t('header.maintain') }}</el-menu-item>
       </el-submenu>
       <el-menu-item style="float: right;" v-if="(!this.username || this.username.length === 0)" index="/login">
         <font-awesome-icon icon="fa-solid fa-right-to-bracket" />

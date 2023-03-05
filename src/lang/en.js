@@ -8,6 +8,7 @@ export default {
         category: 'Category',
         manage: 'Manage',
         approve: 'Approve Upload',
+        maintain: "System Maintenance",
         login: 'Login',
         logout: 'Logout',
         confirmLogout: 'Confirm Logout?',
@@ -348,5 +349,11 @@ export default {
         inputReason: "Please input reason",
         rejectSuccess: "Reject Success",
         file: "File",
+    },
+    admin: {
+        missingFile: "Theses without File",
+        noCatThesis: "Theses without Category",
+        noCatCat: "Category without Category",
+        noChildCat: "Category without Child Items"
     }
 };

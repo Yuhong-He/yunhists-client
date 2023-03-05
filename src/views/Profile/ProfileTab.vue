@@ -33,9 +33,13 @@ export default {
   methods: {
     handleClick(tab) {
       if(tab.name === "UserInfo") {
-        this.$router.push("/profile/UserInfo");
+        if(this.$router.currentRoute.path !== "/profile/UserInfo") {
+          this.$router.push("/profile/UserInfo");
+        }
       } else if (tab.name === "MySharing") {
-        this.$router.push("/profile/MyUpload");
+        if(this.$router.currentRoute.path !== "/profile/MyUpload") {
+          this.$router.push("/profile/MyUpload");
+        }
       }
     }
   }

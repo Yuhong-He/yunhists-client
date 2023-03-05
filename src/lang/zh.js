@@ -8,6 +8,7 @@ export default {
         category: '分类',
         manage: '管理',
         approve: '审批上传',
+        maintain: "系统维护",
         login: '登录',
         logout: '退出',
         confirmLogout: '确认退出？',
@@ -348,5 +349,11 @@ export default {
         inputReason: "请输入理由",
         rejectSuccess: "驳回成功",
         file: "文件",
+    },
+    admin: {
+        missingFile: "缺失文件的论文",
+        noCatThesis: "缺失分类的论文",
+        noCatCat: "缺失分类的分类",
+        noChildCat: "没有子项的分类"
     }
 };

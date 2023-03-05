@@ -24,6 +24,11 @@ import ApproveShare from "@/views/Share/ApproveShare.vue";
 import About from "@/views/Info/About/index.vue";
 import TermOfService from "@/views/Info/TermOfService/index.vue";
 import PrivacyPolicy from "@/views/Info/PrivacyPolicy/index.vue";
+import Maintain from "@/views/Admin/Maintain/index.vue";
+import MissingFile from "@/views/Admin/Maintain/MissingFile.vue";
+import NoCatThesis from "@/views/Admin/Maintain/NoCatThesis.vue";
+import NoCatCat from "@/views/Admin/Maintain/NoCatCat.vue";
+import NoChildCat from "@/views/Admin/Maintain/NoChildCat.vue";
 
 Vue.use(VueRouter)
 
@@ -166,7 +171,7 @@ const routes = [
         meta: {
           title: 'Admin'
         },
-        redirect: '/admin/UploadList',
+        redirect: '/admin/maintain/MissingFile',
         children: [
           {
             path: 'UploadList',
@@ -184,6 +189,50 @@ const routes = [
               title: 'Approve Upload',
               activeMenu: '/admin/UploadList'
             }
+          },
+          {
+            path: 'maintain',
+            name: 'Maintain',
+            component: Maintain,
+            redirect: '/admin/maintain/MissingFile',
+            children: [
+              {
+                path: 'MissingFile',
+                name: 'MissingFile',
+                component: MissingFile,
+                meta: {
+                  title: 'Missing File Thesis',
+                  activeMenu: '/admin/maintain'
+                }
+              },
+              {
+                path: 'NoCatThesis',
+                name: 'NoCatThesis',
+                component: NoCatThesis,
+                meta: {
+                  title: 'Thesis Without Category',
+                  activeMenu: '/admin/maintain'
+                }
+              },
+              {
+                path: 'NoCatCat',
+                name: 'NoCatCat',
+                component: NoCatCat,
+                meta: {
+                  title: 'Category Without Category',
+                  activeMenu: '/admin/maintain'
+                }
+              },
+              {
+                path: 'NoChildCat',
+                name: 'NoChildCat',
+                component: NoChildCat,
+                meta: {
+                  title: 'Category Without Child Item',
+                  activeMenu: '/admin/maintain'
+                }
+              }
+            ]
           }
         ]
       },
