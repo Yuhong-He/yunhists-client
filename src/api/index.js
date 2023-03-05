@@ -493,6 +493,18 @@ const api = {
             }
         })
     },
+    getMissingFileTheses() {
+        return axios({
+            url: BASE_URL + "/thesis/missingFile",
+            method: "get"
+        })
+    },
+    getThesisWithoutCat() {
+        return axios({
+            url: BASE_URL + "/thesis/thesisWithoutCat",
+            method: "get"
+        })
+    }
 }
 
 export default api;

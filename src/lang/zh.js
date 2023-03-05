@@ -354,6 +354,7 @@ export default {
         missingFile: "缺失文件的论文",
         noCatThesis: "缺失分类的论文",
         noCatCat: "缺失分类的分类",
-        noChildCat: "没有子项的分类"
+        noChildCat: "没有子项的分类",
+        noData: "暂无数据"
     }
 };

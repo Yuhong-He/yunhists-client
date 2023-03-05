@@ -354,6 +354,7 @@ export default {
         missingFile: "Theses without File",
         noCatThesis: "Theses without Category",
         noCatCat: "Category without Category",
-        noChildCat: "Category without Child Items"
+        noChildCat: "Category without Child Items",
+        noData: "No Data"
     }
 };

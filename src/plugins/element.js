@@ -79,7 +79,8 @@ import {
   Message,
   Notification,
   Descriptions,
-  DescriptionsItem
+  DescriptionsItem,
+  Empty
 } from 'element-ui';
 
 Vue.use(Pagination);
@@ -158,6 +159,7 @@ Vue.use(CascaderPanel);
 Vue.use(Drawer);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
+Vue.use(Empty);
 
 Vue.use(Loading.directive);
 

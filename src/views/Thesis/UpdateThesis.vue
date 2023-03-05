@@ -240,7 +240,13 @@ export default {
           message: i18n.tc('thesis.updateSuccess'),
           type: 'success'
         });
-        await this.$router.go(-1);
+        if(this.$router.history._startLocation !== this.$router.currentRoute.path) {
+          await this.$router.go(-1);
+        } else {
+          setTimeout(function () {
+            window.open('about:blank','_self').close();
+          }, 2000);
+        }
       } else if(res.data.code === 303) {
         await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
           confirmButtonText: i18n.tc('thesis.confirm'),
