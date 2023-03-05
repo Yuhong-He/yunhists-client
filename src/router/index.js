@@ -224,7 +224,7 @@ const routes = [
                 }
               },
               {
-                path: 'NoChildCat',
+                path: 'EmptyCat',
                 name: 'NoChildCat',
                 component: NoChildCat,
                 meta: {

@@ -504,6 +504,18 @@ const api = {
             url: BASE_URL + "/thesis/thesisWithoutCat",
             method: "get"
         })
+    },
+    getCatWithoutCat() {
+        return axios({
+            url: BASE_URL + "/category/catWithoutCat",
+            method: "get"
+        })
+    },
+    getEmptyCat() {
+        return axios({
+            url: BASE_URL + "/category/emptyCat",
+            method: "get"
+        })
     }
 }
 

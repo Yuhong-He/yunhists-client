@@ -22,7 +22,7 @@ export default {
           return "NoCatThesis";
         } else if(this.$route.path === "/admin/maintain/NoCatCat") {
           return "NoCatCat";
-        } else if(this.$route.path === "/admin/maintain/NoChildCat") {
+        } else if(this.$route.path === "/admin/maintain/EmptyCat") {
           return "NoChildCat";
         }
       },
@@ -46,8 +46,8 @@ export default {
           this.$router.push("/admin/maintain/NoCatCat");
         }
       } else if(tab.name === "NoChildCat") {
-        if(this.$router.currentRoute.path !== "/admin/maintain/NoChildCat") {
-          this.$router.push("/admin/maintain/NoChildCat");
+        if(this.$router.currentRoute.path !== "/admin/maintain/EmptyCat") {
+          this.$router.push("/admin/maintain/EmptyCat");
         }
       }
     }
