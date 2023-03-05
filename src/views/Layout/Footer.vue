@@ -3,11 +3,11 @@
     <div class="app">
       <div class="row1">
         <div>
-          <span class="clickable" @click="$router.push('/about')">{{ $t('footer.about') }}</span>
+          <span class="clickable" @click="toPage('/about')">{{ $t('footer.about') }}</span>
           <el-divider direction="vertical"></el-divider>
-          <span class="clickable" @click="$router.push('/TermOfService')">{{ $t('footer.term') }}</span>
+          <span class="clickable" @click="toPage('/TermOfService')">{{ $t('footer.term') }}</span>
           <el-divider direction="vertical"></el-divider>
-          <span class="clickable" @click="$router.push('/PrivacyPolicy')">{{ $t('footer.privacy') }}</span>
+          <span class="clickable" @click="toPage('/PrivacyPolicy')">{{ $t('footer.privacy') }}</span>
         </div>
       </div>
       <div class="row2">
@@ -21,7 +21,11 @@
 <script>
 export default {
   methods: {
-
+    toPage(url) {
+      if(this.$router.currentRoute.path !== url) {
+        this.$router.push(url);
+      }
+    }
   }
 }
 </script>
