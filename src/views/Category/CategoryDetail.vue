@@ -66,15 +66,16 @@
         <el-col :span="6" class="category-detail-header-right">
           <el-button v-if="this.userRights >= 1 && (this.subCatCount > 0 || this.subThesisCount > 0)"
                      type="warning" @click="openOperateDrawer" plain>
-            {{ $t('category.operate') }}
+            {{ $t('category.operate') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-screwdriver-wrench" />
           </el-button>
           <el-button v-if="this.userRights >= 1 && (this.subCatCount === 0 && this.subThesisCount === 0)"
                      type="danger" @click="openConfirmDeletePanel = true" plain>
-            {{ $t('category.delete') }}
+            {{ $t('category.delete') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-trash-can" />
           </el-button>
           <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
-            {{ $t('thesis.share') }}
+            {{ $t('thesis.share') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
           </el-button>
+          <el-button v-if="subThesisTableData.length > 0" type="success" plain @click="prepareExport">{{ $t('thesis.export') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-file-export" /></el-button>
         </el-col>
       </el-row>
     </div>
@@ -181,6 +182,27 @@
         <el-button type="danger" @click="deleteCategory">{{ $t('category.confirm') }}</el-button>
       </span>
     </el-dialog>
+
+    <el-dialog :title="$t('thesis.export')" :visible.sync="openExportPanel" width="30%">
+      <div>{{ $t('thesis.exportInfo') }}</div>
+      <div style="text-align: center; padding-top: 30px">
+        <el-radio-group v-model="exportFormat" size="small" fill="#FF8000">
+          <el-radio-button label="xls"></el-radio-button>
+          <el-radio-button label="csv"></el-radio-button>
+        </el-radio-group>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <div style="display: inline-flex">
+          <el-button @click="openExportPanel = false" style="margin-right: 10px">{{ $t('thesis.cancel') }}</el-button>
+          <download-excel v-if="exportFormat === 'xls'" :data="exportData" name="data.xls">
+            <el-button type="primary" @click="openExportPanel = false">{{ $t('thesis.confirm') }}</el-button>
+          </download-excel>
+          <downloadCSV v-if="exportFormat === 'csv'" :data="exportData" name="data.csv">
+            <el-button type="primary" @click="openExportPanel = false">{{ $t('thesis.confirm') }}</el-button>
+          </downloadCSV>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -245,7 +267,10 @@ export default {
       newCategoriesId: [],
       newCategories: [],
       destinationCatId: null,
-      openConfirmDeletePanel: false
+      openConfirmDeletePanel: false,
+      openExportPanel: false,
+      exportFormat: "xls",
+      exportData: []
     }
   },
   methods: {
@@ -622,6 +647,21 @@ export default {
       } else {
         generalError(res.data);
       }
+    },
+    prepareExport() {
+      this.exportData = [];
+      for(let item of this.subThesisTableData) {
+        const obj = {
+          author: item.author,
+          title: item.title,
+          publication: item.publication,
+          year: item.thesisIssue.year,
+          volume: item.thesisIssue.volume,
+          issue: item.thesisIssue.issue
+        };
+        this.exportData.push(obj);
+      }
+      this.openExportPanel = true;
     }
   }
 }
@@ -675,6 +715,9 @@ export default {
   .category-detail-header-right {
     padding-top: 5px;
     text-align: right;
+    .btn-icon {
+      padding-left: 5px;
+    }
   }
 }
 .main-title-area {

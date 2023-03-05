@@ -2,21 +2,24 @@
   <div class="thesis-list">
     <div class="thesis-header">
       <el-row>
-        <el-col :span="12" class="thesis-btn-left">
+        <el-col :span="10" class="thesis-btn-left">
           <el-input v-model="titleVal" :placeholder="$t('thesis.searchTitle')" @change="changeQuery(titleVal)" clearable>
             <el-button slot="append" icon="el-icon-search" @click="searchTitle"></el-button>
           </el-input>
           <el-button type="primary" class="advanced-search-btn" @click="openAdvancedSearch = true" plain>{{ $t('thesis.advancedSearch') }}</el-button>
         </el-col>
-        <el-col :span="12" class="thesis-btn-right">
+        <el-col :span="14" class="thesis-btn-right">
           <el-button v-if="this.userRights >= 1" type="warning" @click="openOperateDrawer" plain>
-            {{ $t('thesis.operation') }}
+            {{ $t('thesis.operation') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-screwdriver-wrench" />
           </el-button>
           <el-button v-if="this.userRights >= 1" type="primary" @click="toAddPage" plain>
-            {{ $t('thesis.add') }}
+            {{ $t('thesis.add') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-plus" />
           </el-button>
           <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
-            {{ $t('thesis.share') }}
+            {{ $t('thesis.share') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
+          </el-button>
+          <el-button v-if="tableData.length > 0" type="success" plain @click="prepareExport">
+            {{ $t('thesis.export') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-file-export" />
           </el-button>
           <el-select v-model="sizeVal" class="page-size-selector" @change="changeSize(sizeVal)">
             <el-option
@@ -86,9 +89,29 @@
             </el-collapse-item>
           </el-collapse>
         </div>
-
       </div>
     </el-drawer>
+
+    <el-dialog :title="$t('thesis.export')" :visible.sync="openExportPanel" width="30%">
+      <div>{{ $t('thesis.exportInfo') }}</div>
+      <div style="text-align: center; padding-top: 30px">
+        <el-radio-group v-model="exportFormat" size="small" fill="#FF8000">
+          <el-radio-button label="xls"></el-radio-button>
+          <el-radio-button label="csv"></el-radio-button>
+        </el-radio-group>
+      </div>
+      <div slot="footer" class="dialog-footer">
+        <div style="display: inline-flex">
+          <el-button @click="openExportPanel = false" style="margin-right: 10px">{{ $t('thesis.cancel') }}</el-button>
+          <download-excel v-if="exportFormat === 'xls'" :data="exportData" name="data.xls">
+            <el-button type="primary" @click="openExportPanel = false">{{ $t('thesis.confirm') }}</el-button>
+          </download-excel>
+          <downloadCSV v-if="exportFormat === 'csv'" :data="exportData" name="data.csv">
+            <el-button type="primary" @click="openExportPanel = false">{{ $t('thesis.confirm') }}</el-button>
+          </downloadCSV>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -98,8 +121,8 @@ import i18n from "@/lang";
 import _ from "lodash";
 import ThesisTable from "@/components/ThesisTable.vue";
 import Pagination from "@/components/Pagination.vue";
-import {generalError} from "@/utils/user";
 import CategorySelector from "@/components/CategorySelector.vue";
+import {generalError} from "@/utils/user";
 import {generateErrorMsg} from "@/utils/category";
 
 export default {
@@ -163,7 +186,10 @@ export default {
       operateTheses: false,
       newCategoriesId: [],
       newCategories: [],
-      chooseOperate: 1
+      chooseOperate: 1,
+      openExportPanel: false,
+      exportFormat: "xls",
+      exportData: []
     }
   },
   created() {
@@ -347,6 +373,21 @@ export default {
       } else {
         generalError(res.data);
       }
+    },
+    prepareExport() {
+      this.exportData = [];
+      for(let item of this.tableData) {
+        const obj = {
+          author: item.author,
+          title: item.title,
+          publication: item.publication,
+          year: item.thesisIssue.year,
+          volume: item.thesisIssue.volume,
+          issue: item.thesisIssue.issue
+        };
+        this.exportData.push(obj);
+      }
+      this.openExportPanel = true;
     }
   }
 }
@@ -371,6 +412,9 @@ export default {
     .page-size-selector {
       margin-left: 10px;
       width: 120px;
+    }
+    .btn-icon {
+      padding-left: 5px;
     }
   }
 }

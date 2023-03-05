@@ -318,7 +318,9 @@ export default {
         forFollowingTheses: "为以下论文：",
         shareNewThesis: "上传新论文",
         newCategory: "新建分类",
-        newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考"
+        newCategoryComments: "如果上面找不到您希望的分类，请在这里填写。可以同时提供新建分类的归属关系，以供管理员参考",
+        export: "导出",
+        exportInfo: "将本页面内的论文数据导出为：",
     },
     share: {
         shareSuccess: "上传成功，审批结果会通过邮件通知您",

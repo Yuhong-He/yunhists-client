@@ -10,10 +10,10 @@
         </el-col>
         <el-col :span="12" class="category-btn-right">
           <el-button v-if="this.userRights >= 1" type="warning" @click="openOperateDrawer" plain>
-            {{ $t('category.operate') }}
+            {{ $t('category.operate') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-screwdriver-wrench" />
           </el-button>
           <el-button v-if="this.userRights >= 1" type="primary" @click="toAddPage" plain>
-            {{ $t('category.add') }}
+            {{ $t('category.add') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-plus" />
           </el-button>
           <el-select v-model="sizeVal" class="page-size-selector" @change="changeSize(sizeVal)">
             <el-option
@@ -315,6 +315,9 @@ export default {
     .page-size-selector {
       margin-left: 10px;
       width: 120px;
+    }
+    .btn-icon {
+      padding-left: 5px;
     }
   }
 }

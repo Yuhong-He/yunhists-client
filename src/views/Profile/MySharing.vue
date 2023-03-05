@@ -8,10 +8,10 @@
       </el-col>
       <el-col :span="16" class="my-sharing-btn-right">
         <el-button v-if="userRights === 0" type="warning" @click="$router.push('/thesis/upload')" plain>
-          {{ $t('thesis.share') }}
+          {{ $t('thesis.share') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
         </el-button>
         <el-button v-if="userRights > 0" type="primary" @click="$router.push('/thesis/add')" plain>
-          {{ $t('thesis.add') }}
+          {{ $t('thesis.add') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-plus" />
         </el-button>
       </el-col>
     </div>
@@ -161,6 +161,9 @@ export default {
 }
 .my-sharing-btn-right {
   text-align: right;
+  .btn-icon {
+    padding-left: 5px;
+  }
 }
 .mySharing-pagination {
   font-size: 1.5em;

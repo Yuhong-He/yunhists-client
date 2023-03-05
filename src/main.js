@@ -9,11 +9,15 @@ import './assets/css/reset.css'
 import i18n from './lang/index'
 import api from './api'
 import VueClipboard from 'vue-clipboard2'
+import JsonExcel from "vue-json-excel";
+import JsonCSV from "vue-json-csv";
 
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
 
 Vue.use(VueClipboard);
+Vue.component("downloadExcel", JsonExcel);
+Vue.component("downloadCSV", JsonCSV);
 
 router.beforeEach((to, from, next) => {
     if (to.meta.title) {

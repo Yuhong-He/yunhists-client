@@ -128,7 +128,7 @@ export default {
         preferenceSetting: "Preference Settings",
         settings: "Settings",
         description: "Description",
-        operation: "Operation",
+        operation: "Operate",
         on: "ON",
         off: "OFF",
         lang: "Language",
@@ -260,7 +260,7 @@ export default {
         volumeIsNum: "Volume should be number",
         searchTitle: "Search Title",
         advancedSearch: "Advanced Search",
-        operation: "Operation",
+        operation: "Operate",
         add: "Add",
         share: "Upload",
         noData: "No Data",
@@ -318,7 +318,9 @@ export default {
         forFollowingTheses: "For the following thesis(s):",
         shareNewThesis: "Upload New Thesis",
         newCategory: "New Category",
-        newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference"
+        newCategoryComments: "If you can't find the category you want above, please fill it in here. At the same time, the categorisation relationship of the newly created category can be provided for the administrator's reference",
+        export: "Export",
+        exportInfo: "Export the thesis data in this page as:",
     },
     share: {
         shareSuccess: "Uploaded successfully, the approval result will notify you by email",

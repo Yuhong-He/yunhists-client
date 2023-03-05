@@ -19,7 +19,12 @@ import {
     faEnvelope,
     faRegistered,
     faUserGroup,
-    faAward
+    faAward,
+    faFileExport,
+    faUpload,
+    faPlus,
+    faScrewdriverWrench,
+    faTrashCan
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -53,5 +58,10 @@ library.add(faRegistered);
 library.add(faUserGroup);
 library.add(faPenToSquare);
 library.add(faAward);
+library.add(faFileExport);
+library.add(faUpload);
+library.add(faPlus);
+library.add(faScrewdriverWrench);
+library.add(faTrashCan);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);
