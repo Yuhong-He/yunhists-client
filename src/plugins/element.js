@@ -80,7 +80,8 @@ import {
   Notification,
   Descriptions,
   DescriptionsItem,
-  Empty
+  Empty,
+  Statistic
 } from 'element-ui';
 
 Vue.use(Pagination);
@@ -160,6 +161,7 @@ Vue.use(Drawer);
 Vue.use(Descriptions);
 Vue.use(DescriptionsItem);
 Vue.use(Empty);
+Vue.use(Statistic);
 
 Vue.use(Loading.directive);
 

@@ -24,7 +24,8 @@ import {
     faUpload,
     faPlus,
     faScrewdriverWrench,
-    faTrashCan
+    faTrashCan,
+    faChartLine
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -63,5 +64,6 @@ library.add(faUpload);
 library.add(faPlus);
 library.add(faScrewdriverWrench);
 library.add(faTrashCan);
+library.add(faChartLine);
 
 Vue.component('font-awesome-icon', FontAwesomeIcon);

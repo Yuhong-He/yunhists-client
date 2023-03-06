@@ -22,6 +22,7 @@
             <el-radio label="0">{{ $t('thesis.journal') }}</el-radio>
             <el-radio label="1">{{ $t('thesis.collection') }}</el-radio>
             <el-radio label="2">{{ $t('thesis.bookChapter') }}</el-radio>
+            <el-radio label="3">{{ $t('thesis.newspaperArticle') }}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item v-if="this.form.type === '1' || this.form.type === '2'" :label="$t('thesis.location')" prop="location">
@@ -36,10 +37,10 @@
         <el-form-item v-if="this.form.type === '0' || this.form.type === '1'" :label="$t('thesis.volume')" prop="volume">
           <el-input v-model="form.volume" style="width: 50%" clearable></el-input>
         </el-form-item>
-        <el-form-item v-if="this.form.type === '0'" :label="$t('thesis.issue')" prop="issue">
+        <el-form-item v-if="this.form.type === '0' || this.form.type === '3'" :label="$t('thesis.issue')" prop="issue">
           <el-input v-model="form.issue" style="width: 50%" clearable></el-input>
         </el-form-item>
-        <el-form-item :label="$t('thesis.pages')" prop="pages">
+        <el-form-item v-if="this.form.type !== '3'" :label="$t('thesis.pages')" prop="pages">
           <el-input v-model="form.pages" style="width: 50%" clearable></el-input>
         </el-form-item>
         <el-form-item label="DOI" prop="doi">
@@ -129,6 +130,27 @@ export default {
   components: {
     CategorySelector,
     FileUploader
+  },
+  watch: {
+    'form.type': {
+      handler(newType) {
+        if(newType === '0') {
+          this.form.location = '';
+          this.form.publisher = '';
+        } else if(newType === '1') {
+          this.form.issue = '';
+        } else if(newType === '2') {
+          this.form.issue = '';
+          this.form.volume = '';
+        } else {
+          this.form.location = '';
+          this.form.publisher = '';
+          this.form.volume = '';
+          this.form.pages = '';
+        }
+      },
+      immediate: true
+    }
   },
   mounted() {
     this.checkToken();

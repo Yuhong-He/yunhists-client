@@ -22,6 +22,10 @@
         <font-awesome-icon icon="fa-solid fa-folder-tree" />
         <span class="nav-text">{{ $t('header.category') }}</span>
       </el-menu-item>
+      <el-menu-item index="/statistics">
+        <font-awesome-icon icon="fa-solid fa-chart-line" />
+        <span class="nav-text">{{ $t('header.statistics') }}</span>
+      </el-menu-item>
       <el-submenu index="/admin" v-if="(this.userRights === 1)">
         <template slot="title">
           <span>

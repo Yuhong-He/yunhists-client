@@ -516,6 +516,12 @@ const api = {
             url: BASE_URL + "/category/emptyCat",
             method: "get"
         })
+    },
+    getStatisticsData() {
+        return axios({
+            url: BASE_URL + "/statistics/get",
+            method: "get"
+        })
     }
 }
 

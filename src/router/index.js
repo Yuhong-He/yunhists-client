@@ -29,6 +29,7 @@ import MissingFile from "@/views/Admin/Maintain/MissingFile.vue";
 import NoCatThesis from "@/views/Admin/Maintain/NoCatThesis.vue";
 import NoCatCat from "@/views/Admin/Maintain/NoCatCat.vue";
 import NoChildCat from "@/views/Admin/Maintain/NoChildCat.vue";
+import Statistics from "@/views/Statistics/index.vue";
 
 Vue.use(VueRouter)
 
@@ -134,6 +135,14 @@ const routes = [
             }
           }
         ]
+      },
+      {
+        path: '/statistics',
+        name: 'Statistics',
+        component: Statistics,
+        meta: {
+          title: 'Statistics'
+        }
       },
       {
         path: '/profile',
