@@ -26,7 +26,29 @@ router.beforeEach((to, from, next) => {
     if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
         i18n.locale = store.state.Settings.lang;
     } else {
-        i18n.locale = "zh";
+        switch (navigator.language.toLowerCase()) {
+            case "zh-hans":
+                i18n.locale = "zh";
+                break;
+            case "zh-cn":
+                i18n.locale = "zh";
+                break;
+            case "zh":
+                i18n.locale = "zh";
+                break;
+            case "zh-hant":
+                i18n.locale = "zh";
+                break;
+            case "zh-hk":
+                i18n.locale = "zh";
+                break;
+            case "zh-tw":
+                i18n.locale = "zh";
+                break;
+            default:
+                i18n.locale = "en";
+                break;
+        }
     }
     next()
 })
@@ -41,7 +63,7 @@ console.log(
     "                                                      \n" +
     "-------------------------------------------------------\n" +
     "                                                      \n" +
-    "感谢您访问我的网站，本人不谙CSS样式。如您有意愿帮助提升本站的UI，欢迎联系本人，不胜感激！\n" +
+    "感谢您访问我的网站，本人不谙CSS样式。如您有意愿帮助提升本站的UI，欢迎联系我，不胜感激！\n" +
     "Thanks for visiting my site, I am not familiar with CSS styling. If you are willing to help improve the UI of this site, please contact me, thank you very much!"
 )
 
