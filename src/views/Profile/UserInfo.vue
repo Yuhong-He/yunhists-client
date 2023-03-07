@@ -85,12 +85,15 @@
                 </span>
               </el-popover>
             </template>
+            <span class="userinfo-description-text">{{ userInfo.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
             <el-popover
               placement="top-start"
               width="200"
               trigger="hover"
-              :content="$i18n.tc('profile.pointsRequire1') + pointsToNextLevel + $i18n.tc('profile.pointsRequire2')">
-              <span slot="reference" class="userinfo-description-text" style="cursor: help">{{ userInfo.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
+              :content="$t('profile.pointsRequire1') + pointsToNextLevel + $t('profile.pointsRequire2')">
+              <span class="popup-text" slot="reference">
+                <span class="popup-icon"><font-awesome-icon icon="fa-solid fa-question" /></span>
+              </span>
             </el-popover>
           </el-descriptions-item>
         </el-descriptions>
