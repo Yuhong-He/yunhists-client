@@ -20,6 +20,8 @@
     "firebase": "^9.17.1",
     "jquery": "^3.6.3",
     "lodash": "^4.17.21",
+    "moment": "^2.29.4",
+    "moment-timezone": "^0.5.41",
     "vue": "^2.6.14",
     "vue-clipboard2": "^0.3.3",
     "vue-countupjs": "^1.0.0",

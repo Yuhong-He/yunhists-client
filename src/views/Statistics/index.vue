@@ -40,7 +40,8 @@
       </div>
       <div class="time-countdown">
         <div class="note">
-          <el-statistic ref="statistic" @finish="refreshStatistics" format="HH:mm:ss" :value="tomorrow" :title="$t('statistics.refreshCountdown')" time-indices></el-statistic>
+          <div style="font-size: 14px">{{ $t('statistics.refreshCountdown') }}</div>
+          <div style="text-align: center; font-size: 1.1em">{{ tomorrow }}</div>
         </div>
       </div>
     </div>
@@ -69,6 +70,8 @@
 <script>
 import * as echarts from 'echarts';
 import VueCountUp from 'vue-countupjs';
+import moment from 'moment';
+import 'moment-timezone';
 import i18n from "@/lang";
 
 export default {
@@ -83,7 +86,7 @@ export default {
   },
   data() {
     return {
-      tomorrow: Date.now() + (new Date().setHours(23, 59, 59) - Date.now()),
+      tomorrow: "00:00:00",
       general: {
         categoryCount: null,
         categoryLinkCount: null,
@@ -93,16 +96,33 @@ export default {
       },
       thesisYear: [],
       thesisYearChart: null,
+      thesisTypePieChart: null,
+      thesisCopyrightPieChart: null,
       thesisYearChartOption: {},
       thesisCopyrightData: {},
       thesisTypeData: {}
     }
   },
   mounted() {
+    this.countdown();
     this.generateContent();
     window.addEventListener('resize', this.handleResize);
   },
   methods: {
+    countdown() {
+      const deadline = moment().endOf('day').add(1, 'days').set({hour: 15, minute: 59, second: 59, millisecond: 0});
+      setInterval(() => {
+        const diff = deadline.diff(moment(), 'seconds');
+        const duration = moment.duration(diff, 'seconds');
+        const hours = duration.hours().toString().padStart(2, '0');
+        const minutes = duration.minutes().toString().padStart(2, '0');
+        const seconds = duration.seconds().toString().padStart(2, '0');
+        this.tomorrow = hours + ':' + minutes + ':' + seconds;
+        if(this.tomorrow === "00:00:00") {
+          this.refreshStatistics();
+        }
+      }, 1000);
+    },
     async generateContent() {
       let res = await this.$api.getStatisticsData();
       if(res.data.code === 200) {
@@ -127,6 +147,9 @@ export default {
       }
 
       const chartDom = document.getElementById('thesis-year-line-chart');
+      if (this.thesisYearChart != null && this.thesisYearChart !== "" && this.thesisYearChart !== undefined) {
+        this.thesisYearChart.dispose();
+      }
       this.thesisYearChart = echarts.init(chartDom);
       this.thesisYearChartOption = {
         xAxis: {
@@ -178,7 +201,10 @@ export default {
         pie_data.push(obj);
       }
       const chartDom = document.getElementById('thesis-copyright-pie-chart');
-      const myChart = echarts.init(chartDom);
+      if (this.thesisCopyrightPieChart != null && this.thesisCopyrightPieChart !== "" && this.thesisCopyrightPieChart !== undefined) {
+        this.thesisCopyrightPieChart.dispose();
+      }
+      this.thesisCopyrightPieChart = echarts.init(chartDom);
       let option;
       option = {
         tooltip: {
@@ -203,7 +229,7 @@ export default {
           }
         ]
       };
-      option && myChart.setOption(option);
+      option && this.thesisCopyrightPieChart.setOption(option);
     },
     generateThesisTypePieChart() {
       const pie_data = [];
@@ -231,7 +257,10 @@ export default {
         pie_data.push(obj);
       }
       const chartDom = document.getElementById('thesis-type-pie-chart');
-      const myChart = echarts.init(chartDom);
+      if (this.thesisTypePieChart != null && this.thesisTypePieChart !== "" && this.thesisTypePieChart !== undefined) {
+        this.thesisTypePieChart.dispose();
+      }
+      this.thesisTypePieChart = echarts.init(chartDom);
       let option;
       option = {
         tooltip: {
@@ -259,7 +288,7 @@ export default {
           }
         ]
       };
-      option && myChart.setOption(option);
+      option && this.thesisTypePieChart.setOption(option);
     },
     refreshStatistics() {
       this.$message({
