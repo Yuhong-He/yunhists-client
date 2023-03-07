@@ -85,8 +85,12 @@ import {validateThesis} from "@/utils/thesis";
 import {mapState} from "vuex";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("updateUpload");
+  },
   components: {
     CategorySelector,
     FileUploader
@@ -125,6 +129,9 @@ export default {
         }
       },
       immediate: true
+    },
+    '$i18n.locale'() {
+      document.title = getTitle("updateUpload");
     }
   },
   mounted() {

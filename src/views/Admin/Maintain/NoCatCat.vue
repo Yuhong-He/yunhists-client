@@ -13,7 +13,17 @@
 </template>
 
 <script>
+import {getTitle} from "@/utils/title";
+
 export default {
+  created() {
+    document.title = getTitle("noCatCat");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("noCatCat");
+    }
+  },
   mounted() {
     this.getData();
   },

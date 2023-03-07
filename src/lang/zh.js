@@ -378,5 +378,26 @@ export default {
         dataRefreshed: "数据已刷新",
         refreshCountdown: "刷新倒计时",
         refreshCountdownPopup: "北京时间0点刷新"
+    },
+    title: {
+        home: "首页",
+        missingFile: "缺少文件的论文列表",
+        noCatCat: "缺少分类的分类列表",
+        noCatThesis: "缺少分类的论文列表",
+        emptyCat: "空分类列表",
+        addCat: "添加分类",
+        catList: "分类列表",
+        login: "登录",
+        myUpload: "我的上传",
+        userInfo: "用户信息",
+        addUpload: "上传论文",
+        approveUpload: "审批上传",
+        uploadList: "上传列表",
+        updateUpload: "修改论文",
+        statistics: "数据统计",
+        addThesis: "添加论文",
+        thesisList: "论文列表",
+        updateThesis: "修改论文",
+        siteName: " - 滇史论辑"
     }
 };

@@ -110,8 +110,12 @@ import CategorySelector from "@/components/CategorySelector.vue";
 import $ from "jquery";
 import {generalError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("addUpload");
+  },
   computed: {
     ...mapState('UserInfo', ['userRights']),
     options() {
@@ -150,6 +154,9 @@ export default {
         }
       },
       immediate: true
+    },
+    '$i18n.locale'() {
+      document.title = getTitle("addUpload");
     }
   },
   mounted() {

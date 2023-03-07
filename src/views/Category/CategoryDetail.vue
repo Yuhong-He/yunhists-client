@@ -304,6 +304,11 @@ export default {
           this.catEnName = res.data.data.enName;
           this.subCatCount = res.data.data.catSubCats;
           this.subThesisCount = res.data.data.catTheses;
+          if(i18n.locale === "zh") {
+            document.title = this.catZhName + " - 滇史论辑";
+          } else {
+            document.title = this.catEnName + " - Yunhists";
+          }
         } else if(res.data.code === 305) {
           this.$message.error(i18n.tc('category.categoryIdNotExist'));
           this.$router.push("/category/list");

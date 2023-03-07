@@ -72,8 +72,12 @@ import {mapState} from "vuex";
 import {generalError} from "@/utils/user";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("uploadList");
+  },
   computed: {
     ...mapState('UserInfo', ['userRights'])
   },
@@ -82,6 +86,7 @@ export default {
   },
   watch: {
     '$i18n.locale'() {
+      document.title = getTitle("uploadList");
       if(i18n.locale === "zh") {
         this.operationColWidth = 77;
       } else {

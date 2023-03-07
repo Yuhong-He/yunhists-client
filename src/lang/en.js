@@ -140,7 +140,6 @@ export default {
         deleteAccountDesc: "Your email, password, and user name in the database will be cleared, you will not be able to log in to your account, and your user name will not be visible in the upload records.",
         pointsRequire1: "",
         pointsRequire2: " points are required to advance to the next level"
-
     },
     util: {
         user: {
@@ -379,5 +378,26 @@ export default {
         dataRefreshed: "Data Refreshed",
         refreshCountdown: "Refresh Countdown",
         refreshCountdownPopup: "Refresh at 00:00 Beijing time"
+    },
+    title: {
+        home: "Home",
+        missingFile: "List of Missing File Thesis",
+        noCatCat: "List of Category without Category",
+        noCatThesis: "List of Thesis without Category",
+        emptyCat: "Empty Category List",
+        addCat: "Add Category",
+        catList: "Category List",
+        login: "Login",
+        myUpload: "My Upload",
+        userInfo: "User Info",
+        addUpload: "Upload Thesis",
+        approveUpload: "Approve Upload",
+        uploadList: "Upload List",
+        updateUpload: "Update Thesis",
+        statistics: "Statistics",
+        addThesis: "Add Thesis",
+        thesisList: "Thesis List",
+        updateThesis: "Update Thesis",
+        siteName: " - Yunhists"
     }
 };

@@ -8,7 +8,17 @@
 </template>
 
 <script>
+import {getTitle} from "@/utils/title";
+
 export default {
+  created() {
+    document.title = getTitle("missingFile");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("missingFile");
+    }
+  },
   mounted() {
     this.getData();
   },

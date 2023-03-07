@@ -21,9 +21,6 @@ Vue.component("downloadExcel", JsonExcel);
 Vue.component("downloadCSV", JsonCSV);
 
 router.beforeEach((to, from, next) => {
-    if (to.meta.title) {
-        document.title = to.meta.title
-    }
     if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
         i18n.locale = store.state.Settings.lang;
     } else {

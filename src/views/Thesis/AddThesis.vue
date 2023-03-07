@@ -32,7 +32,7 @@
           <el-input v-model="form.publisher" clearable></el-input>
         </el-form-item>
         <el-form-item :label="$t('thesis.year')" prop="year">
-          <el-date-picker v-model="form.year" type="year" format="yyyy" value-format="yyyy" style="width: 50%" :placeholder="$t('thesis.select')" :picker-options="pickerOptions"></el-date-picker>
+          <el-date-picker v-model="form.year" type="year" format="yyyy" value-format="yyyy" style="width: 50%" :placeholder="$t('thesis.select')" :picker-options="pickerOptions" popper-class="date_picker_class"></el-date-picker>
         </el-form-item>
         <el-form-item v-if="this.form.type === '0' || this.form.type === '1'" :label="$t('thesis.volume')" prop="volume">
           <el-input v-model="form.volume" style="width: 50%" clearable></el-input>
@@ -107,8 +107,12 @@ import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import $ from "jquery";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("addThesis");
+  },
   computed: {
     ...mapState('UserInfo', ['userRights']),
     options() {
@@ -143,6 +147,9 @@ export default {
         }
       },
       immediate: true
+    },
+    '$i18n.locale'() {
+      document.title = getTitle("addThesis");
     }
   },
   mounted() {
@@ -336,6 +343,12 @@ export default {
   }
   a:active {
     color: darkorange;
+  }
+}
+.date_picker_class {
+  .el-year-table td.today .cell {
+    font-weight: normal;
+    color: #606266;
   }
 }
 </style>

@@ -67,9 +67,9 @@
           <div id="thesis-copyright-pie-chart" style="height: 350px"></div>
         </div>
       </div>
-      <div class="line-chart-area empty-status">
-        <el-empty :image="require('@/assets/images/Red-Coming-Soon-Stamp.svg')" :description="$t('statistics.comingSoon')"></el-empty>
-      </div>
+<!--      <div class="line-chart-area empty-status">-->
+<!--        <el-empty :image="require('@/assets/images/Red-Coming-Soon-Stamp.svg')" :description="$t('statistics.comingSoon')"></el-empty>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -80,13 +80,18 @@ import VueCountUp from 'vue-countupjs';
 import moment from 'moment';
 import 'moment-timezone';
 import i18n from "@/lang";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("statistics");
+  },
   components: {
     VueCountUp
   },
   watch: {
     '$i18n.locale'() {
+      document.title = getTitle("statistics");
       this.generateThesisCopyrightPieChart();
       this.generateThesisTypePieChart();
     }

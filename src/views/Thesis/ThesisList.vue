@@ -124,6 +124,7 @@ import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {generalError} from "@/utils/user";
 import {generateErrorMsg} from "@/utils/category";
+import {getTitle} from "@/utils/title";
 
 export default {
   computed: {
@@ -193,10 +194,12 @@ export default {
     }
   },
   created() {
+    document.title = getTitle("thesisList");
     this.getThesisList();
   },
   watch: {
     '$i18n.locale'() {
+      document.title = getTitle("thesisList");
       this.refreshRoute();
     },
     '$route': 'getThesisList'

@@ -238,8 +238,12 @@ import {generalError} from "@/utils/user";
 import {setToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("userInfo");
+  },
   data() {
     return {
       userInfo: {
@@ -277,6 +281,7 @@ export default {
   },
   watch: {
     '$i18n.locale'() {
+      document.title = getTitle("userInfo");
       this.refreshUserInfo();
     }
   },

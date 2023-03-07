@@ -13,7 +13,6 @@ import CategoryDetail from '@/views/Category/CategoryDetail.vue'
 import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
 import ShareList from '@/views/Share/ShareList.vue'
-import Test from "@/views/Test"
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
 import MySharing from "@/views/Profile/MySharing.vue";
@@ -44,34 +43,24 @@ const routes = [
       {
         path: '/',
         name: 'Home',
-        component: Home,
-        meta: {
-          title: 'Home'
-        }
+        component: Home
       },
       {
         path: '/thesis',
         name: 'Thesis',
         component: Thesis,
-        meta: {
-          title: 'Thesis'
-        },
         redirect: '/thesis/list',
         children: [
           {
             path: 'list',
             name: 'ThesisList',
-            component: ThesisList,
-            meta: {
-              title: 'Thesis List'
-            }
+            component: ThesisList
           },
           {
             path: 'add',
             name: 'ThesisAdd',
             component: ThesisAdd,
             meta: {
-              title: 'Add Thesis',
               activeMenu: '/thesis/list'
             }
           },
@@ -80,7 +69,6 @@ const routes = [
             name: 'UpdateThesis',
             component: UpdateThesis,
             meta: {
-              title: 'Update Thesis',
               activeMenu: '/thesis/list'
             }
           },
@@ -89,7 +77,6 @@ const routes = [
             name: 'AddShare',
             component: AddShare,
             meta: {
-              title: 'Upload Thesis',
               activeMenu: '/thesis/list'
             }
           }
@@ -99,18 +86,12 @@ const routes = [
         path: '/category',
         name: 'Category',
         component: Category,
-        meta: {
-          title: 'Category'
-        },
         redirect: '/category/list',
         children: [
           {
             path: 'list',
             name: 'CategoryList',
-            component: CategoryList,
-            meta: {
-              title: 'Category List'
-            }
+            component: CategoryList
           },
           {
             path: 'id',
@@ -121,7 +102,6 @@ const routes = [
             name: 'CategoryDetail',
             component: CategoryDetail,
             meta: {
-              title: 'Category Detail',
               activeMenu: '/category/list'
             }
           },
@@ -130,7 +110,6 @@ const routes = [
             name: 'CategoryAdd',
             component: CategoryAdd,
             meta: {
-              title: 'Add Category',
               activeMenu: '/category/list'
             }
           }
@@ -139,18 +118,12 @@ const routes = [
       {
         path: '/statistics',
         name: 'Statistics',
-        component: Statistics,
-        meta: {
-          title: 'Statistics'
-        }
+        component: Statistics
       },
       {
         path: '/profile',
         name: 'Profile',
         component: Profile,
-        meta: {
-          title: 'Profile',
-        },
         redirect: '/profile/UserInfo',
         children: [
           {
@@ -158,7 +131,6 @@ const routes = [
             name: 'UserInfo',
             component: UserInfo,
             meta: {
-              title: 'User Info',
               activeMenu: '/profile'
             }
           },
@@ -167,7 +139,6 @@ const routes = [
             name: 'MyUpload',
             component: MySharing,
             meta: {
-              title: 'My Upload',
               activeMenu: '/profile'
             }
           }
@@ -177,25 +148,18 @@ const routes = [
         path: '/admin',
         name: 'Admin',
         component: Admin,
-        meta: {
-          title: 'Admin'
-        },
         redirect: '/admin/maintain/MissingFile',
         children: [
           {
             path: 'UploadList',
             name: 'UploadList',
-            component: ShareList,
-            meta: {
-              title: 'Upload List'
-            }
+            component: ShareList
           },
           {
             path: 'ApproveUpload/:id',
             name: 'ApproveUpload',
             component: ApproveShare,
             meta: {
-              title: 'Approve Upload',
               activeMenu: '/admin/UploadList'
             }
           },
@@ -210,7 +174,6 @@ const routes = [
                 name: 'MissingFile',
                 component: MissingFile,
                 meta: {
-                  title: 'Missing File Thesis',
                   activeMenu: '/admin/maintain'
                 }
               },
@@ -219,7 +182,6 @@ const routes = [
                 name: 'NoCatThesis',
                 component: NoCatThesis,
                 meta: {
-                  title: 'Thesis Without Category',
                   activeMenu: '/admin/maintain'
                 }
               },
@@ -228,7 +190,6 @@ const routes = [
                 name: 'NoCatCat',
                 component: NoCatCat,
                 meta: {
-                  title: 'Category Without Category',
                   activeMenu: '/admin/maintain'
                 }
               },
@@ -237,7 +198,6 @@ const routes = [
                 name: 'NoChildCat',
                 component: NoChildCat,
                 meta: {
-                  title: 'Category Without Child Item',
                   activeMenu: '/admin/maintain'
                 }
               }
@@ -250,7 +210,6 @@ const routes = [
         name: 'UpdateUpload',
         component: UpdateShare,
         meta: {
-          title: 'Update Upload',
           activeMenu: '/thesis/list'
         }
       },
@@ -259,7 +218,6 @@ const routes = [
         name: 'About',
         component: About,
         meta: {
-          title: 'About',
           activeMenu: '/'
         }
       },
@@ -268,7 +226,6 @@ const routes = [
         name: 'TermOfService',
         component: TermOfService,
         meta: {
-          title: 'Term of Service',
           activeMenu: '/'
         }
       },
@@ -277,7 +234,6 @@ const routes = [
         name: 'PrivacyPolicy',
         component: PrivacyPolicy,
         meta: {
-          title: 'Privacy Policy',
           activeMenu: '/'
         }
       },
@@ -286,18 +242,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
-    meta: {
-      title: 'Login'
-    }
-  },
-  {
-    path: '/test',
-    name: 'Test',
-    component: Test,
-    meta: {
-      title: 'Test'
-    }
+    component: Login
   },
   {
     path: '/:pathMatch(.*)*',

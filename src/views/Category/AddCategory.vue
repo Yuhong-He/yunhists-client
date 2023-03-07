@@ -27,8 +27,17 @@ import CategorySelector from "@/components/CategorySelector.vue";
 import {mapState} from "vuex";
 import {generalError} from "@/utils/user";
 import i18n from "@/lang";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("addCat");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("addCat");
+    }
+  },
   computed: {
     ...mapState('UserInfo', ['userRights'])
   },

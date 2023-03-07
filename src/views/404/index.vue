@@ -12,7 +12,9 @@
 
 <script>
 export default {
-  name: "index"
+  created() {
+    document.title = "404 Not Found";
+  }
 }
 </script>
 

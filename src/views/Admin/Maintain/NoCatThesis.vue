@@ -8,7 +8,17 @@
 </template>
 
 <script>
+import {getTitle} from "@/utils/title";
+
 export default {
+  created() {
+    document.title = getTitle("noCatThesis");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("noCatThesis");
+    }
+  },
   mounted() {
     this.getData();
   },

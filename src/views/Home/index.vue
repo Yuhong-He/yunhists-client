@@ -14,8 +14,17 @@
 
 <script>
 import router from "@/router";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("home");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("home");
+    }
+  },
   mounted() {
     window.addEventListener("keydown", function(event) {
       const search_btn = document.getElementById("search-btn");

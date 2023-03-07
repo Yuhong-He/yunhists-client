@@ -108,8 +108,17 @@ import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Loading } from 'element-ui';
 import {firebaseConfig} from "@/utils/firebase";
+import {getTitle} from "@/utils/title";
 
 export default{
+  created() {
+    document.title = getTitle("login");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("login");
+    }
+  },
   computed: {
     ...mapState('Settings', ['lang'])
   },

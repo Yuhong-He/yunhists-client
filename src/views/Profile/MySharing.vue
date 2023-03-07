@@ -73,8 +73,17 @@ import {generalError} from "@/utils/user";
 import i18n from "@/lang";
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("myUpload");
+  },
+  watch: {
+    '$i18n.locale'() {
+      document.title = getTitle("myUpload");
+    }
+  },
   computed: {
     ...mapState('UserInfo', ['userRights'])
   },

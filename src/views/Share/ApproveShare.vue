@@ -111,8 +111,12 @@ import CategorySelector from "@/components/CategorySelector.vue";
 import {generalError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("approveUpload");
+  },
   components: {
     CategorySelector
   },
@@ -150,6 +154,9 @@ export default {
         }
       },
       immediate: true
+    },
+    '$i18n.locale'() {
+      document.title = getTitle("approveUpload");
     }
   },
   mounted() {

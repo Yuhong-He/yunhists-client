@@ -82,8 +82,12 @@ import {generalError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
+import {getTitle} from "@/utils/title";
 
 export default {
+  created() {
+    document.title = getTitle("updateThesis");
+  },
   components: {
     CategorySelector,
     FileUploader
@@ -122,6 +126,9 @@ export default {
         }
       },
       immediate: true
+    },
+    '$i18n.locale'() {
+      document.title = getTitle("updateThesis");
     }
   },
   mounted() {
