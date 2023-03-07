@@ -10,14 +10,6 @@ import ProfileTab from "@/views/Profile/ProfileTab.vue";
 import {mapState} from "vuex";
 
 export default {
-  computed: {
-    ...mapState('UserInfo', ['username'])
-  },
-  mounted() {
-    if(!(this.username && this.username.length > 0)) {
-      this.$router.push("/login");
-    }
-  },
   components: {
     ProfileTab
   }
