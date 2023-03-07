@@ -11,6 +11,7 @@ import api from './api'
 import VueClipboard from 'vue-clipboard2'
 import JsonExcel from "vue-json-excel";
 import JsonCSV from "vue-json-csv";
+import 'babel-polyfill';
 
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
