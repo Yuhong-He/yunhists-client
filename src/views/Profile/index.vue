@@ -7,7 +7,6 @@
 
 <script>
 import ProfileTab from "@/views/Profile/ProfileTab.vue";
-import {mapState} from "vuex";
 
 export default {
   components: {
