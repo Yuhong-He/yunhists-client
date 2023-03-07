@@ -138,6 +138,9 @@ export default {
         receiveEmailDesc: "Receive notification emails for success, failure, and deletion of thesis uploads.",
         deleteAccount: "Delete Account",
         deleteAccountDesc: "Your email, password, and user name in the database will be cleared, you will not be able to log in to your account, and your user name will not be visible in the upload records.",
+        pointsRequire1: "",
+        pointsRequire2: " points are required to advance to the next level"
+
     },
     util: {
         user: {
@@ -374,6 +377,7 @@ export default {
         year: "Year: ",
         count: "Total: ",
         dataRefreshed: "Data Refreshed",
-        refreshCountdown: "Refresh Countdown"
+        refreshCountdown: "Refresh Countdown",
+        refreshCountdownPopup: "Refresh at 00:00 Beijing time"
     }
 };

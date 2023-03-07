@@ -40,8 +40,15 @@
       </div>
       <div class="time-countdown">
         <div class="note">
-          <div style="font-size: 14px">{{ $t('statistics.refreshCountdown') }}</div>
-          <div style="text-align: center; font-size: 1.1em">{{ tomorrow }}</div>
+          <div style="font-size: 13px; color: dimgrey">{{ $t('statistics.refreshCountdown') }}</div>
+          <div style="text-align: center; font-size: 20px; cursor: help">
+            <el-popover
+                placement="top"
+                trigger="hover"
+                :content="$t('statistics.refreshCountdownPopup')">
+              <span slot="reference">{{ tomorrow }}</span>
+            </el-popover>
+          </div>
         </div>
       </div>
     </div>

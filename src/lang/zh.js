@@ -138,6 +138,8 @@ export default {
         receiveEmailDesc: "接收论文上传成功、失败以及删除的通知邮件",
         deleteAccount: "注销账户",
         deleteAccountDesc: "数据库中您的邮箱、密码、用户名会被清除，您将无法登录账户，上传记录中也无法看到您的用户名",
+        pointsRequire1: "升到下一级还需要",
+        pointsRequire2: "积分"
     },
     util: {
         user: {
@@ -374,6 +376,7 @@ export default {
         year: "年份：",
         count: "数量：",
         dataRefreshed: "数据已刷新",
-        refreshCountdown: "刷新倒计时"
+        refreshCountdown: "刷新倒计时",
+        refreshCountdownPopup: "北京时间0点刷新"
     }
 };

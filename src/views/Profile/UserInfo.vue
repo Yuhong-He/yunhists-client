@@ -85,7 +85,13 @@
                 </span>
               </el-popover>
             </template>
-            <span class="userinfo-description-text">{{ userInfo.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
+            <el-popover
+              placement="top-start"
+              width="200"
+              trigger="hover"
+              :content="$i18n.tc('profile.pointsRequire1') + pointsToNextLevel + $i18n.tc('profile.pointsRequire2')">
+              <span slot="reference" class="userinfo-description-text" style="cursor: help">{{ userInfo.points }}{{ $t('profile.points') }}{{ $t('profile.comma') }}{{ userLevel }}</span>
+            </el-popover>
           </el-descriptions-item>
         </el-descriptions>
       </div>
@@ -262,7 +268,8 @@ export default {
       }, {
         value: 'en',
         label: 'English'
-      }]
+      }],
+      pointsToNextLevel: 1
     }
   },
   watch: {
@@ -387,6 +394,7 @@ export default {
       for(i = 0; i < 20; i++) {
         points = points - i;
         if(points < 0) {
+          this.pointsToNextLevel = Math.abs(points);
           break;
         }
       }
