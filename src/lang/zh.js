@@ -369,7 +369,7 @@ export default {
         relationshipCount: "分类关系数",
         userCount: "用户数",
         uploadCount: "上传总数",
-        yearLineChartTitle: "历年论文数量变化图",
+        yearLineChartTitle: "历年论文数量折线图",
         typePieChartTitle: "论文类型比例图",
         copyrightPieChart: "论文版权比例图",
         comingSoon: "即将推出",

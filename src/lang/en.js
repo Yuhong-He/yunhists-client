@@ -22,7 +22,7 @@ export default {
         about: 'About',
         term: 'Terms of Service',
         privacy: 'Privacy Policy',
-        site: 'Yunnan History Thesis System'
+        site: 'Yunhists'
     },
     login: {
         accountLogin: 'Sign In',
@@ -369,7 +369,7 @@ export default {
         relationshipCount: "Category Relation Total",
         userCount: "User Total",
         uploadCount: "Upload Total",
-        yearLineChartTitle: "Changes in the number of theses over the years",
+        yearLineChartTitle: "Number of theses over the years",
         typePieChartTitle: "Thesis Type Pie Chart",
         copyrightPieChart: "Thesis Copyright Pie Chart",
         comingSoon: "Coming Soon",
