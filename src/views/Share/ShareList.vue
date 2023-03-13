@@ -100,7 +100,6 @@ export default {
     } else {
       this.operationColWidth = 98;
     }
-    this.checkToken();
     this.generateTable();
   },
   data() {
@@ -117,17 +116,6 @@ export default {
   },
   methods: {
     handleThesisIssue,
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 1) {
-          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
     async generateTable() {
       this.loading = true;
       let unapproved = "OFF"

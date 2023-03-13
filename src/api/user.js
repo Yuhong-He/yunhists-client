@@ -30,15 +30,6 @@ export default {
             params: data
         })
     },
-    validateToken() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/validateToken",
-            method: "get"
-        })
-    },
     refreshSTS() {
         return axios({
             headers: {

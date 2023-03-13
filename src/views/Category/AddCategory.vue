@@ -41,9 +41,6 @@ export default {
   computed: {
     ...mapState('UserInfo', ['userRights'])
   },
-  mounted() {
-    this.checkToken();
-  },
   data() {
     return {
       form: {
@@ -65,17 +62,6 @@ export default {
     CategorySelector
   },
   methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 1) {
-          this.$message.error(i18n.tc('category.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

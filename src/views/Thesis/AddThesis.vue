@@ -152,9 +152,6 @@ export default {
       document.title = getTitle("addThesis");
     }
   },
-  mounted() {
-    this.checkToken();
-  },
   data() {
     return {
       pickerOptions: {
@@ -191,17 +188,6 @@ export default {
     FileUploader
   },
   methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 1) {
-          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
     getFileName(val) {
       this.form.fileName = val;
     },

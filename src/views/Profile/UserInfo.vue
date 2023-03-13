@@ -315,7 +315,7 @@ export default {
     }
   },
   mounted() {
-    this.checkToken();
+    this.generateUserInfo();
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
@@ -379,14 +379,6 @@ export default {
       }
 
       this.userLevel = this.generateLevelName(this.userInfo.points);
-    },
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        await this.generateUserInfo();
-      } else {
-        generalError(res.data);
-      }
     },
     generateLevelName(points) {
       points = parseInt(points);

@@ -135,7 +135,6 @@ export default {
     }
   },
   mounted() {
-    this.checkToken();
     this.getShareDetails();
   },
   data() {
@@ -171,17 +170,6 @@ export default {
     }
   },
   methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 0) {
-          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
     async getShareDetails() {
       const id = this.$route.params.id;
       await this.$api.getMyShareById(id).then(res => {

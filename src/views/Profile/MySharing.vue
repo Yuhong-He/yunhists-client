@@ -91,7 +91,6 @@ export default {
     Pagination
   },
   mounted() {
-    this.checkToken();
     this.generateTable();
   },
   data() {
@@ -110,12 +109,6 @@ export default {
   },
   methods: {
     handleThesisIssue,
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code !== 200) {
-        generalError(res.data);
-      }
-    },
     async generateTable() {
       this.loading = true;
       let res = await this.$api.listMySharing(this.page, this.title);

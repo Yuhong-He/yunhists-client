@@ -210,7 +210,6 @@ export default {
       this.refreshRoute();
     },
     openOperateDrawer() {
-      this.checkToken();
       if(!_.isEmpty(this.selectedCats)) {
         this.operateCats = true;
       } else {
@@ -218,12 +217,6 @@ export default {
           message: i18n.tc('category.selectCategory'),
           type: 'warning'
         });
-      }
-    },
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code !== 200) {
-        generalError(res.data);
       }
     },
     getCategories(val) {

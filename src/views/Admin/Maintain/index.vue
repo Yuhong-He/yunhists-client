@@ -7,33 +7,10 @@
 
 <script>
 import MaintenanceTab from "@/views/Admin/Maintain/MaintenanceTab.vue";
-import i18n from "@/lang";
-import {generalError} from "@/utils/user";
-import {mapState} from "vuex";
 
 export default {
-  name: "index",
   components: {
     MaintenanceTab
-  },
-  computed: {
-    ...mapState('UserInfo', ['userRights'])
-  },
-  mounted() {
-    this.checkToken();
-  },
-  methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 1) {
-          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
   }
 }
 </script>

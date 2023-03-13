@@ -310,7 +310,6 @@ export default {
       this.selectedTheses = val;
     },
     openOperateDrawer() {
-      this.checkToken();
       if(!_.isEmpty(this.selectedTheses)) {
         this.operateTheses = true;
       } else {
@@ -318,12 +317,6 @@ export default {
           message: i18n.tc('thesis.selectThesis'),
           type: 'warning'
         });
-      }
-    },
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code !== 200) {
-        generalError(res.data);
       }
     },
     getCategories(val) {

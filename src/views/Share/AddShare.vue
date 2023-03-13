@@ -159,9 +159,6 @@ export default {
       document.title = getTitle("addUpload");
     }
   },
-  mounted() {
-    this.checkToken();
-  },
   data() {
     return {
       form: {
@@ -196,17 +193,6 @@ export default {
     }
   },
   methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code === 200) {
-        if(this.userRights < 0) {
-          this.$message.error(i18n.tc('thesis.noPermissionVisit'));
-          await this.$router.push("/");
-        }
-      } else {
-        generalError(res.data);
-      }
-    },
     semiAutoParse() {
       this.form = {
         author: '',

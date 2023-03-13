@@ -1,6 +1,6 @@
 <template>
   <div class="error-page-root">
-    <el-button icon="el-icon-back" type="success" class="back-btn" @click="$router.go(-1)" circle></el-button>
+    <el-button icon="el-icon-back" type="success" class="back-btn" @click="$router.push('/')" circle></el-button>
     <div class="error-page">
       <div>
         <h1 data-h1="404">404</h1>

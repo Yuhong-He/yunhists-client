@@ -274,12 +274,6 @@ export default {
     }
   },
   methods: {
-    async checkToken() {
-      let res = await this.$api.validateToken();
-      if(res.data.code !== 200) {
-        generalError(res.data);
-      }
-    },
     generateCategoryDetails() {
       window.scrollTo(0, 0);
       this.updateCatNamePanel = false;
@@ -350,7 +344,6 @@ export default {
       }
     },
     openOperateDrawer() {
-      this.checkToken();
       if(!_.isEmpty(this.selectedSubTheses) || !_.isEmpty(this.selectedSubCats)) {
         this.operateThesesSubCats = true;
       } else {
