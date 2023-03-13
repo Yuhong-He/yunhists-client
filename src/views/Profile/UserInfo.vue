@@ -316,7 +316,6 @@ export default {
   },
   mounted() {
     this.checkToken();
-    this.generateUserInfo();
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
@@ -383,7 +382,9 @@ export default {
     },
     async checkToken() {
       let res = await this.$api.validateToken();
-      if(res.data.code !== 200) {
+      if(res.data.code === 200) {
+        await this.generateUserInfo();
+      } else {
         generalError(res.data);
       }
     },

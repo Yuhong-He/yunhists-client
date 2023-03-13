@@ -1,7 +1,11 @@
 <template>
   <div class="content">
     <ul>
-      <li v-for="thesis of thesisList"><a :href="'/thesis/update/' + thesis.id" target="_blank">{{ thesis.title }}</a></li>
+      <li v-for="thesis of thesisList">
+        <span class="fake-link" @click="$router.push('/thesis/update/' + thesis.id)">
+          {{ thesis.title }}
+        </span>
+      </li>
     </ul>
     <el-empty v-if="thesisList.length === 0" :description="$t('admin.noData')"></el-empty>
   </div>
@@ -53,19 +57,14 @@ ul {
   column-gap: 50px;
   list-style-type:circle;
 }
-a {
-  text-decoration: none;
-}
-a:link {
+.fake-link {
   color: #0645AD;
+  cursor: pointer;
 }
-a:visited {
-  color: #0645AD;
-}
-a:hover {
+.fake-link:hover {
   color: dodgerblue;
 }
-a:active {
+.fake-link:active {
   color: darkorange;
 }
 </style>

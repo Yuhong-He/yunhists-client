@@ -7,14 +7,14 @@ const api = {
     login(data) {
         return axios({
             url: BASE_URL + "/user/login",
-            method: "post",
+            method: "get",
             params: data
         })
     },
     google(email, username, lang) {
         return axios({
             url: BASE_URL + "/user/google",
-            method: "post",
+            method: "get",
             params: {
                 email: email,
                 username: username,
@@ -53,7 +53,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/updateLang",
-            method: "post",
+            method: "put",
             params: data
         })
     },
@@ -86,7 +86,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/delete",
-            method: "post"
+            method: "delete"
         })
     },
     updateUsername(data) {
@@ -95,7 +95,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/updateUsername",
-            method: "post",
+            method: "put",
             params: data
         })
     },
@@ -115,7 +115,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/updateEmail",
-            method: "post",
+            method: "put",
             params: data
         })
     },
@@ -125,7 +125,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/updatePassword",
-            method: "post",
+            method: "put",
             params: data
         })
     },
@@ -135,7 +135,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/user/updateEmailNotification",
-            method: "post",
+            method: "put",
             params: {
                 status: status
             }
@@ -143,6 +143,9 @@ const api = {
     },
     getCategoryOption(catName, lang) {
         return axios({
+            headers: {
+                "token": getToken()
+            },
             url: BASE_URL + "/category/option/" + catName + "/" + lang,
             method: "get"
         })
@@ -174,7 +177,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/addCatALot",
-            method: "post",
+            method: "put",
             data: data
         })
     },
@@ -259,7 +262,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/thesis/deleteFile",
-            method: "post",
+            method: "delete",
             params: {
                 file: file
             }
@@ -271,7 +274,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/thesis/update",
-            method: "post",
+            method: "put",
             data: thesis,
             params: {
                 id: id,
@@ -285,7 +288,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/thesis/delete/" + id,
-            method: "post",
+            method: "delete",
             data: reason
         })
     },
@@ -327,7 +330,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/updateCatName/" + id,
-            method: "post",
+            method: "put",
             params: {
                 zhName: zhName,
                 enName: enName
@@ -340,7 +343,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/updateCatParentCat/" + id,
-            method: "post",
+            method: "put",
             params: {
                 lang: lang,
                 categories: categories
@@ -353,7 +356,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/removeFromCat/" + id,
-            method: "post",
+            method: "delete",
             params: {
                 subCats: subCats,
                 subTheses: subTheses
@@ -366,7 +369,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/moveTo",
-            method: "post",
+            method: "put",
             params: {
                 originId: originId,
                 destId: destId,
@@ -381,7 +384,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/category/delete/" + catId,
-            method: "post"
+            method: "delete"
         })
     },
     shareThesis(share) {
@@ -412,7 +415,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/share/delete/" + id,
-            method: "post"
+            method: "delete"
         })
     },
     getMyShareById(id) {
@@ -430,7 +433,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/share/deleteFile",
-            method: "post",
+            method: "delete",
             params: {
                 file: file
             }
@@ -442,7 +445,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/share/update/" + id,
-            method: "post",
+            method: "put",
             data: share
         })
     },
@@ -474,7 +477,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/share/approve/" + id,
-            method: "post",
+            method: "put",
             data: share,
             params: {
                 category: categories
@@ -487,7 +490,7 @@ const api = {
                 "token": getToken()
             },
             url: BASE_URL + "/share/reject/" + id,
-            method: "post",
+            method: "put",
             params: {
                 reason: reason
             }
@@ -495,31 +498,43 @@ const api = {
     },
     getMissingFileTheses() {
         return axios({
+            headers: {
+                "token": getToken()
+            },
             url: BASE_URL + "/thesis/missingFile",
             method: "get"
         })
     },
     getThesisWithoutCat() {
         return axios({
+            headers: {
+                "token": getToken()
+            },
             url: BASE_URL + "/thesis/thesisWithoutCat",
             method: "get"
         })
     },
     getCatWithoutCat() {
         return axios({
+            headers: {
+                "token": getToken()
+            },
             url: BASE_URL + "/category/catWithoutCat",
             method: "get"
         })
     },
     getEmptyCat() {
         return axios({
+            headers: {
+                "token": getToken()
+            },
             url: BASE_URL + "/category/emptyCat",
             method: "get"
         })
     },
     getStatisticsData() {
         return axios({
-            url: BASE_URL + "/statistics/get",
+            url: BASE_URL + "/statistics",
             method: "get"
         })
     }

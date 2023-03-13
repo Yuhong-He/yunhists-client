@@ -2,10 +2,10 @@
   <div class="content">
     <ul>
       <li v-for="cat of catList">
-        <a :href="'/category/id/' + cat.id" target="_blank">
+        <span class="fake-link" @click="$router.push('/category/id/' + cat.id)">
           <span v-if="$i18n.locale === 'zh'">{{ cat.zhName }}</span>
           <span v-if="$i18n.locale === 'en'">{{ cat.enName }}</span>
-        </a>
+        </span>
       </li>
     </ul>
     <el-empty v-if="catList.length === 0" :description="$t('admin.noData')"></el-empty>
@@ -58,19 +58,14 @@ ul {
   column-gap: 50px;
   list-style-type:circle;
 }
-a {
-  text-decoration: none;
-}
-a:link {
+.fake-link {
   color: #0645AD;
+  cursor: pointer;
 }
-a:visited {
-  color: #0645AD;
-}
-a:hover {
+.fake-link:hover {
   color: dodgerblue;
 }
-a:active {
+.fake-link:active {
   color: darkorange;
 }
 </style>
