@@ -642,10 +642,6 @@ export default{
   border-color: rgb(57,167,176);
 }
 
-.el-dialog__body span {
-  word-break: normal;
-}
-
 a {
   text-decoration: none;
 }

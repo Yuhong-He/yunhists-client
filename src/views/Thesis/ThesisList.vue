@@ -432,9 +432,6 @@ export default {
   padding-top: 10px;
   text-align: center;
 }
-.el-dialog__body div {
-  word-break: normal;
-}
 .thesis-list-operate-drawer {
   width: 100%;
   text-align: center;

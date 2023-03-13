@@ -364,7 +364,4 @@ export default {
     }
   }
 }
-/deep/ .el-table .cell {
-  word-break: normal;
-}
 </style>

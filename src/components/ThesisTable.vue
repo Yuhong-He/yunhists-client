@@ -350,13 +350,7 @@ export default {
   color: #0645AD;
   cursor: pointer;
 }
-.el-dialog__body div {
-  word-break: normal;
-}
 .el-tag + .el-tag {
   margin-left: 10px;
-}
-/deep/ .el-table .cell {
-  word-break: normal;
 }
 </style>

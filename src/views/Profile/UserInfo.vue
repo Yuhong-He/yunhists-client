@@ -704,13 +704,7 @@ export default {
     margin-left: 2px;
   }
 }
-.el-dialog__body span {
-  word-break: normal;
-}
 .dialog-multi-input {
   padding-top: 10px;
-}
-/deep/ .el-table .cell {
-  word-break: normal;
 }
 </style>
