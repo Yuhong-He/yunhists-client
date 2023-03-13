@@ -149,6 +149,10 @@ export default {
             missingToken: "Token不存在，请重新登陆",
             unknownError: "未知错误，请重新登陆",
             noPermission: "您没有权限！"
+        },
+        permission: {
+            noLogin: "你没有登录！",
+            noPermission: "您没有权限访问本页面"
         }
     },
     category: {

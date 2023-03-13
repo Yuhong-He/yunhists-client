@@ -12,16 +12,14 @@ function generalError(data) {
          }).then(() => {});
     } else {
         setToken("");
-        store.state.UserInfo.userId = "";
         store.state.UserInfo.username = "";
-        store.state.UserInfo.email = "";
         store.state.UserInfo.userRights = "";
-        store.state.UserInfo.points = "";
         store.state.Aliyun.accessKeyId = "";
         store.state.Aliyun.accessKeySecret = "";
         store.state.Aliyun.stsToken = "";
         if(router.currentRoute.path !== '/login') {
-            router.push('/login').then(() => printErrorMsg(data.code));
+            printErrorMsg(data.code)
+            router.push('/login');
         }
     }
 }
@@ -42,4 +40,34 @@ function printErrorMsg(errorCode) {
     }
 }
 
-export {generalError};
+function initLang() {
+    if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
+        i18n.locale = store.state.Settings.lang;
+    } else {
+        switch (navigator.language.toLowerCase()) {
+            case "zh-hans":
+                i18n.locale = "zh";
+                break;
+            case "zh-cn":
+                i18n.locale = "zh";
+                break;
+            case "zh":
+                i18n.locale = "zh";
+                break;
+            case "zh-hant":
+                i18n.locale = "zh";
+                break;
+            case "zh-hk":
+                i18n.locale = "zh";
+                break;
+            case "zh-tw":
+                i18n.locale = "zh";
+                break;
+            default:
+                i18n.locale = "en";
+                break;
+        }
+    }
+}
+
+export {generalError, initLang};

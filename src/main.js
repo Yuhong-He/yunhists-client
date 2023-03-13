@@ -12,6 +12,8 @@ import VueClipboard from 'vue-clipboard2'
 import JsonExcel from "vue-json-excel";
 import JsonCSV from "vue-json-csv";
 import 'babel-polyfill';
+import {initLang} from "@/utils/user";
+import {validatePermission} from "@/utils/permission";
 
 Vue.config.productionTip = false;
 Vue.prototype.$api = api;
@@ -20,35 +22,10 @@ Vue.use(VueClipboard);
 Vue.component("downloadExcel", JsonExcel);
 Vue.component("downloadCSV", JsonCSV);
 
-router.beforeEach((to, from, next) => {
-    if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
-        i18n.locale = store.state.Settings.lang;
-    } else {
-        switch (navigator.language.toLowerCase()) {
-            case "zh-hans":
-                i18n.locale = "zh";
-                break;
-            case "zh-cn":
-                i18n.locale = "zh";
-                break;
-            case "zh":
-                i18n.locale = "zh";
-                break;
-            case "zh-hant":
-                i18n.locale = "zh";
-                break;
-            case "zh-hk":
-                i18n.locale = "zh";
-                break;
-            case "zh-tw":
-                i18n.locale = "zh";
-                break;
-            default:
-                i18n.locale = "en";
-                break;
-        }
-    }
-    next()
+router.beforeEach(async (to, from, next) => {
+    initLang();
+    validatePermission(to, from, next);
+    next();
 })
 
 // banner txt

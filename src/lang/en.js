@@ -149,6 +149,10 @@ export default {
             missingToken: "Token not exist, please login again",
             unknownError: "Unknown error, please login again",
             noPermission: "You Don't Have Permission!"
+        },
+        permission: {
+            noLogin: "You are not logged in!",
+            noPermission: "You don't have permission to this page."
         }
     },
     category: {

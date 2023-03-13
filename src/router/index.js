@@ -95,6 +95,7 @@ const routes = [
           },
           {
             path: 'id',
+            name: 'CategoryId',
             redirect: '/category/list'
           },
           {
