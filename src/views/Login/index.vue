@@ -236,7 +236,7 @@ export default{
   },
   methods:{
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     changeType() {
       this.isLogin = !this.isLogin;
@@ -269,11 +269,8 @@ export default{
       let res = await this.$api.login({'email': email, 'password': password});
       if(res.data.code === 200) {
         setToken(res.data.data.token);
-        this.setUserId(res.data.data.userId);
         this.setUsername(res.data.data.username);
-        this.setEmail(res.data.data.email);
         this.setUserRights(res.data.data.userRights);
-        this.setPoints(res.data.data.points);
         this.setAccessKeyId(res.data.data.sts.accessKeyId);
         this.setAccessKeySecret(res.data.data.sts.accessKeySecret);
         this.setStsToken(res.data.data.sts.stsToken);
@@ -313,11 +310,8 @@ export default{
         let loginResult = await this.$api.google(user.email, user.displayName, i18n.locale);
         if(loginResult.data.code === 200) {
           setToken(loginResult.data.data.token);
-          this.setUserId(loginResult.data.data.userId);
           this.setUsername(loginResult.data.data.username);
-          this.setEmail(loginResult.data.data.email);
           this.setUserRights(loginResult.data.data.userRights);
-          this.setPoints(loginResult.data.data.points);
           this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);
           this.setAccessKeySecret(loginResult.data.data.sts.accessKeySecret);
           this.setStsToken(loginResult.data.data.sts.stsToken);

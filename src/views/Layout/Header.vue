@@ -75,7 +75,7 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     activeMenu() {
       let route = this.$route;
@@ -99,11 +99,8 @@ export default {
         type: 'warning'
       }).then(() => {
         setToken("");
-        this.setUserId("");
         this.setUsername("");
-        this.setEmail("");
         this.setUserRights("");
-        this.setPoints("");
         this.setAccessKeyId("");
         this.setAccessKeySecret("");
         this.setStsToken("");

@@ -191,7 +191,6 @@ export default {
     FileUploader
   },
   methods: {
-    ...mapMutations('UserInfo', ['setPoints']),
     async checkToken() {
       let res = await this.$api.validateToken();
       if(res.data.code === 200) {
@@ -224,14 +223,12 @@ export default {
       let parentCat = Array.from(categories).toString();
       let res = await this.$api.addThesis(thesis, parentCat);
       if(res.data.code === 200) {
-        this.setPoints(res.data.data.points);
         this.$message({
           message: i18n.tc('thesis.addSuccess'),
           type: 'success'
         });
         await this.$router.push("/thesis");
       } else if(res.data.code === 303) {
-        this.setPoints(res.data.data.points);
         await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
           confirmButtonText: i18n.tc('thesis.confirm'),
           callback: () => {}

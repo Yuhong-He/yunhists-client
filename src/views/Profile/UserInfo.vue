@@ -319,7 +319,7 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUserId', 'setUsername', 'setEmail', 'setUserRights','setPoints']),
+    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     async generateUserInfo() {
       let res = await this.$api.getUserInfo();
@@ -417,11 +417,8 @@ export default {
       let res = await this.$api.deleteAccount();
       if(res.data.code === 200) {
         setToken("");
-        this.setUserId("");
         this.setUsername("");
-        this.setEmail("");
         this.setUserRights("");
-        this.setPoints("");
         this.setAccessKeyId("");
         this.setAccessKeySecret("");
         this.setStsToken("");
@@ -476,6 +473,8 @@ export default {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         if (regex.test(email)) {
           if(email !== this.userInfo.email) {
+            $("#v-email-btn").css("cursor", "not-allowed");
+            this.countDown();
             this.doSendChangeEmailEmail(email);
           } else {
             this.$message(i18n.tc('profile.emailSame'));
@@ -496,8 +495,6 @@ export default {
     async doSendChangeEmailEmail(email) {
       let res = await this.$api.sendChangeEmailEmail({'email': email});
       if(res.data.code === 200) {
-        $("#v-email-btn").css("cursor", "not-allowed");
-        this.countDown();
         this.$message({
           type: 'success',
           message: i18n.tc('profile.codeSent')
@@ -571,7 +568,8 @@ export default {
     async doChangeEmail(email, password, code) {
       let res = await this.$api.updateEmail({'email': email, 'password': password, 'code': code});
       if(res.data.code === 200) {
-        this.setEmail(email);
+        clearInterval(this.timer);
+        this.restoreEmailBtn();
         this.changeEmailPanel = false;
         this.userInfo.email = email;
         this.$message({
