@@ -22,7 +22,7 @@ Vue.use(VueClipboard);
 Vue.component("downloadExcel", JsonExcel);
 Vue.component("downloadCSV", JsonCSV);
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach((to, from, next) => {
     initLang();
     validatePermission(to, from, next);
     next();

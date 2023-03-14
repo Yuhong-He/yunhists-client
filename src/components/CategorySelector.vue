@@ -26,6 +26,7 @@
 <script>
 
 import {mapState} from "vuex";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export default {
   props: ['catList'],
@@ -67,24 +68,27 @@ export default {
     getCategory(val) {
       this.$emit('getCategories', val);
     },
-    async doGetCategoryOptions(query) {
+    doGetCategoryOptions(query) {
       this.options = [];
-      let res = await this.$api.getCategoryOption(query, this.lang);
-      if(res.data.code === 200) {
-        this.loading = false;
-        res.data.data.catOptions.forEach(cat => {
-          let catOption = {};
-          catOption.value = cat.id;
-          if(this.lang === "zh") {
-            catOption.label = cat.zhName;
-          } else {
-            catOption.label = cat.enName;
-          }
-          this.options.push(catOption);
-        });
-      } else {
-        console.log("Unexpected error");
-      }
+      this.$api.getCategoryOption(query, this.lang).then(res => {
+        if(res.data.code === 200) {
+          this.loading = false;
+          res.data.data.catOptions.forEach(cat => {
+            let catOption = {};
+            catOption.value = cat.id;
+            if(this.lang === "zh") {
+              catOption.label = cat.zhName;
+            } else {
+              catOption.label = cat.enName;
+            }
+            this.options.push(catOption);
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     newAddCatPage() {
       window.open("/category/add", '_blank')

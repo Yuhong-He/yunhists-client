@@ -1,20 +1,18 @@
-import axios from "axios";
-import {getToken} from "@/utils/token";
-import {BASE_URL} from "@/api/index";
+import request from "@/utils/request";
 
 const path = "/user";
 
 export default {
     login(data) {
-        return axios({
-            url: BASE_URL + path + "/login",
+        return request({
+            url: path + "/login",
             method: "get",
             params: data
         })
     },
     google(email, username, lang) {
-        return axios({
-            url: BASE_URL + path + "/google",
+        return request({
+            url: path + "/google",
             method: "get",
             params: {
                 email: email,
@@ -24,109 +22,82 @@ export default {
         })
     },
     register(data) {
-        return axios({
-            url: BASE_URL + path + "/register",
+        return request({
+            url: path + "/register",
             method: "post",
             params: data
         })
     },
     refreshSTS() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/refreshSTS",
+        return request({
+            url: path + "/refreshSTS",
             method: "get"
         })
     },
     updateLang(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateLang",
+        return request({
+            url: path + "/updateLang",
             method: "put",
             params: data
         })
     },
     sendVerificationEmail(data) {
-        return axios({
-            url: BASE_URL + path + "/sendRegisterEmail",
+        return request({
+            url: path + "/sendRegisterEmail",
             method: "post",
             params: data
         })
     },
     resetPassword(data) {
-        return axios({
-            url: BASE_URL + path + "/resetPassword",
+        return request({
+            url: path + "/resetPassword",
             method: "post",
             params: data
         })
     },
     getUserInfo() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/getUserInfo",
+        return request({
+            url: path + "/getUserInfo",
             method: "get"
         })
     },
     deleteAccount() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/delete",
+        return request({
+            url: path + "/delete",
             method: "delete"
         })
     },
     updateUsername(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateUsername",
+        return request({
+            url: path + "/updateUsername",
             method: "put",
             params: data
         })
     },
     sendChangeEmailEmail(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/sendChangeEmailEmail",
+        return request({
+            url: path + "/sendChangeEmailEmail",
             method: "post",
             params: data
         })
     },
     updateEmail(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateEmail",
+        return request({
+            url: path + "/updateEmail",
             method: "put",
             params: data
         })
     },
     updatePassword(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updatePassword",
+        return request({
+            url: path + "/updatePassword",
             method: "put",
             params: data
         })
     },
     updateEmailNotification(status) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateEmailNotification",
+        return request({
+            url: path + "/updateEmailNotification",
             method: "put",
             params: {
                 status: status

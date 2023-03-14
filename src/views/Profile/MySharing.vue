@@ -69,7 +69,7 @@
 
 <script>
 import Pagination from "@/components/Pagination.vue";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import i18n from "@/lang";
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
@@ -109,14 +109,19 @@ export default {
   },
   methods: {
     handleThesisIssue,
-    async generateTable() {
+    generateTable() {
       this.loading = true;
-      let res = await this.$api.listMySharing(this.page, this.title);
-      if(res.data.code === 200) {
-        this.tableData = res.data.data.records;
-        this.total = res.data.data.total;
-        this.loading = false;
-      }
+      this.$api.listMySharing(this.page, this.title).then(res => {
+        if(res.data.code === 200) {
+          this.tableData = res.data.data.records;
+          this.total = res.data.data.total;
+          this.loading = false;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     getPagination(page) {
       this.page = page;
@@ -130,22 +135,25 @@ export default {
       this.confirmDeleteTitle = title;
       this.confirmDeletePanel = true;
     },
-    async doDelete() {
+    doDelete() {
       this.isDeleting = true;
-      let res = await this.$api.deleteMySharing(this.confirmDeleteId);
-      if(res.data.code === 200) {
-        await this.generateTable();
-        this.isDeleting = false;
-        this.confirmDeletePanel = false;
-        this.$message.success(i18n.tc('thesis.deleteSuccess'));
-      } else if(res.data.code === 503) {
-        await this.generateTable();
-        this.isDeleting = false;
-        this.confirmDeletePanel = false;
-        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-      } else {
-        generalError(res.data);
-      }
+      this.$api.deleteMySharing(this.confirmDeleteId).then(res => {
+        if(res.data.code === 200) {
+          this.generateTable();
+          this.isDeleting = false;
+          this.confirmDeletePanel = false;
+          this.$message.success(i18n.tc('thesis.deleteSuccess'));
+        } else if(res.data.code === 503) {
+          this.generateTable();
+          this.isDeleting = false;
+          this.confirmDeletePanel = false;
+          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     }
   }
 }

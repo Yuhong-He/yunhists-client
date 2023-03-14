@@ -1,26 +1,18 @@
-import axios from "axios";
-import {getToken} from "@/utils/token";
-import {BASE_URL} from "@/api/index";
+import request from "@/utils/request";
 
 const path = "/share";
 
 export default {
     shareThesis(share) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/add",
+        return request({
+            url: path + "/add",
             method: "post",
             data: share
         })
     },
     listMySharing(page, title) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/myList/" + page,
+        return request({
+            url: path + "/myList/" + page,
             method: "get",
             params: {
                 title: title
@@ -28,29 +20,20 @@ export default {
         })
     },
     deleteMySharing(id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/delete/" + id,
+        return request({
+            url: path + "/delete/" + id,
             method: "delete"
         })
     },
     getMyShareById(id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/myShare/" + id,
+        return request({
+            url: path + "/myShare/" + id,
             method: "get"
         })
     },
     deleteShareFile(file) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/deleteFile",
+        return request({
+            url: path + "/deleteFile",
             method: "delete",
             params: {
                 file: file
@@ -58,21 +41,15 @@ export default {
         })
     },
     updateThesisSharing(id, share) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/update/" + id,
+        return request({
+            url: path + "/update/" + id,
             method: "put",
             data: share
         })
     },
     listAllSharing(page, title, unapproved) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/listAll/" + page,
+        return request({
+            url: path + "/listAll/" + page,
             method: "get",
             params: {
                 title: title,
@@ -81,20 +58,14 @@ export default {
         })
     },
     getShareById(id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/id/" + id,
+        return request({
+            url: path + "/id/" + id,
             method: "get"
         })
     },
     approveShare(id, share, categories) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/approve/" + id,
+        return request({
+            url: path + "/approve/" + id,
             method: "put",
             data: share,
             params: {
@@ -103,11 +74,8 @@ export default {
         })
     },
     rejectShare(id, reason) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/reject/" + id,
+        return request({
+            url: path + "/reject/" + id,
             method: "put",
             params: {
                 reason: reason

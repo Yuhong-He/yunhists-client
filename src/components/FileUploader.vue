@@ -30,7 +30,7 @@
 import OSS from "ali-oss";
 import i18n from "@/lang";
 import {oss} from "@/utils/oss";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export default {
   props: ['action', 'fileList'],
@@ -97,36 +97,42 @@ export default {
         console.log("Unexpected Action!!!");
       }
     },
-    async deleteThesisFile(path) {
-      let res = await this.$api.deleteThesisFile(path);
-      if(res.data.code === 200) {
-        this.doDeleteFile(path);
-      } else if(res.data.code === 408) {
-        await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          type: 'error',
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+    deleteThesisFile(path) {
+      this.$api.deleteThesisFile(path).then(res => {
+        if(res.data.code === 200) {
+          this.doDeleteFile(path);
+        } else if(res.data.code === 408) {
+          this.$alert(i18n.tc('thesis.noFileInDatabase'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            type: 'error',
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async deleteShareFile(path) {
-      let res = await this.$api.deleteShareFile(path);
-      if(res.data.code === 200) {
-        this.doDeleteFile(path);
-      } else if(res.data.code === 503) {
-        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        await this.$router.push("/profile/MyUpload");
-      } else if(res.data.code === 504) {
-        await this.$alert(i18n.tc('thesis.noFileInDatabase'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          type: 'error',
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+    deleteShareFile(path) {
+      this.$api.deleteShareFile(path).then(res => {
+        if(res.data.code === 200) {
+          this.doDeleteFile(path);
+        } else if(res.data.code === 503) {
+          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+          this.$router.push("/profile/MyUpload");
+        } else if(res.data.code === 504) {
+          this.$alert(i18n.tc('thesis.noFileInDatabase'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            type: 'error',
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     doDeleteFile(url) {
       new OSS(oss).delete(url).then(() => {
@@ -153,7 +159,7 @@ export default {
         return `${+new Date()}_${rx()}${rx()}`
       }
 
-      async function multipartUpload() {
+      function multipartUpload() {
         let temporary = file.file.name.lastIndexOf('.')
         let fileNameLength = file.file.name.length
         let fileFormat = file.file.name.substring(

@@ -108,7 +108,7 @@ import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import $ from "jquery";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
 import {getTitle} from "@/utils/title";
 
@@ -234,20 +234,23 @@ export default {
         this.shareThesis(this.form);
       }
     },
-    async shareThesis(share) {
-      let res = await this.$api.shareThesis(share);
-      if(res.data.code === 200) {
-        this.isSubmitting = false;
-        this.$message({
-          duration: 10000,
-          showClose: true,
-          message: i18n.tc('share.shareSuccess'),
-          type: 'success'
-        });
-        await this.$router.push("/profile/MyUpload");
-      } else {
-        generalError(res.data);
-      }
+    shareThesis(share) {
+      this.$api.shareThesis(share).then(res => {
+        if(res.data.code === 200) {
+          this.isSubmitting = false;
+          this.$message({
+            duration: 10000,
+            showClose: true,
+            message: i18n.tc('share.shareSuccess'),
+            type: 'success'
+          });
+          this.$router.push("/profile/MyUpload");
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     parsing() {
       if(this.jsonObj && this.jsonObj.length > 0) {

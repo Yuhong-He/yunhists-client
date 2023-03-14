@@ -1,6 +1,6 @@
 import store from "@/store";
 import api from "@/api";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export const oss = {
     region: "oss-cn-hongkong",
@@ -8,19 +8,22 @@ export const oss = {
     accessKeySecret: store.state.Aliyun.accessKeySecret,
     stsToken: store.state.Aliyun.stsToken,
     bucket: "yunhists",
-    refreshSTSToken: async () => {
-        const res = await api.refreshSTS();
-        if(res.data.code === 200) {
-            store.state.Aliyun.accessKeyId = res.data.data.sts.accessKeyId;
-            store.state.Aliyun.accessKeySecret = res.data.data.sts.accessKeySecret;
-            store.state.Aliyun.stsToken = res.data.data.sts.stsToken;
-            return {
-                accessKeyId: res.data.data.sts.accessKeyId,
-                accessKeySecret: res.data.data.sts.accessKeySecret,
-                stsToken: res.data.data.sts.stsToken,
-            };
-        } else {
-            generalError(res.data);
-        }
+    refreshSTSToken: () => {
+        api.refreshSTS().then(res => {
+            if(res.data.code === 200) {
+                store.commit('Aliyun/setAccessKeyId', res.data.data.sts.accessKeyId);
+                store.commit('Aliyun/setAccessKeySecret', res.data.data.sts.accessKeySecret);
+                store.commit('Aliyun/setStsToken', res.data.data.sts.stsToken);
+                return {
+                    accessKeyId: res.data.data.sts.accessKeyId,
+                    accessKeySecret: res.data.data.sts.accessKeySecret,
+                    stsToken: res.data.data.sts.stsToken,
+                };
+            } else {
+                generalError(res.data);
+            }
+        }).catch(res => {
+            unexpectedError(res);
+        })
     }
 };

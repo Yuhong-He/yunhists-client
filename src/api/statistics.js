@@ -1,12 +1,11 @@
-import axios from "axios";
-import {BASE_URL} from "@/api/index";
+import request from "@/utils/request";
 
 const path = "/statistics";
 
 export default {
     getStatisticsData() {
-        return axios({
-            url: BASE_URL + path,
+        return request({
+            url: path,
             method: "get"
         })
     }

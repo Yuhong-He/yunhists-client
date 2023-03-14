@@ -78,7 +78,7 @@
 <script>
 import {mapState} from "vuex";
 import i18n from "@/lang";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
@@ -172,9 +172,9 @@ export default {
     getCategories(val) {
       this.categories = val;
     },
-    async getThesisDetails() {
+    getThesisDetails() {
       const id = this.$route.params.id;
-      await this.$api.getThesisById(id).then(res => {
+      this.$api.getThesisById(id).then(res => {
         if (res.data.code === 200) {
           const json = res.data.data.thesis;
           if (!_.isEmpty(json)) {
@@ -217,9 +217,8 @@ export default {
         } else {
           generalError(res.data);
         }
-      }).catch(() => {
-        this.$message.error(i18n.tc('thesis.invalidId'));
-        this.$router.push("/thesis/list");
+      }).catch(res => {
+        unexpectedError(res);
       });
     },
     onSubmit() {
@@ -233,29 +232,32 @@ export default {
         this.updateThesis(this.form, this.categories);
       }
     },
-    async updateThesis(thesis, categories) {
+    updateThesis(thesis, categories) {
       let parentCat = Array.from(categories).toString();
-      let res = await this.$api.updateThesis(thesis, parentCat, this.$route.params.id);
-      if(res.data.code === 200) {
-        this.$message({
-          message: i18n.tc('thesis.updateSuccess'),
-          type: 'success'
-        });
-        await this.$router.go(-1);
-      } else if(res.data.code === 303) {
-        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        await this.$router.push("/thesis");
-      } else if(res.data.code === 406) {
-        await this.$alert(i18n.tc('thesis.thesisExist'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+      this.$api.updateThesis(thesis, parentCat, this.$route.params.id).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: i18n.tc('thesis.updateSuccess'),
+            type: 'success'
+          });
+          this.$router.go(-1);
+        } else if(res.data.code === 303) {
+          this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+          this.$router.push("/thesis");
+        } else if(res.data.code === 406) {
+          this.$alert(i18n.tc('thesis.thesisExist'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     }
   }
 }

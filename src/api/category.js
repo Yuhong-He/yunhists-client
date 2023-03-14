@@ -1,32 +1,24 @@
-import axios from "axios";
-import {getToken} from "@/utils/token";
-import {BASE_URL} from "@/api/index";
+import request from "@/utils/request";
 
 const path = "/category";
 
 export default {
     getCategoryOption(catName, lang) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/option/" + catName + "/" + lang,
+        return request({
+            url: path + "/option/" + catName + "/" + lang,
             method: "get"
         })
     },
     addCategory(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/add",
+        return request({
+            url: path + "/add",
             method: "post",
             data: data
         })
     },
     getCategoryList(lang, page, pageSize, query, sortCol, sortOrder) {
-        return axios({
-            url: BASE_URL + path + "/list/" + lang +"/" + page + "/" + pageSize,
+        return request({
+            url: path + "/list/" + lang +"/" + page + "/" + pageSize,
             method: "get",
             params: {
                 name: query,
@@ -36,18 +28,15 @@ export default {
         })
     },
     addCatALot(data) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/addCatALot",
+        return request({
+            url: path + "/addCatALot",
             method: "put",
             data: data
         })
     },
     getCategoryByIds(ids) {
-        return axios({
-            url: BASE_URL + path + "/ids",
+        return request({
+            url: path + "/ids",
             method: "get",
             params: {
                 ids: ids
@@ -55,20 +44,20 @@ export default {
         })
     },
     getCategoryInfo(id) {
-        return axios({
-            url: BASE_URL + path + "/id/" + id,
+        return request({
+            url: path + "/id/" + id,
             method: "get"
         })
     },
     getCategoryParentCats(id) {
-        return axios({
-            url: BASE_URL + path + "/parentCats/" + id,
+        return request({
+            url: path + "/parentCats/" + id,
             method: "get"
         })
     },
     getCategoryChildCats(id, sortCol, sortOrder) {
-        return axios({
-            url: BASE_URL + path + "/childCat/" + id,
+        return request({
+            url: path + "/childCat/" + id,
             method: "get",
             params: {
                 sortCol: sortCol,
@@ -77,11 +66,8 @@ export default {
         })
     },
     updateCategoryName(id, zhName, enName) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateCatName/" + id,
+        return request({
+            url: path + "/updateCatName/" + id,
             method: "put",
             params: {
                 zhName: zhName,
@@ -90,11 +76,8 @@ export default {
         })
     },
     updateCatParentCat(id, lang, categories) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/updateCatParentCat/" + id,
+        return request({
+            url: path + "/updateCatParentCat/" + id,
             method: "put",
             params: {
                 lang: lang,
@@ -103,11 +86,8 @@ export default {
         })
     },
     removeFromCat(id, subCats, subTheses) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/removeFromCat/" + id,
+        return request({
+            url: path + "/removeFromCat/" + id,
             method: "delete",
             params: {
                 subCats: subCats,
@@ -116,11 +96,8 @@ export default {
         })
     },
     moveTo(originId, destId, subCats, subTheses) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/moveTo",
+        return request({
+            url: path + "/moveTo",
             method: "put",
             params: {
                 originId: originId,
@@ -131,29 +108,20 @@ export default {
         })
     },
     deleteCat(catId) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/delete/" + catId,
+        return request({
+            url: path + "/delete/" + catId,
             method: "delete"
         })
     },
     getCatWithoutCat() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/catWithoutCat",
+        return request({
+            url: path + "/catWithoutCat",
             method: "get"
         })
     },
     getEmptyCat() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/emptyCat",
+        return request({
+            url: path + "/emptyCat",
             method: "get"
         })
     }

@@ -25,7 +25,7 @@
 <script>
 import CategorySelector from "@/components/CategorySelector.vue";
 import {mapState} from "vuex";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import i18n from "@/lang";
 import {getTitle} from "@/utils/title";
 
@@ -74,28 +74,31 @@ export default {
     getCategories(val) {
       this.form.categories = val;
     },
-    async addCategory(zhName, enName, categories) {
+    addCategory(zhName, enName, categories) {
       let parentCat = Array.from(categories);
-      let res = await this.$api.addCategory({"zhName": zhName, "enName": enName, "parentCat": parentCat});
-      if(res.data.code === 200) {
-        this.$message({
-          type: 'success',
-          message: i18n.tc('category.addSuccess')
-        });
-        await this.$router.push("/category");
-      } else if(res.data.code === 301) {
-        await this.$alert(i18n.tc('category.zhCatExist'), {
-          confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {}
-        });
-      } else if(res.data.code === 302) {
-        await this.$alert(i18n.tc('category.enCatExist'), {
-          confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+      this.$api.addCategory({"zhName": zhName, "enName": enName, "parentCat": parentCat}).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: i18n.tc('category.addSuccess')
+          });
+          this.$router.push("/category");
+        } else if(res.data.code === 301) {
+          this.$alert(i18n.tc('category.zhCatExist'), {
+            confirmButtonText: i18n.tc('category.confirm'),
+            callback: () => {}
+          });
+        } else if(res.data.code === 302) {
+          this.$alert(i18n.tc('category.enCatExist'), {
+            confirmButtonText: i18n.tc('category.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     }
   }
 }

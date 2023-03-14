@@ -211,7 +211,7 @@ import {mapState} from "vuex";
 import CategoryTable from "@/components/CategoryTable.vue";
 import i18n from "@/lang";
 import ThesisTable from "@/components/ThesisTable.vue";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import _ from "lodash";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {generateErrorMsg} from "@/utils/category";
@@ -312,12 +312,17 @@ export default {
         this.$router.push("/category/list");
       });
     },
-    async getCategoryParentCats() {
-      let res = await this.$api.getCategoryParentCats(this.catId);
-      if(res.data.code === 200) {
-        this.parentCats = res.data.data;
-        this.generateUpdateParentCatTags();
-      }
+    getCategoryParentCats() {
+      this.$api.getCategoryParentCats(this.catId).then(res => {
+        if(res.data.code === 200) {
+          this.parentCats = res.data.data;
+          this.generateUpdateParentCatTags();
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     generateUpdateParentCatTags() {
       this.updateParentCats = [];
@@ -329,19 +334,29 @@ export default {
         }
       }
     },
-    async getCategorySubCats() {
-      let res = await this.$api.getCategoryChildCats(this.catId, this.subCatSortCol, this.subCatSortOrder);
-      if(res.data.code === 200) {
-        this.subCatTableData = res.data.data;
-        this.subCatLoading = false;
-      }
+    getCategorySubCats() {
+      this.$api.getCategoryChildCats(this.catId, this.subCatSortCol, this.subCatSortOrder).then(res => {
+        if(res.data.code === 200) {
+          this.subCatTableData = res.data.data;
+          this.subCatLoading = false;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async getCategoryTheses() {
-      let res = await this.$api.getCategoryTheses(this.catId, this.thesesSortCol, this.thesesSortOrder);
-      if(res.data.code === 200) {
-        this.subThesisTableData = res.data.data;
-        this.subThesisLoading = false;
-      }
+    getCategoryTheses() {
+      this.$api.getCategoryTheses(this.catId, this.thesesSortCol, this.thesesSortOrder).then(res => {
+        if(res.data.code === 200) {
+          this.subThesisTableData = res.data.data;
+          this.subThesisLoading = false;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     openOperateDrawer() {
       if(!_.isEmpty(this.selectedSubTheses) || !_.isEmpty(this.selectedSubCats)) {
@@ -372,29 +387,32 @@ export default {
       this.thesesSortOrder = val.sortOrder;
       this.getCategoryTheses();
     },
-    async updateCatName() {
-      let res = await this.$api.updateCategoryName(this.catId, this.catZhName, this.catEnName);
-      if(res.data.code === 200) {
-        this.$message({
-          type: 'success',
-          message: i18n.tc('category.updateSuccess')
-        });
-        this.getCategoryInfo();
-        await this.getCategoryTheses();
-        this.updateCatNamePanel = false;
-      } else if(res.data.code === 301) {
-        await this.$alert(i18n.tc('category.zhCatExist'), {
-          confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {}
-        });
-      } else if(res.data.code === 302) {
-        await this.$alert(i18n.tc('category.enCatExist'), {
-          confirmButtonText: i18n.tc('category.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+    updateCatName() {
+      this.$api.updateCategoryName(this.catId, this.catZhName, this.catEnName).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: i18n.tc('category.updateSuccess')
+          });
+          this.getCategoryInfo();
+          this.getCategoryTheses();
+          this.updateCatNamePanel = false;
+        } else if(res.data.code === 301) {
+          this.$alert(i18n.tc('category.zhCatExist'), {
+            confirmButtonText: i18n.tc('category.confirm'),
+            callback: () => {}
+          });
+        } else if(res.data.code === 302) {
+          this.$alert(i18n.tc('category.enCatExist'), {
+            confirmButtonText: i18n.tc('category.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     removeCat(tag) {
       this.updateParentCats.splice(this.updateParentCats.indexOf(tag), 1);
@@ -404,31 +422,34 @@ export default {
       this.updateParentCat = false;
       this.generateUpdateParentCatTags();
     },
-    async saveUpdateParentTag() {
-      let res = await this.$api.updateCatParentCat(this.catId, i18n.locale, this.updateParentCats.toString());
+    saveUpdateParentTag() {
+      this.$api.updateCatParentCat(this.catId, i18n.locale, this.updateParentCats.toString()).then(res => {
       if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.updateParentCat = false;
-          this.selectNewParentCat = false;
-          this.$message({
-            message: i18n.tc('category.updateSuccess'),
-            type: 'success'
-          });
-          await this.getCategoryParentCats();
+          if(_.isEmpty(res.data.data.failed)) {
+            this.updateParentCat = false;
+            this.selectNewParentCat = false;
+            this.$message({
+              message: i18n.tc('category.updateSuccess'),
+              type: 'success'
+            });
+            this.getCategoryParentCats();
+          } else {
+            this.updateParentCat = false;
+            this.selectNewParentCat = false;
+            this.$notify.error({
+              title: i18n.tc('category.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: i18n.tc('category.canNotBeCatItselfDetailPage_1') + "<span style='font-weight: bold; color: darkgreen'>" + this.mainTitle + "</span>" + i18n.tc('category.canNotBeCatItselfDetailPage_2')
+            });
+            this.getCategoryParentCats();
+          }
         } else {
-          this.updateParentCat = false;
-          this.selectNewParentCat = false;
-          this.$notify.error({
-            title: i18n.tc('category.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: i18n.tc('category.canNotBeCatItselfDetailPage_1') + "<span style='font-weight: bold; color: darkgreen'>" + this.mainTitle + "</span>" + i18n.tc('category.canNotBeCatItselfDetailPage_2')
-          });
-          await this.getCategoryParentCats();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     showSelectNewParentCat() {
       this.selectNewParentCat = true;
@@ -456,23 +477,26 @@ export default {
         cb(this.newParentCategory);
       }
     },
-    async searchCategory(str) {
+    searchCategory(str) {
       this.newParentCategory = [];
       if(str && str.length > 0) {
-        let res = await this.$api.getCategoryOption(str, i18n.locale);
-        if(res.data.code === 200) {
-          res.data.data.catOptions.forEach(cat => {
-            let catOption = {};
-            if(i18n.locale === "zh") {
-              catOption.value = cat.zhName;
-            } else {
-              catOption.value = cat.enName;
-            }
-            this.newParentCategory.push(catOption);
-          });
-        } else {
-          console.log("Unexpected error");
-        }
+        this.$api.getCategoryOption(str, i18n.locale).then(res => {
+          if(res.data.code === 200) {
+            res.data.data.catOptions.forEach(cat => {
+              let catOption = {};
+              if(i18n.locale === "zh") {
+                catOption.value = cat.zhName;
+              } else {
+                catOption.value = cat.enName;
+              }
+              this.newParentCategory.push(catOption);
+            });
+          } else {
+            generalError(res.data);
+          }
+        }).catch(res => {
+          unexpectedError(res);
+        })
       }
     },
     getCategories(val) {
@@ -487,11 +511,16 @@ export default {
         this.getNewCategoryNames(val.toString());
       }
     },
-    async getNewCategoryNames(val) {
-      let res = await this.$api.getCategoryByIds(val);
-      if(res.data.code === 200) {
-        this.newCategories = res.data.data;
-      }
+    getNewCategoryNames(val) {
+      this.$api.getCategoryByIds(val).then(res => {
+        if(res.data.code === 200) {
+          this.newCategories = res.data.data;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     addCatALot() {
       if(!_.isEmpty(this.newCategoriesId)) {
@@ -511,32 +540,35 @@ export default {
         });
       }
     },
-    async doAddCatALot(childCat, childTheses, parentCat) {
-      let res = await this.$api.addCatALot({"categories": childCat, "theses": childTheses, "parentCats": parentCat});
+    doAddCatALot(childCat, childTheses, parentCat) {
+      this.$api.addCatALot({"categories": childCat, "theses": childTheses, "parentCats": parentCat}).then(res => {
       if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.operateThesesSubCats = false;
-          this.$message({
-            message: i18n.tc('category.batchSuccess'),
-            type: 'success'
-          });
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+          if(_.isEmpty(res.data.data.failed)) {
+            this.operateThesesSubCats = false;
+            this.$message({
+              message: i18n.tc('category.batchSuccess'),
+              type: 'success'
+            });
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          } else {
+            this.operateThesesSubCats = false;
+            const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
+            this.$notify.error({
+              title: i18n.tc('category.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: errorMsg
+            });
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          }
         } else {
-          this.operateThesesSubCats = false;
-          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
-          this.$notify.error({
-            title: i18n.tc('category.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: errorMsg
-          });
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     removeFromCurrentCat() {
       const childCat = [];
@@ -553,40 +585,43 @@ export default {
       }
       this.doRemoveFromCurrentCat(this.catId, childCat, childTheses);
     },
-    async doRemoveFromCurrentCat(id, subCats, subTheses) {
-      let res = await this.$api.removeFromCat(id, subCats.toString(), subTheses.toString());
-      if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.operateThesesSubCats = false;
-          this.$message({
-            message: i18n.tc('category.batchSuccess'),
-            type: 'success'
-          });
-          await this.getCategoryInfo();
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+    doRemoveFromCurrentCat(id, subCats, subTheses) {
+      this.$api.removeFromCat(id, subCats.toString(), subTheses.toString()).then(res => {
+        if(res.data.code === 200) {
+          if(_.isEmpty(res.data.data.failed)) {
+            this.operateThesesSubCats = false;
+            this.$message({
+              message: i18n.tc('category.batchSuccess'),
+              type: 'success'
+            });
+            this.getCategoryInfo();
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          } else {
+            this.operateThesesSubCats = false;
+            const parentCat = [];
+            const obj = {};
+            obj.id = this.catId;
+            obj.zhName = this.catZhName;
+            obj.enName = this.catEnName;
+            parentCat.push(obj);
+            const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, parentCat);
+            this.$notify.error({
+              title: i18n.tc('category.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: errorMsg
+            });
+            this.getCategoryInfo();
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          }
         } else {
-          this.operateThesesSubCats = false;
-          const parentCat = [];
-          const obj = {};
-          obj.id = this.catId;
-          obj.zhName = this.catZhName;
-          obj.enName = this.catEnName;
-          parentCat.push(obj);
-          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, parentCat);
-          this.$notify.error({
-            title: i18n.tc('category.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: errorMsg
-          });
-          await this.getCategoryInfo();
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     moveToAnotherCat() {
       const childCat = [];
@@ -603,48 +638,54 @@ export default {
       }
       this.doMoveToAnotherCat(this.catId, this.destinationCatId, childCat, childTheses);
     },
-    async doMoveToAnotherCat(origin, dest, subCats, subTheses) {
-      let res = await this.$api.moveTo(origin, dest, subCats.toString(), subTheses.toString());
-      if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.operateThesesSubCats = false;
-          this.$message({
-            message: i18n.tc('category.batchSuccess'),
-            type: 'success'
-          });
-          await this.getCategoryInfo();
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+    doMoveToAnotherCat(origin, dest, subCats, subTheses) {
+      this.$api.moveTo(origin, dest, subCats.toString(), subTheses.toString()).then(res => {
+        if(res.data.code === 200) {
+          if(_.isEmpty(res.data.data.failed)) {
+            this.operateThesesSubCats = false;
+            this.$message({
+              message: i18n.tc('category.batchSuccess'),
+              type: 'success'
+            });
+            this.getCategoryInfo();
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          } else {
+            this.operateThesesSubCats = false;
+            const origin = {};
+            origin.id = this.catId;
+            origin.zhName = this.catZhName;
+            origin.enName = this.catEnName;
+            this.newCategories.push(origin); // dest cat already inside
+            const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
+            this.$notify.error({
+              title: i18n.tc('category.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: errorMsg
+            });
+            this.getCategoryInfo();
+            this.getCategorySubCats();
+            this.getCategoryTheses();
+          }
         } else {
-          this.operateThesesSubCats = false;
-          const origin = {};
-          origin.id = this.catId;
-          origin.zhName = this.catZhName;
-          origin.enName = this.catEnName;
-          this.newCategories.push(origin); // dest cat already inside
-          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedSubCats, this.selectedSubTheses, this.newCategories);
-          this.$notify.error({
-            title: i18n.tc('category.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: errorMsg
-          });
-          await this.getCategoryInfo();
-          await this.getCategorySubCats();
-          await this.getCategoryTheses();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async deleteCategory() {
-      let res = await this.$api.deleteCat(this.catId);
-      if(res.data.code === 200) {
-        this.openConfirmDeletePanel = false;
-        this.$router.go(-1);
-      } else {
-        generalError(res.data);
-      }
+    deleteCategory() {
+      this.$api.deleteCat(this.catId).then(res => {
+        if(res.data.code === 200) {
+          this.openConfirmDeletePanel = false;
+          this.$router.go(-1);
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     prepareExport() {
       this.exportData = [];

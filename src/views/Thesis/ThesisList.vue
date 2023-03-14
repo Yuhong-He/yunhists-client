@@ -122,7 +122,7 @@ import _ from "lodash";
 import ThesisTable from "@/components/ThesisTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {generateErrorMsg} from "@/utils/category";
 import {getTitle} from "@/utils/title";
 
@@ -208,22 +208,23 @@ export default {
     i18n() {
       return i18n
     },
-    async getThesisList() {
+    getThesisList() {
       if(Object.getOwnPropertyNames(this.$route.query).length === 0) {
         this.refreshRoute();
       } else {
         this.initialData();
         this.refreshRoute();
-        await this.$api.getThesisList(this.page, this.pageSize, this.query, this.sortCol, this.sortOrder).then(res => {
+        this.$api.getThesisList(this.page, this.pageSize, this.query, this.sortCol, this.sortOrder).then(res => {
           if (res.data.code === 200) {
             this.tableData = res.data.data.records;
             this.total = res.data.data.total;
             this.loading = false;
             window.scrollTo(0, 0);
+          } else {
+            generalError(res.data);
           }
-        }).catch(() => {
-          this.$message.error(i18n.tc('thesis.invalidParamInPath'));
-          this.$router.push("/");
+        }).catch(res => {
+          unexpectedError(res);
         });
       }
     },
@@ -325,11 +326,16 @@ export default {
         this.getNewCategoryNames(val.toString());
       }
     },
-    async getNewCategoryNames(val) {
-      let res = await this.$api.getCategoryByIds(val);
-      if(res.data.code === 200) {
-        this.newCategories = res.data.data;
-      }
+    getNewCategoryNames(val) {
+      this.$api.getCategoryByIds(val).then(res => {
+        if(res.data.code === 200) {
+          this.newCategories = res.data.data;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     updateTheses() {
       if(!_.isEmpty(this.newCategoriesId)) {
@@ -345,30 +351,33 @@ export default {
         });
       }
     },
-    async addCatALot(childTheses, parentCat) {
-      let res = await this.$api.addCatALot({"categories": [], "theses": childTheses, "parentCats": parentCat});
-      if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.operateTheses = false;
-          this.$message({
-            message: i18n.tc('thesis.batchSuccess'),
-            type: 'success'
-          });
-          await this.getThesisList();
+    addCatALot(childTheses, parentCat) {
+      this.$api.addCatALot({"categories": [], "theses": childTheses, "parentCats": parentCat}).then(res => {
+        if(res.data.code === 200) {
+          if(_.isEmpty(res.data.data.failed)) {
+            this.operateTheses = false;
+            this.$message({
+              message: i18n.tc('thesis.batchSuccess'),
+              type: 'success'
+            });
+            this.getThesisList();
+          } else {
+            this.operateTheses = false;
+            const errorMsg = generateErrorMsg(res.data.data.failed, {}, this.selectedTheses, this.newCategories);
+            this.$notify.error({
+              title: i18n.tc('thesis.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: errorMsg
+            });
+            this.getThesisList();
+          }
         } else {
-          this.operateTheses = false;
-          const errorMsg = generateErrorMsg(res.data.data.failed, {}, this.selectedTheses, this.newCategories);
-          this.$notify.error({
-            title: i18n.tc('thesis.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: errorMsg
-          });
-          await this.getThesisList();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     prepareExport() {
       this.exportData = [];

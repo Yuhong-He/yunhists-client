@@ -69,7 +69,7 @@
 <script>
 import Pagination from "@/components/Pagination.vue";
 import {mapState} from "vuex";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
 import {getTitle} from "@/utils/title";
@@ -116,19 +116,24 @@ export default {
   },
   methods: {
     handleThesisIssue,
-    async generateTable() {
+    generateTable() {
       this.loading = true;
       let unapproved = "OFF"
       if(this.turnOnUnapproved) {
         unapproved = "ON"
       }
-      let res = await this.$api.listAllSharing(this.page, this.title, unapproved);
-      if(res.data.code === 200) {
-        this.tableData = res.data.data.records;
-        this.total = res.data.data.total;
-        this.loading = false;
-        window.scrollTo(0, 0);
-      }
+      this.$api.listAllSharing(this.page, this.title, unapproved).then(res => {
+        if(res.data.code === 200) {
+          this.tableData = res.data.data.records;
+          this.total = res.data.data.total;
+          this.loading = false;
+          window.scrollTo(0, 0);
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     getPagination(page) {
       this.page = page;

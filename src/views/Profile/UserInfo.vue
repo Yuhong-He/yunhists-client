@@ -234,7 +234,7 @@
 
 <script>
 import {mapMutations} from "vuex";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {setToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
@@ -321,41 +321,46 @@ export default {
     ...mapMutations('Settings', ['setLang']),
     ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
-    async generateUserInfo() {
-      let res = await this.$api.getUserInfo();
-      if(res.data.code === 200) {
-        this.userInfo.userId = res.data.data.userId;
-        this.userInfo.username = res.data.data.username;
-        this.userInfo.email = res.data.data.email;
-        this.userInfo.userRights = res.data.data.userRights;
-        this.userInfo.points = res.data.data.points;
-        this.userInfo.registration = res.data.data.registration;
-        this.userInfo.sendEmail = res.data.data.sendEmail;
+    generateUserInfo() {
+      this.$api.getUserInfo().then(res => {
+        if(res.data.code === 200) {
+          this.userInfo.userId = res.data.data.userId;
+          this.userInfo.username = res.data.data.username;
+          this.userInfo.email = res.data.data.email;
+          this.userInfo.userRights = res.data.data.userRights;
+          this.userInfo.points = res.data.data.points;
+          this.userInfo.registration = res.data.data.registration;
+          this.userInfo.sendEmail = res.data.data.sendEmail;
 
-        if(this.userInfo.registration === 0) {
-          this.registration_str = i18n.tc('profile.emailRegistration')
-        } else if(this.userInfo.registration === 1) {
-          this.registration_str = i18n.tc('profile.googleRegistration')
-        }
-
-        if(this.userInfo.userRights === 0) {
-          if(i18n.locale === "zh") {
-            this.userRightsGroup = "用户";
-          } else if (i18n.locale === "en") {
-            this.userRightsGroup = "User";
+          if(this.userInfo.registration === 0) {
+            this.registration_str = i18n.tc('profile.emailRegistration')
+          } else if(this.userInfo.registration === 1) {
+            this.registration_str = i18n.tc('profile.googleRegistration')
           }
-        } else if (this.userInfo.userRights === 1) {
-          if(i18n.locale === "zh") {
-            this.userRightsGroup = "管理员";
-          } else if (i18n.locale === "en") {
-            this.userRightsGroup = "Admin";
+
+          if(this.userInfo.userRights === 0) {
+            if(i18n.locale === "zh") {
+              this.userRightsGroup = "用户";
+            } else if (i18n.locale === "en") {
+              this.userRightsGroup = "User";
+            }
+          } else if (this.userInfo.userRights === 1) {
+            if(i18n.locale === "zh") {
+              this.userRightsGroup = "管理员";
+            } else if (i18n.locale === "en") {
+              this.userRightsGroup = "Admin";
+            }
           }
+
+          this.userLevel = this.generateLevelName(this.userInfo.points);
+
+          this.openEmailNotification = this.userInfo.sendEmail === "ON";
+        } else {
+          generalError(res.data);
         }
-
-        this.userLevel = this.generateLevelName(this.userInfo.points);
-
-        this.openEmailNotification = this.userInfo.sendEmail === "ON";
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     refreshUserInfo() {
       if(this.userInfo.registration === 0) {
@@ -405,24 +410,27 @@ export default {
         return enName[i - 1];
       }
     },
-    async deleteAccount() {
-      let res = await this.$api.deleteAccount();
-      if(res.data.code === 200) {
-        setToken("");
-        this.setUsername("");
-        this.setUserRights("");
-        this.setAccessKeyId("");
-        this.setAccessKeySecret("");
-        this.setStsToken("");
-        this.deleteAccountPanel = false;
-        await this.$router.push('/');
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.accountDeleted')
-        });
-      } else {
-        generalError(res.data);
-      }
+    deleteAccount() {
+      this.$api.deleteAccount().then(res => {
+        if(res.data.code === 200) {
+          setToken("");
+          this.setUsername("");
+          this.setUserRights("");
+          this.setAccessKeyId("");
+          this.setAccessKeySecret("");
+          this.setStsToken("");
+          this.deleteAccountPanel = false;
+          this.$router.push('/');
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.accountDeleted')
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     openChangeUsernamePanel() {
       this.newUsername = this.userInfo.username;
@@ -439,19 +447,22 @@ export default {
         this.$message.error(i18n.tc('profile.usernameLength'));
       }
     },
-    async doChangeUsername(username) {
-      let res = await this.$api.updateUsername({"username": username});
-      if(res.data.code === 200) {
-        this.setUsername(username);
-        this.changeUsernamePanel = false;
-        this.userInfo.username = username;
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.changeSuccess')
-        });
-      } else {
-        generalError(res.data);
-      }
+    doChangeUsername(username) {
+      this.$api.updateUsername({"username": username}).then(res => {
+        if(res.data.code === 200) {
+          this.setUsername(username);
+          this.changeUsernamePanel = false;
+          this.userInfo.username = username;
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.changeSuccess')
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     openChangeEmailPanel() {
       this.newEmail = this.userInfo.email;
@@ -484,25 +495,28 @@ export default {
         });
       }
     },
-    async doSendChangeEmailEmail(email) {
-      let res = await this.$api.sendChangeEmailEmail({'email': email});
-      if(res.data.code === 200) {
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.codeSent')
-        });
-      } else if(res.data.code === 211) {
-        this.$message({
-          type: 'warning',
-          message: i18n.tc('profile.waitCountDown')
-        });
-      } else if(res.data.code === 212) {
-        this.$message.error(i18n.tc('profile.sendEmailFail'));
-      } else if(res.data.code === 215) {
-        this.$message.error(i18n.tc('profile.emailRegistered'));
-      } else {
-        generalError(res.data);
-      }
+    doSendChangeEmailEmail(email) {
+      this.$api.sendChangeEmailEmail({'email': email}).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.codeSent')
+          });
+        } else if(res.data.code === 211) {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('profile.waitCountDown')
+          });
+        } else if(res.data.code === 212) {
+          this.$message.error(i18n.tc('profile.sendEmailFail'));
+        } else if(res.data.code === 215) {
+          this.$message.error(i18n.tc('profile.emailRegistered'));
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     countDown() {
       clearInterval(this.timer);
@@ -557,28 +571,31 @@ export default {
         });
       }
     },
-    async doChangeEmail(email, password, code) {
-      let res = await this.$api.updateEmail({'email': email, 'password': password, 'code': code});
-      if(res.data.code === 200) {
-        clearInterval(this.timer);
-        this.restoreEmailBtn();
-        this.changeEmailPanel = false;
-        this.userInfo.email = email;
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.changeSuccess')
-        });
-      } else if (res.data.code === 206) {
-        this.$message.error(i18n.tc('profile.incorrectPwd'));
-      } else if (res.data.code === 213) {
-        this.$message.error(i18n.tc('profile.codeExpired'));
-      } else if (res.data.code === 214) {
-        this.$message.error(i18n.tc('profile.incorrectCode'));
-      } else if (res.data.code === 218) {
-        this.$message.error(i18n.tc('profile.noVerificationCodeSend'));
-      } else {
-        generalError(res.data);
-      }
+    doChangeEmail(email, password, code) {
+      this.$api.updateEmail({'email': email, 'password': password, 'code': code}).then(res => {
+        if(res.data.code === 200) {
+          clearInterval(this.timer);
+          this.restoreEmailBtn();
+          this.changeEmailPanel = false;
+          this.userInfo.email = email;
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.changeSuccess')
+          });
+        } else if (res.data.code === 206) {
+          this.$message.error(i18n.tc('profile.incorrectPwd'));
+        } else if (res.data.code === 213) {
+          this.$message.error(i18n.tc('profile.codeExpired'));
+        } else if (res.data.code === 214) {
+          this.$message.error(i18n.tc('profile.incorrectCode'));
+        } else if (res.data.code === 218) {
+          this.$message.error(i18n.tc('profile.noVerificationCodeSend'));
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     openChangePasswordPanel() {
       this.oldPassword = "";
@@ -617,37 +634,43 @@ export default {
         });
       }
     },
-    async doChangePassword(oldPwd, newPwd, newPwd2) {
-      let res = await this.$api.updatePassword({'oldPwd': oldPwd, 'newPwd': newPwd, 'newPwd2': newPwd2});
-      if(res.data.code === 200) {
-        this.changePasswordPanel = false;
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.changeSuccess')
-        });
-      } else if (res.data.code === 206) {
-        this.$message.error(i18n.tc('profile.incorrectPwd'));
-      } else {
-        generalError(res.data);
-      }
+    doChangePassword(oldPwd, newPwd, newPwd2) {
+      this.$api.updatePassword({'oldPwd': oldPwd, 'newPwd': newPwd, 'newPwd2': newPwd2}).then(res => {
+        if(res.data.code === 200) {
+          this.changePasswordPanel = false;
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.changeSuccess')
+          });
+        } else if (res.data.code === 206) {
+          this.$message.error(i18n.tc('profile.incorrectPwd'));
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     setLangTo(val) {
       this.setLang(val);
       this.$i18n.locale = val;
       this.$api.updateLang({'lang': val});
     },
-    async changeEmailNotification(val) {
+    changeEmailNotification(val) {
       const status = val ? "ON" : "OFF";
-      let res = await this.$api.updateEmailNotification(status);
-      if(res.data.code === 200) {
-        this.$message({
-          type: 'success',
-          message: i18n.tc('profile.changeSuccess')
-        });
-      } else {
-        generalError(res.data);
-      }
-    }
+      this.$api.updateEmailNotification(status).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: i18n.tc('profile.changeSuccess')
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
+    },
   }
 }
 </script>

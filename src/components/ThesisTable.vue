@@ -131,7 +131,7 @@
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
 
@@ -187,98 +187,104 @@ export default {
       }
       this.$emit('getSortCol', obj);
     },
-    async citeThesis(id) {
-      let res = await this.$api.getReference(id);
-      if(res.data.code === 200) {
-        this.citeForm = res.data.data;
-        this.openCitePanel = true;
-      } else {
-        await this.$alert(i18n.tc('thesis.oops'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      }
+    citeThesis(id) {
+      this.$api.getReference(id).then(res => {
+        if(res.data.code === 200) {
+          this.citeForm = res.data.data;
+          this.openCitePanel = true;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     copyReference(val) {
       this.$copyText(val);
     },
-    async thesisOnlinePublishInfo(id) {
+    thesisOnlinePublishInfo(id) {
       this.downloadThesisId = id;
-      let res = await this.$api.getOnlinePublishInfo(id);
-      if(res.data.code === 200) {
-        this.title = res.data.data.title;
-        this.onlinePublisher = res.data.data.onlinePublisher;
-        this.url = res.data.data.url;
-        this.copyrightStatus = res.data.data.copyrightStatus;
+      this.$api.getOnlinePublishInfo(id).then(res => {
+        if(res.data.code === 200) {
+          this.title = res.data.data.title;
+          this.onlinePublisher = res.data.data.onlinePublisher;
+          this.url = res.data.data.url;
+          this.copyrightStatus = res.data.data.copyrightStatus;
 
-        if(i18n.locale !== "zh") {
-          if(this.onlinePublisher === "中国知网") {
-            this.onlinePublisher = "CNKI";
-          } else if(this.onlinePublisher === "维普资讯") {
-            this.onlinePublisher = "CQVIP";
-          } else if(this.onlinePublisher === "自主出版") {
-            this.onlinePublisher = "Self Publish";
+          if(i18n.locale !== "zh") {
+            if(this.onlinePublisher === "中国知网") {
+              this.onlinePublisher = "CNKI";
+            } else if(this.onlinePublisher === "维普资讯") {
+              this.onlinePublisher = "CQVIP";
+            } else if(this.onlinePublisher === "自主出版") {
+              this.onlinePublisher = "Self Publish";
+            }
           }
+          if(this.copyrightStatus === 0) {
+            this.copyright = i18n.tc('thesis.publisherAllRights');
+          } else if (this.copyrightStatus === 1) {
+            this.copyright = i18n.tc('thesis.isOpenAccess');
+          } else if (this.copyrightStatus === 2) {
+            this.copyright = i18n.tc('thesis.isPublicDomain');
+          }
+          this.openDownloadPanel = true;
+        } else {
+          generalError(res.data);
         }
-        if(this.copyrightStatus === 0) {
-          this.copyright = i18n.tc('thesis.publisherAllRights');
-        } else if (this.copyrightStatus === 1) {
-          this.copyright = i18n.tc('thesis.isOpenAccess');
-        } else if (this.copyrightStatus === 2) {
-          this.copyright = i18n.tc('thesis.isPublicDomain');
-        }
-        this.openDownloadPanel = true;
-      } else {
-        await this.$alert(i18n.tc('thesis.oops'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async getDownloadInfo() {
-      let res = await this.$api.getDownloadNum();
-      if(res.data.code === 200) {
-        this.remain = res.data.data.remain;
-        this.confirmDownloadPanel = true;
-      } else {
-        generalError(res.data);
-      }
+    getDownloadInfo() {
+      this.$api.getDownloadNum().then(res => {
+        if(res.data.code === 200) {
+          this.remain = res.data.data.remain;
+          this.confirmDownloadPanel = true;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     toSharePage() {
       this.$router.push("/thesis/upload");
     },
-    async doDownload() {
-      let res = await this.$api.getFileName(this.downloadThesisId);
-      if(res.data.code === 200) {
-        const fileName = res.data.data.file;
-        const suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
-        const regex = /[\\/:*?"<>|]/g;
-        const title = this.title.replaceAll(regex, "_") + "." + suffix;
-        const response = {
-          'content-disposition': `attachment; filename=${encodeURIComponent(title)}`
+    doDownload() {
+      this.$api.getFileName(this.downloadThesisId).then(res => {
+        if(res.data.code === 200) {
+          const fileName = res.data.data.file;
+          const suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
+          const regex = /[\\/:*?"<>|]/g;
+          const title = this.title.replaceAll(regex, "_") + "." + suffix;
+          const response = {
+            'content-disposition': `attachment; filename=${encodeURIComponent(title)}`
+          }
+          const url = new OSS(oss).signatureUrl(fileName, {response});
+          window.open(url, '_blank');
+          this.confirmDownloadPanel = false;
+          this.openDownloadPanel = false;
+        } else if(res.data.code === 401) {
+          this.$alert(i18n.tc('thesis.noMoreDownload'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else if(res.data.code === 404) {
+          this.$alert(i18n.tc('thesis.fileMissing'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else if(res.data.code === 407) {
+          this.$alert(i18n.tc('thesis.oops'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
         }
-        const url = new OSS(oss).signatureUrl(fileName, {response});
-        window.open(url, '_blank');
-        this.confirmDownloadPanel = false;
-        this.openDownloadPanel = false;
-      } else if(res.data.code === 401) {
-        await this.$alert(i18n.tc('thesis.noMoreDownload'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else if(res.data.code === 404) {
-        await this.$alert(i18n.tc('thesis.fileMissing'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else if(res.data.code === 407) {
-        await this.$alert(i18n.tc('thesis.oops'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     updateThesis(id) {
       this.$router.push("/thesis/update/" + id);
@@ -292,25 +298,28 @@ export default {
     inputReason(reason) {
       this.reason = reason;
     },
-    async doDelete() {
+    doDelete() {
       this.isDeleting = true;
       if(this.reason.length === 0) {
         this.reason = "<--- NULL --->";
       }
-      let res = await this.$api.deleteThesis(this.confirmDeleteId, this.reason);
-      if(res.data.code === 200) {
-        this.isDeleting = false;
-        this.confirmDeletePanel = false;
-        this.$message.success(i18n.tc('thesis.deleteSuccess'));
-        this.$emit('refreshList');
-      } else if(res.data.code === 407) {
-        await this.$alert(i18n.tc('thesis.oops'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+      this.$api.deleteThesis(this.confirmDeleteId, this.reason).then(res => {
+        if(res.data.code === 200) {
+          this.isDeleting = false;
+          this.confirmDeletePanel = false;
+          this.$message.success(i18n.tc('thesis.deleteSuccess'));
+          this.$emit('refreshList');
+        } else if(res.data.code === 407) {
+          this.$alert(i18n.tc('thesis.oops'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     toCategoryDetailPage(url) {
       if(this.$router.currentRoute.path !== url) {

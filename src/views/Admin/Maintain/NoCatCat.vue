@@ -14,6 +14,7 @@
 
 <script>
 import {getTitle} from "@/utils/title";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export default {
   created() {
@@ -33,12 +34,17 @@ export default {
     }
   },
   methods: {
-    async getData() {
-      let res = await this.$api.getCatWithoutCat();
-      if(res.data.code === 200) {
-        this.catList = res.data.data;
-      }
-    }
+    getData() {
+      this.$api.getCatWithoutCat().then(res => {
+        if(res.data.code === 200) {
+          this.catList = res.data.data;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
+    },
   }
 }
 </script>

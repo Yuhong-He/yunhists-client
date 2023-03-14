@@ -81,6 +81,7 @@ import moment from 'moment';
 import 'moment-timezone';
 import i18n from "@/lang";
 import {getTitle} from "@/utils/title";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export default {
   created() {
@@ -135,17 +136,22 @@ export default {
         }
       }, 1000);
     },
-    async generateContent() {
-      let res = await this.$api.getStatisticsData();
-      if(res.data.code === 200) {
-        this.general = res.data.data.general;
-        this.thesisYear = res.data.data.year;
-        this.thesisCopyrightData = res.data.data.copyright;
-        this.thesisTypeData = res.data.data.thesisType;
-        this.generateYearLineChart();
-        this.generateThesisCopyrightPieChart();
-        this.generateThesisTypePieChart();
-      }
+    generateContent() {
+      this.$api.getStatisticsData().then(res => {
+        if(res.data.code === 200) {
+          this.general = res.data.data.general;
+          this.thesisYear = res.data.data.year;
+          this.thesisCopyrightData = res.data.data.copyright;
+          this.thesisTypeData = res.data.data.thesisType;
+          this.generateYearLineChart();
+          this.generateThesisCopyrightPieChart();
+          this.generateThesisTypePieChart();
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     handleResize() {
       this.thesisYearChart.resize();

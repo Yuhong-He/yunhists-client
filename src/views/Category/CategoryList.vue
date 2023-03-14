@@ -77,7 +77,7 @@ import _ from "lodash";
 import CategoryTable from "@/components/CategoryTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {generateErrorMsg} from "@/utils/category";
 import {getTitle} from "@/utils/title";
 
@@ -145,23 +145,24 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setCategoryListTips']),
-    async getCategoryList() {
+    getCategoryList() {
       if(Object.getOwnPropertyNames(this.$route.query).length === 0) {
         this.refreshRoute();
       } else {
         this.initialData();
         this.refreshRoute();
-        await this.$api.getCategoryList(i18n.locale, this.page,
+        this.$api.getCategoryList(i18n.locale, this.page,
             this.pageSize, this.catName, this.sortCol, this.sortOrder).then(res => {
           if(res.data.code === 200) {
             this.tableData = res.data.data.records;
             this.total = res.data.data.total;
             this.loading = false;
             window.scrollTo(0, 0);
+          } else {
+            generalError(res.data);
           }
-        }).catch(() => {
-          this.$message.error(i18n.tc('thesis.invalidParamInPath'));
-          this.$router.push("/");
+        }).catch(res => {
+          unexpectedError(res);
         });
       }
     },
@@ -239,36 +240,44 @@ export default {
         });
       }
     },
-    async addCatALot(childCat, parentCat) {
-      let res = await this.$api.addCatALot({"categories": childCat, "theses": [], "parentCats": parentCat});
+    addCatALot(childCat, parentCat) {
+      this.$api.addCatALot({"categories": childCat, "theses": [], "parentCats": parentCat}).then(res => {
       if(res.data.code === 200) {
-        if(_.isEmpty(res.data.data.failed)) {
-          this.operateCats = false;
-          this.$message({
-            message: i18n.tc('category.batchSuccess'),
-            type: 'success'
-          });
-          await this.getCategoryList();
+          if(_.isEmpty(res.data.data.failed)) {
+            this.operateCats = false;
+            this.$message({
+              message: i18n.tc('category.batchSuccess'),
+              type: 'success'
+            });
+            this.getCategoryList();
+          } else {
+            this.operateCats = false;
+            const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedCats, {}, this.newCategories);
+            this.$notify.error({
+              title: i18n.tc('category.error'),
+              dangerouslyUseHTMLString: true,
+              duration: 0,
+              message: errorMsg
+            });
+            this.getCategoryList();
+          }
         } else {
-          this.operateCats = false;
-          const errorMsg = generateErrorMsg(res.data.data.failed, this.selectedCats, {}, this.newCategories);
-          this.$notify.error({
-            title: i18n.tc('category.error'),
-            dangerouslyUseHTMLString: true,
-            duration: 0,
-            message: errorMsg
-          });
-          await this.getCategoryList();
+          generalError(res.data);
         }
-      } else {
-        generalError(res.data);
-      }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async getNewCategoryNames(val) {
-      let res = await this.$api.getCategoryByIds(val);
-      if(res.data.code === 200) {
-        this.newCategories = res.data.data;
-      }
+    getNewCategoryNames(val) {
+      this.$api.getCategoryByIds(val).then(res => {
+        if(res.data.code === 200) {
+          this.newCategories = res.data.data;
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     showTips() {
       this.$notify({

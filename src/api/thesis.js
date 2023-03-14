@@ -1,16 +1,11 @@
-import axios from "axios";
-import {getToken} from "@/utils/token";
-import {BASE_URL} from "@/api/index";
+import request from "@/utils/request";
 
 const path = "/thesis";
 
 export default {
     addThesis(thesis, parentCat) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/add",
+        return request({
+            url: path + "/add",
             method: "post",
             data: thesis,
             params: {
@@ -19,8 +14,8 @@ export default {
         })
     },
     getThesisList(page, pageSize, query, sortCol, sortOrder) {
-        return axios({
-            url: BASE_URL + path + "/list/" + page + "/" + pageSize,
+        return request({
+            url: path + "/list/" + page + "/" + pageSize,
             method: "get",
             params: {
                 author: query.author,
@@ -33,50 +28,38 @@ export default {
         })
     },
     getReference(id) {
-        return axios({
-            url: BASE_URL + path + "/cite/" + id,
+        return request({
+            url: path + "/cite/" + id,
             method: "get"
         })
     },
     getOnlinePublishInfo(id) {
-        return axios({
-            url: BASE_URL + path + "/onlinePublishInfo/" + id,
+        return request({
+            url: path + "/onlinePublishInfo/" + id,
             method: "get"
         })
     },
     getDownloadNum() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/getDownloadNum",
+        return request({
+            url: path + "/getDownloadNum",
             method: "get"
         })
     },
     getFileName(id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/file/" + id,
+        return request({
+            url: path + "/file/" + id,
             method: "get"
         })
     },
     getThesisById(id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/id/" + id,
+        return request({
+            url: path + "/id/" + id,
             method: "get"
         })
     },
     deleteThesisFile(file) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/deleteFile",
+        return request({
+            url: path + "/deleteFile",
             method: "delete",
             params: {
                 file: file
@@ -84,11 +67,8 @@ export default {
         })
     },
     updateThesis(thesis, parentCat, id) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/update",
+        return request({
+            url: path + "/update",
             method: "put",
             data: thesis,
             params: {
@@ -98,18 +78,15 @@ export default {
         })
     },
     deleteThesis(id, reason) {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/delete/" + id,
+        return request({
+            url: path + "/delete/" + id,
             method: "delete",
             data: reason
         })
     },
     getCategoryTheses(id, sortCol, sortOrder) {
-        return axios({
-            url: BASE_URL + path + "/categoryTheses/" + id,
+        return request({
+            url: path + "/categoryTheses/" + id,
             method: "get",
             params: {
                 sortCol: sortCol,
@@ -118,20 +95,14 @@ export default {
         })
     },
     getMissingFileTheses() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/missingFile",
+        return request({
+            url: path + "/missingFile",
             method: "get"
         })
     },
     getThesisWithoutCat() {
-        return axios({
-            headers: {
-                "token": getToken()
-            },
-            url: BASE_URL + path + "/thesisWithoutCat",
+        return request({
+            url: path + "/thesisWithoutCat",
             method: "get"
         })
     },

@@ -142,17 +142,20 @@ export default {
         pointsRequire2: " points are required to advance to the next level"
     },
     util: {
-        user: {
+
+        permission: {
+            noLogin: "You are not logged in!",
+            noPermission: "You don't have permission to this page."
+        },
+        request: {
+            serverError: "Server Error",
             noUser: "User not exist, please login again",
             tokenExpired: "Token expired, please login again",
             tokenError: "Token error, please login again",
             missingToken: "Token not exist, please login again",
             unknownError: "Unknown error, please login again",
-            noPermission: "You Don't Have Permission!"
-        },
-        permission: {
-            noLogin: "You are not logged in!",
-            noPermission: "You don't have permission to this page."
+            noPermission: "You Don't Have Permission!",
+            unexpectedError: "Unexpected Error"
         }
     },
     category: {

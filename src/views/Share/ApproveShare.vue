@@ -108,7 +108,7 @@
 import {mapState} from "vuex";
 import i18n from "@/lang";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
 import {getTitle} from "@/utils/title";
@@ -204,9 +204,9 @@ export default {
     }
   },
   methods: {
-    async getShareDetails() {
+    getShareDetails() {
       const id = this.$route.params.id;
-      await this.$api.getShareById(id).then(res => {
+      this.$api.getShareById(id).then(res => {
         if(res.data.code === 200) {
           const json = res.data.data.share;
           if (!_.isEmpty(json)) {
@@ -256,10 +256,9 @@ export default {
         } else {
           generalError(res.data);
         }
-      }).catch(() => {
-        this.$message.error(i18n.tc('thesis.invalidId'));
-        this.$router.push("/thesis/list");
-      });
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     getCategories(val) {
       this.categories = val;
@@ -283,39 +282,42 @@ export default {
         });
       }
     },
-    async doApprove() {
+    doApprove() {
       const id = this.$route.params.id;
-      let res = await this.$api.approveShare(id, this.form, this.categories.toString());
-      if(res.data.code === 200) {
-        this.$message({
-          message: i18n.tc('share.approveSuccess'),
-          type: 'success'
-        });
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else if(res.data.code === 303) {
-        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else if(res.data.code === 406) {
-        await this.$alert(i18n.tc('thesis.thesisExist'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else if (res.data.code === 501) {
-        this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else if(res.data.code === 503) {
-        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else {
-        generalError(res.data);
-      }
+      this.$api.approveShare(id, this.form, this.categories.toString()).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: i18n.tc('share.approveSuccess'),
+            type: 'success'
+          });
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else if(res.data.code === 303) {
+          this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else if(res.data.code === 406) {
+          this.$alert(i18n.tc('thesis.thesisExist'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else if (res.data.code === 501) {
+          this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else if(res.data.code === 503) {
+          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     inputReason(reason) {
       this.reason = reason;
@@ -331,27 +333,30 @@ export default {
         });
       }
     },
-    async doReject(id, reason) {
-      let res = await this.$api.rejectShare(id, reason);
-      if(res.data.code === 200) {
-        this.$message({
-          message: i18n.tc('share.rejectSuccess'),
-          type: 'success'
-        });
-        this.isRejecting = false;
-        this.confirmRejectPanel = false;
-        await this.$router.push("/admin/UploadList");
-      } else if (res.data.code === 501) {
-        this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else if(res.data.code === 503) {
-        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        this.isApproving = false;
-        await this.$router.push("/admin/UploadList");
-      } else {
-        generalError(res.data);
-      }
+    doReject(id, reason) {
+      this.$api.rejectShare(id, reason).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: i18n.tc('share.rejectSuccess'),
+            type: 'success'
+          });
+          this.isRejecting = false;
+          this.confirmRejectPanel = false;
+          this.$router.push("/admin/UploadList");
+        } else if (res.data.code === 501) {
+          this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else if(res.data.code === 503) {
+          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+          this.isApproving = false;
+          this.$router.push("/admin/UploadList");
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     }
   }
 }

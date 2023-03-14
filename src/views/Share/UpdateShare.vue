@@ -80,7 +80,7 @@
 
 <script>
 import i18n from "@/lang";
-import {generalError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
 import {mapState} from "vuex";
 import FileUploader from "@/components/FileUploader.vue";
@@ -170,9 +170,9 @@ export default {
     }
   },
   methods: {
-    async getShareDetails() {
+    getShareDetails() {
       const id = this.$route.params.id;
-      await this.$api.getMyShareById(id).then(res => {
+      this.$api.getMyShareById(id).then(res => {
         if(res.data.code === 200) {
           const json = res.data.data.share;
           if (!_.isEmpty(json)) {
@@ -221,10 +221,9 @@ export default {
         } else {
           generalError(res.data);
         }
-      }).catch(() => {
-        this.$message.error(i18n.tc('thesis.invalidId'));
-        this.$router.push("/thesis/list");
-      });
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     getFileName(val) {
       this.form.fileName = val;
@@ -243,20 +242,23 @@ export default {
         this.updateThesisSharing(this.$route.params.id, this.form);
       }
     },
-    async updateThesisSharing(id, share) {
-      let res = await this.$api.updateThesisSharing(id, share);
-      if(res.data.code === 200) {
-        this.$message({
-          message: i18n.tc('share.updateSuccess'),
-          type: 'success'
-        });
-        await this.$router.push("/profile/MyUpload");
-      } else if(res.data.code === 503) {
-        this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-        await this.$router.push("/profile/MyUpload");
-      } else {
-        generalError(res.data);
-      }
+    updateThesisSharing(id, share) {
+      this.$api.updateThesisSharing(id, share).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: i18n.tc('share.updateSuccess'),
+            type: 'success'
+          });
+          this.$router.push("/profile/MyUpload");
+        } else if(res.data.code === 503) {
+          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+          this.$router.push("/profile/MyUpload");
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
   }
 }

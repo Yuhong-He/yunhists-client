@@ -1,47 +1,28 @@
 import store from "@/store";
-import router from "@/router";
-import Vue from "vue";
 import i18n from "@/lang";
-import {setToken} from "@/utils/token";
+import {Message} from "element-ui";
+import router from "@/router";
 
-function generalError(data) {
-    if(data.code === 201) {
-        Vue.prototype.$alert("Unexpected Error", {
-            confirmButtonText: i18n.tc('header.confirm'),
-            callback: () => {}
-         }).then(() => {});
+export function generalError(data) { // error with request.js Promise.resolve
+
+    const authenticationError = [
+        203, 205, 223, 224, 225
+    ]
+    if(authenticationError.includes(data.code)) {
+        console.log("Authentication Error");
     } else {
-        setToken("");
-        store.state.UserInfo.username = "";
-        store.state.UserInfo.userRights = "";
-        store.state.Aliyun.accessKeyId = "";
-        store.state.Aliyun.accessKeySecret = "";
-        store.state.Aliyun.stsToken = "";
-        if(router.currentRoute.path !== '/login') {
-            printErrorMsg(data.code)
-            router.push('/login');
-        }
+        Message.error(i18n.tc('util.request.unexpectedError'));
+        console.log(data.data);
     }
 }
 
-function printErrorMsg(errorCode) {
-    if(errorCode === 205) {
-        Vue.prototype.$message.error(i18n.tc('util.user.noUser'));
-    } else if (errorCode === 203) {
-        Vue.prototype.$message.error(i18n.tc('util.user.noPermission'));
-    } else if (errorCode === 223) {
-        Vue.prototype.$message.error(i18n.tc('util.user.tokenExpired'));
-    } else if (errorCode === 224) {
-        Vue.prototype.$message.error(i18n.tc('util.user.tokenError'));
-    } else if (errorCode === 225) {
-        Vue.prototype.$message.error(i18n.tc('util.user.missingToken'));
-    } else {
-        Vue.prototype.$message.error(i18n.tc('util.user.unknownError'));
-    }
+export function unexpectedError(res) { // error with request.js Promise.reject
+    router.push("/");
+    console.log(res);
 }
 
-function initLang() {
-    if(store.state.Settings.lang && store.state.Settings.lang.length > 0) {
+export function initLang() {
+    if (store.state.Settings.lang && store.state.Settings.lang.length > 0) {
         i18n.locale = store.state.Settings.lang;
     } else {
         switch (navigator.language.toLowerCase()) {
@@ -69,5 +50,3 @@ function initLang() {
         }
     }
 }
-
-export {generalError, initLang};

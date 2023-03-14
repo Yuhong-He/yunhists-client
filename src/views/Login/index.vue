@@ -109,6 +109,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Loading } from 'element-ui';
 import {firebaseConfig} from "@/utils/firebase";
 import {getTitle} from "@/utils/title";
+import {generalError, unexpectedError} from "@/utils/user";
 
 export default{
   created() {
@@ -264,78 +265,84 @@ export default{
         }
       });
     },
-    async doLogin(email, password) {
+    doLogin(email, password) {
       this.loginLoading = true;
-      let res = await this.$api.login({'email': email, 'password': password});
-      if(res.data.code === 200) {
-        setToken(res.data.data.token);
-        this.setUsername(res.data.data.username);
-        this.setUserRights(res.data.data.userRights);
-        this.setAccessKeyId(res.data.data.sts.accessKeyId);
-        this.setAccessKeySecret(res.data.data.sts.accessKeySecret);
-        this.setStsToken(res.data.data.sts.stsToken);
-        this.setLang(res.data.data.lang);
-        this.$i18n.locale = res.data.data.lang;
-        this.loginLoading = false;
-        await this.$router.go(-1);
-        this.$message({
-          type: 'success',
-          message: i18n.tc('login.welcome') + " " + res.data.data.username
-        });
-      } else if (res.data.code === 206) {
-        this.loginLoading = false;
-        await this.$alert(i18n.tc('login.incorrectPwd'), {
-          confirmButtonText: i18n.tc('login.confirm')
-        }).catch(() => {});
-      } else if (res.data.code === 208) {
-        this.loginLoading = false;
-        await this.$alert(i18n.tc('login.emailNotRegistered'), {
-          confirmButtonText: i18n.tc('login.confirm')
-        }).catch(() => {});
-      } else if (res.data.code === 209) {
-        this.loginLoading = false;
-        await this.$alert(i18n.tc('login.googleAccount'), {
-          confirmButtonText: i18n.tc('login.confirm')
-        }).catch(() => {});
-      }
+      this.$api.login({'email': email, 'password': password}).then(res => {
+        if(res.data.code === 200) {
+          setToken(res.data.data.token);
+          this.setUsername(res.data.data.username);
+          this.setUserRights(res.data.data.userRights);
+          this.setAccessKeyId(res.data.data.sts.accessKeyId);
+          this.setAccessKeySecret(res.data.data.sts.accessKeySecret);
+          this.setStsToken(res.data.data.sts.stsToken);
+          this.setLang(res.data.data.lang);
+          this.$i18n.locale = res.data.data.lang;
+          this.loginLoading = false;
+          this.$router.go(-1);
+          this.$message({
+            type: 'success',
+            message: i18n.tc('login.welcome') + " " + res.data.data.username
+          });
+        } else if (res.data.code === 206) {
+          this.loginLoading = false;
+          this.$alert(i18n.tc('login.incorrectPwd'), {
+            confirmButtonText: i18n.tc('login.confirm')
+          }).catch(() => {});
+        } else if (res.data.code === 208) {
+          this.loginLoading = false;
+          this.$alert(i18n.tc('login.emailNotRegistered'), {
+            confirmButtonText: i18n.tc('login.confirm')
+          }).catch(() => {});
+        } else if (res.data.code === 209) {
+          this.loginLoading = false;
+          this.$alert(i18n.tc('login.googleAccount'), {
+            confirmButtonText: i18n.tc('login.confirm')
+          }).catch(() => {});
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
-    async google() {
+    google() {
       initializeApp(firebaseConfig);
       const provider = new GoogleAuthProvider();
       const auth = getAuth();
-      try {
-        let loadingInstance = Loading.service({ fullscreen: true });
-        let googleResult = await signInWithPopup(auth, provider);
+      let loadingInstance = Loading.service({ fullscreen: true });
+      signInWithPopup(auth, provider).then(googleResult => {
         const user = googleResult.user;
-        let loginResult = await this.$api.google(user.email, user.displayName, i18n.locale);
-        if(loginResult.data.code === 200) {
-          setToken(loginResult.data.data.token);
-          this.setUsername(loginResult.data.data.username);
-          this.setUserRights(loginResult.data.data.userRights);
-          this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);
-          this.setAccessKeySecret(loginResult.data.data.sts.accessKeySecret);
-          this.setStsToken(loginResult.data.data.sts.stsToken);
-          this.setLang(loginResult.data.data.lang);
-          this.$i18n.locale = loginResult.data.data.lang;
-          this.$message({
-            type: 'success',
-            message: i18n.tc('login.welcome') + " " + loginResult.data.data.username
-          });
-          loadingInstance.close();
-          await this.$router.go(-1);
-        } else if(loginResult.data.code === 215) {
-          loadingInstance.close();
-          this.$alert(i18n.tc('login.emailAccount'), {
-            confirmButtonText: i18n.tc('header.confirm'),
-            callback: () => {}
-          }).then(() => {});
-        }
-      } catch (e) {
-        this.$alert("Unexpected Error", {
-          confirmButtonText: i18n.tc('header.confirm'),
-          callback: () => {}
-        }).then(() => {});
-      }
+        this.$api.google(user.email, user.displayName, i18n.locale).then(loginResult => {
+          if (loginResult.data.code === 200) {
+            setToken(loginResult.data.data.token);
+            this.setUsername(loginResult.data.data.username);
+            this.setUserRights(loginResult.data.data.userRights);
+            this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);
+            this.setAccessKeySecret(loginResult.data.data.sts.accessKeySecret);
+            this.setStsToken(loginResult.data.data.sts.stsToken);
+            this.setLang(loginResult.data.data.lang);
+            this.$i18n.locale = loginResult.data.data.lang;
+            this.$message({
+              type: 'success',
+              message: i18n.tc('login.welcome') + " " + loginResult.data.data.username
+            });
+            loadingInstance.close();
+            this.$router.go(-1);
+          } else if (loginResult.data.code === 215) {
+            loadingInstance.close();
+            this.$alert(i18n.tc('login.emailAccount'), {
+              confirmButtonText: i18n.tc('header.confirm'),
+              callback: () => {}
+            }).then(() => {});
+          } else {
+            generalError(loginResult.data);
+          }
+        }).catch(loginResult => {
+          unexpectedError(loginResult);
+        })
+      }).catch(googleResult => {
+        unexpectedError(googleResult);
+      })
     },
     register(formName){
       this.$refs[formName].validate((valid) => {
@@ -354,39 +361,44 @@ export default{
           this.registerForm.register_verificationCode
       );
     },
-    async doRegister(email, username, pwd, pwd2, code) {
-      let res = await this.$api.register(
+    doRegister(email, username, pwd, pwd2, code) {
+      this.$api.register(
           {'lang': this.lang, 'email': email, 'username': username,
-           'password': pwd, 'password2': pwd2, 'code': code});
-      if(res.data.code === 200) {
-        this.$message({
-          type: 'success',
-          message: i18n.tc('login.registerSuccess')
-        });
-        this.isLogin = true;
-        this.loginForm.login_email = email;
-        this.loginForm.login_password = pwd;
-      } else if (res.data.code === 218) {
-        await this.$alert(i18n.tc('login.noVerificationCodeSend'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
-      } else if (res.data.code === 215) {
-        await this.$alert(i18n.tc('login.emailRegistered'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
-      } else if (res.data.code === 214) {
-        await this.$alert(i18n.tc('login.incorrectCode'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
-      } else if (res.data.code === 213) {
-        await this.$alert(i18n.tc('login.codeExpired'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
-      }
+           'password': pwd, 'password2': pwd2, 'code': code}).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            type: 'success',
+            message: i18n.tc('login.registerSuccess')
+          });
+          this.isLogin = true;
+          this.loginForm.login_email = email;
+          this.loginForm.login_password = pwd;
+        } else if (res.data.code === 218) {
+          this.$alert(i18n.tc('login.noVerificationCodeSend'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        } else if (res.data.code === 215) {
+          this.$alert(i18n.tc('login.emailRegistered'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        } else if (res.data.code === 214) {
+          this.$alert(i18n.tc('login.incorrectCode'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        } else if (res.data.code === 213) {
+          this.$alert(i18n.tc('login.codeExpired'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     verificationCode() {
       const email = this.registerForm.register_email;
@@ -407,31 +419,36 @@ export default{
         });
       }
     },
-    async doSendVerificationEmail (email) {
-      let res = await this.$api.sendVerificationEmail({'lang': this.lang, 'email': email});
-      if(res.data.code === 200) {
-        $("#v-email-btn").css("cursor", "not-allowed");
-        this.countDown();
-        this.$message({
-          type: 'success',
-          message: i18n.tc('login.codeSent')
-        });
-      } else if(res.data.code === 211) {
-        this.$message({
-          type: 'warning',
-          message: i18n.tc('login.waitCountDown')
-        });
-      } else if(res.data.code === 212) {
-        this.$message({
-          type: 'warning',
-          message: i18n.tc('login.sendEmailFail')
-        });
-      } else if (res.data.code === 215) {
-        await this.$alert(i18n.tc('login.emailRegistered'), {
-          confirmButtonText: i18n.tc('login.confirm'),
-          callback: () => {}
-        });
-      }
+    doSendVerificationEmail (email) {
+      this.$api.sendVerificationEmail({'lang': this.lang, 'email': email}).then(res => {
+        if(res.data.code === 200) {
+          $("#v-email-btn").css("cursor", "not-allowed");
+          this.countDown();
+          this.$message({
+            type: 'success',
+            message: i18n.tc('login.codeSent')
+          });
+        } else if (res.data.code === 211) {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('login.waitCountDown')
+          });
+        } else if (res.data.code === 212) {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('login.sendEmailFail')
+          });
+        } else if (res.data.code === 215) {
+          this.$alert(i18n.tc('login.emailRegistered'), {
+            confirmButtonText: i18n.tc('login.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     countDown() {
       clearInterval(this.timer);
@@ -468,34 +485,39 @@ export default{
         });
       }
     },
-    async doResetPwd(email) {
-      let res = await this.$api.resetPassword({'email': email});
-      if(res.data.code === 200) {
-        this.resetPwdBox = false;
-        this.$message({
-          type: 'success',
-          message: i18n.tc('login.newPwdSent')
-        });
-      } else if (res.data.code === 208) {
-        await this.$alert(i18n.tc('login.emailNotRegistered'), {
-          confirmButtonText: i18n.tc('login.confirm')
-        }).catch(() => {});
-      } else if (res.data.code === 209) {
-        await this.$alert(i18n.tc('login.googleAccount'), {
-          confirmButtonText: i18n.tc('login.confirm')
-        }).catch(() => {});
-      } else if(res.data.code === 211) {
-        this.$message({
-          type: 'warning',
-          message: i18n.tc('login.waitSendEmail')
-        });
-      } else if(res.data.code === 212) {
-        this.$message({
-          type: 'warning',
-          message: i18n.tc('login.sendEmailFail')
-        });
-      }
-    }
+    doResetPwd(email) {
+      this.$api.resetPassword({'email': email}).then(res => {
+        if(res.data.code === 200) {
+          this.resetPwdBox = false;
+          this.$message({
+            type: 'success',
+            message: i18n.tc('login.newPwdSent')
+          });
+        } else if (res.data.code === 208) {
+          this.$alert(i18n.tc('login.emailNotRegistered'), {
+            confirmButtonText: i18n.tc('login.confirm')
+          }).catch(() => {});
+        } else if (res.data.code === 209) {
+          this.$alert(i18n.tc('login.googleAccount'), {
+            confirmButtonText: i18n.tc('login.confirm')
+          }).catch(() => {});
+        } else if(res.data.code === 211) {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('login.waitSendEmail')
+          });
+        } else if(res.data.code === 212) {
+          this.$message({
+            type: 'warning',
+            message: i18n.tc('login.sendEmailFail')
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
+    },
   }
 }
 </script>

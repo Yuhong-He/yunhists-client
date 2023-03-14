@@ -100,8 +100,8 @@
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
-import {generalError} from "@/utils/user";
+import {mapState} from "vuex";
+import {generalError, unexpectedError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
 import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
@@ -205,29 +205,32 @@ export default {
         this.addThesis(this.form, this.categories);
       }
     },
-    async addThesis(thesis, categories) {
+    addThesis(thesis, categories) {
       let parentCat = Array.from(categories).toString();
-      let res = await this.$api.addThesis(thesis, parentCat);
-      if(res.data.code === 200) {
-        this.$message({
-          message: i18n.tc('thesis.addSuccess'),
-          type: 'success'
-        });
-        await this.$router.push("/thesis");
-      } else if(res.data.code === 303) {
-        await this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-        await this.$router.push("/thesis");
-      } else if(res.data.code === 406) {
-        await this.$alert(i18n.tc('thesis.thesisExist'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      } else {
-        generalError(res.data);
-      }
+      this.$api.addThesis(thesis, parentCat).then(res => {
+        if(res.data.code === 200) {
+          this.$message({
+            message: i18n.tc('thesis.addSuccess'),
+            type: 'success'
+          });
+          this.$router.push("/thesis");
+        } else if(res.data.code === 303) {
+          this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+          this.$router.push("/thesis");
+        } else if(res.data.code === 406) {
+          this.$alert(i18n.tc('thesis.thesisExist'), {
+            confirmButtonText: i18n.tc('thesis.confirm'),
+            callback: () => {}
+          });
+        } else {
+          generalError(res.data);
+        }
+      }).catch(res => {
+        unexpectedError(res);
+      })
     },
     semiAutoParse() {
       this.form = {

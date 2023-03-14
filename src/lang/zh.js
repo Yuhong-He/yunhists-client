@@ -142,17 +142,19 @@ export default {
         pointsRequire2: "积分"
     },
     util: {
-        user: {
+        permission: {
+            noLogin: "您没有登录！",
+            noPermission: "您没有权限访问本页面"
+        },
+        request: {
+            serverError: "服务器错误",
             noUser: "用户不存在，请重新登陆",
             tokenExpired: "Token过期，请重新登陆",
             tokenError: "Token错误，请重新登陆",
             missingToken: "Token不存在，请重新登陆",
             unknownError: "未知错误，请重新登陆",
-            noPermission: "您没有权限！"
-        },
-        permission: {
-            noLogin: "你没有登录！",
-            noPermission: "您没有权限访问本页面"
+            noPermission: "您没有权限！",
+            unexpectedError: "未知错误"
         }
     },
     category: {
