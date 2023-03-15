@@ -1,12 +1,12 @@
 <template>
-  <div class="user-share-container">
+  <div class="user-upload-container">
     <div class="open-parsing-btn-area">
       <el-button type="info" class="open-parsing-btn" @click="semiAutoParse" plain>{{ $t('thesis.autoInput') }}</el-button>
     </div>
-    <div class="user-share-title">
-      <h2>{{ $t('thesis.shareNewThesis') }}</h2>
+    <div class="user-upload-title">
+      <h2>{{ $t('thesis.uploadNewThesis') }}</h2>
     </div>
-    <div class="user-share-form">
+    <div class="user-upload-form">
       <el-form ref="form" :model="form" label-width="20%">
         <el-form-item :label="$t('thesis.author')" prop="author">
           <el-input v-model="form.author" clearable></el-input>
@@ -65,7 +65,7 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item :label="$t('thesis.uploadFile')" prop="fileName">
-          <FileUploader @getFileName="getFileName" :action="'Share'"></FileUploader>
+          <FileUploader @getFileName="getFileName" :action="'Upload'"></FileUploader>
         </el-form-item>
         <el-form-item :label="$t('thesis.category')" prop="category">
           <CategorySelector style="width: 100%;" @getCategories="getCategories"></CategorySelector>
@@ -75,7 +75,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <div class="user-share-btn">
+    <div class="user-upload-btn">
       <el-button type="primary" @click="onSubmit" :loading="isSubmitting" round>{{ $t('thesis.confirm') }}</el-button>
     </div>
     <el-dialog
@@ -231,17 +231,17 @@ export default {
       }
       if(validateThesis(this.form)) {
         this.isSubmitting = true;
-        this.shareThesis(this.form);
+        this.uploadThesis(this.form);
       }
     },
-    shareThesis(share) {
-      this.$api.shareThesis(share).then(res => {
+    uploadThesis(upload) {
+      this.$api.uploadThesis(upload).then(res => {
         if(res.data.code === 200) {
           this.isSubmitting = false;
           this.$message({
             duration: 10000,
             showClose: true,
-            message: i18n.tc('share.shareSuccess'),
+            message: i18n.tc('upload.uploadSuccess'),
             type: 'success'
           });
           this.$router.push("/profile/MyUpload");
@@ -294,17 +294,17 @@ export default {
 </script>
 
 <style lang="less" scoped>
-.user-share-container {
+.user-upload-container {
   margin: 40px 25%;
 }
-.user-share-title {
+.user-upload-title {
   text-align: center;
   font-size: 1.5em;
 }
-.user-share-form {
+.user-upload-form {
   margin-top: 20px;
 }
-.user-share-btn {
+.user-upload-btn {
   display: flex;
   align-items: center;
   justify-content: center;

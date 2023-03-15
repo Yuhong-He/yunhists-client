@@ -1,16 +1,16 @@
 import request from "@/utils/request";
 
-const path = "/share";
+const path = "/upload";
 
 export default {
-    shareThesis(share) {
+    uploadThesis(upload) {
         return request({
             url: path + "/add",
             method: "post",
-            data: share
+            data: upload
         })
     },
-    listMySharing(page, title) {
+    listMyUpload(page, title) {
         return request({
             url: path + "/myList/" + page,
             method: "get",
@@ -19,19 +19,19 @@ export default {
             }
         })
     },
-    deleteMySharing(id) {
+    deleteMyUpload(id) {
         return request({
             url: path + "/delete/" + id,
             method: "delete"
         })
     },
-    getMyShareById(id) {
+    getMyUploadById(id) {
         return request({
-            url: path + "/myShare/" + id,
+            url: path + "/myUpload/" + id,
             method: "get"
         })
     },
-    deleteShareFile(file) {
+    deleteUploadFile(file) {
         return request({
             url: path + "/deleteFile",
             method: "delete",
@@ -40,14 +40,14 @@ export default {
             }
         })
     },
-    updateThesisSharing(id, share) {
+    updateThesisUpload(id, upload) {
         return request({
             url: path + "/update/" + id,
             method: "put",
-            data: share
+            data: upload
         })
     },
-    listAllSharing(page, title, unapproved) {
+    listAllUpload(page, title, unapproved) {
         return request({
             url: path + "/listAll/" + page,
             method: "get",
@@ -57,23 +57,23 @@ export default {
             }
         })
     },
-    getShareById(id) {
+    getUploadById(id) {
         return request({
             url: path + "/id/" + id,
             method: "get"
         })
     },
-    approveShare(id, share, categories) {
+    approveUpload(id, upload, categories) {
         return request({
             url: path + "/approve/" + id,
             method: "put",
-            data: share,
+            data: upload,
             params: {
                 category: categories
             }
         })
     },
-    rejectShare(id, reason) {
+    rejectUpload(id, reason) {
         return request({
             url: path + "/reject/" + id,
             method: "put",

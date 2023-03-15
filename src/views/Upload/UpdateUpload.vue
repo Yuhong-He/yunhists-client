@@ -1,9 +1,9 @@
 <template>
-  <div class="approve-share-container">
-    <div class="approve-share-title">
-      <h2>{{ $t('share.approveNewShare') }}</h2>
+  <div class="update-upload-container">
+    <div class="update-upload-title">
+      <h2>{{ $t('upload.updateUpload') }}</h2>
     </div>
-    <div class="approve-share-form">
+    <div class="update-upload-form">
       <el-form ref="form" :model="form" label-width="20%">
         <el-form-item :label="$t('thesis.author')" prop="author">
           <el-input v-model="form.author" clearable></el-input>
@@ -61,64 +61,39 @@
             <el-radio label="2">{{ $t('thesis.publicDomain') }}</el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item :label="$t('share.file')" prop="category">
-          <el-row>
-            <el-col :span="20" :style="'color: ' + fileColor">{{ file }}</el-col>
-            <el-col :span="4" style="text-align: right">
-              <el-button type="primary" :disabled="downloadBtnDisabled" @click="downloadFile">{{ $t('share.download') }}</el-button>
-            </el-col>
-          </el-row>
+        <el-form-item :label="$t('thesis.uploadFile')" prop="fileName">
+          <FileUploader @getFileName="getFileName" :action="'UpdateUpload'" :fileList="fileList"></FileUploader>
         </el-form-item>
         <el-form-item :label="$t('thesis.category')" prop="category">
           <CategorySelector style="width: 100%;" @getCategories="getCategories" :catList="catList"></CategorySelector>
         </el-form-item>
         <el-form-item :label="$t('thesis.newCategory')" prop="newCategory">
-          {{ newCategory }}
+          <el-input v-model="form.newCategory" type="textarea" :rows="4" :placeholder="$t('thesis.newCategoryComments')" clearable></el-input>
         </el-form-item>
       </el-form>
     </div>
-    <div class="share-share-btn">
-      <el-button type="danger" round @click="confirmRejectPanel = true">{{ $t('share.reject') }}</el-button>
-      <el-button type="success" round :loading="isApproving" @click="approve">{{ $t('share.approvePass') }}</el-button>
+    <div class="update-upload-btn">
+      <el-button type="primary" @click="onSubmit" round>{{ $t('thesis.confirm') }}</el-button>
     </div>
-
-    <el-dialog :title="$t('share.confirmReject')" :lock-scroll="false" :append-to-body="true" :visible.sync="confirmRejectPanel" :close-on-click-modal="false" width="30%">
-      <div>{{ $t('thesis.pleaseInputReason') }}</div>
-      <div>
-        <el-input
-            type="textarea"
-            :rows="4"
-            v-model="reason">
-        </el-input>
-      </div>
-      <div style="margin-top: 10px">
-        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.notMeetCriteriaBody'))" type="info">{{ $t('thesis.notMeetCriteriaTitle') }}</el-tag>
-        <el-tag style="cursor: pointer" @click="inputReason($t('thesis.repeatThesisBody'))" type="info">{{ $t('thesis.repeatThesisTitle') }}</el-tag>
-        <el-tag style="cursor: pointer" @click="inputReason($t('share.fileMissingBody'))" type="info">{{ $t('share.fileMissingTitle') }}</el-tag>
-      </div>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="confirmRejectPanel = false">{{ $t('thesis.cancel') }}</el-button>
-        <el-button type="danger" :loading="isRejecting" @click="reject">{{ $t('share.reject') }}</el-button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
 <script>
-import {mapState} from "vuex";
 import i18n from "@/lang";
-import CategorySelector from "@/components/CategorySelector.vue";
 import {generalError, unexpectedError} from "@/utils/user";
-import OSS from "ali-oss";
-import {oss} from "@/utils/oss";
+import {validateThesis} from "@/utils/thesis";
+import {mapState} from "vuex";
+import FileUploader from "@/components/FileUploader.vue";
+import CategorySelector from "@/components/CategorySelector.vue";
 import {getTitle} from "@/utils/title";
 
 export default {
   created() {
-    document.title = getTitle("approveUpload");
+    document.title = getTitle("updateUpload");
   },
   components: {
-    CategorySelector
+    CategorySelector,
+    FileUploader
   },
   computed: {
     ...mapState('UserInfo', ['userRights']),
@@ -156,11 +131,11 @@ export default {
       immediate: true
     },
     '$i18n.locale'() {
-      document.title = getTitle("approveUpload");
+      document.title = getTitle("updateUpload");
     }
   },
   mounted() {
-    this.getShareDetails();
+    this.getUploadDetails();
   },
   data() {
     return {
@@ -190,25 +165,16 @@ export default {
           return time.getTime() > _now
         }
       },
-      file: "",
-      catList: [],
-      categories: [],
-      fileColor: "#666666",
-      downloadBtnDisabled: false,
-      downloaded: false,
-      isApproving: false,
-      confirmRejectPanel: false,
-      reason: "",
-      isRejecting: false,
-      newCategory: "None"
+      fileList: [],
+      catList: []
     }
   },
   methods: {
-    getShareDetails() {
+    getUploadDetails() {
       const id = this.$route.params.id;
-      this.$api.getShareById(id).then(res => {
+      this.$api.getMyUploadById(id).then(res => {
         if(res.data.code === 200) {
-          const json = res.data.data.share;
+          const json = res.data.data.upload;
           if (!_.isEmpty(json)) {
             for (const valKey in json) { // loop json from server
               for (const formKey in this.form) { // loop json for this form
@@ -229,11 +195,11 @@ export default {
 
           if (this.form.fileName.length > 0) {
             const suffix = this.form.fileName.substring(this.form.fileName.lastIndexOf('.') + 1);
-            this.file = this.form.title + "." + suffix;
-          } else {
-            this.file = i18n.tc('share.fileMissing');
-            this.fileColor = "red";
-            this.downloadBtnDisabled = true;
+            const obj = {
+              name: this.form.title + "." + suffix,
+              url: this.form.fileName
+            };
+            this.fileList.push(obj);
           }
 
           this.categories = res.data.data.categories;
@@ -243,15 +209,14 @@ export default {
           }
           this.catList = arr;
 
-          if(this.form.newCategory.length > 0) {
-            this.newCategory = this.form.newCategory;
-          }
-
         } else if (res.data.code === 501) {
           this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-          this.$router.push("/admin/UploadList");
+          this.$router.push("/profile/MyUpload");
+        } else if (res.data.code === 502) {
+          this.$message.error(i18n.tc('upload.notYourUpload'));
+          this.$router.push("/profile/MyUpload");
         } else if(res.data.code === 503) {
-          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
+          this.$message.error(i18n.tc('upload.approvedUploadCanNotUpdate'));
           this.$router.push("/profile/MyUpload");
         } else {
           generalError(res.data);
@@ -260,59 +225,34 @@ export default {
         unexpectedError(res);
       })
     },
+    getFileName(val) {
+      this.form.fileName = val;
+    },
     getCategories(val) {
-      this.categories = val;
+      this.form.category = val.toString();
     },
-    async downloadFile() {
-      await this.$store.dispatch("Aliyun/checkAccessKeyId");
-      const response = {
-        'content-disposition': `attachment; filename=${encodeURIComponent(this.file)}`
+    onSubmit() {
+      const regexNewLine = /\t|\n/gi;
+      const regexAuthor = /，|、|；|;/gi;
+      this.form.author = this.form.author.replaceAll(regexAuthor, ",");
+      for (let key in this.form) {
+        this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
-      const url = new OSS(oss).signatureUrl(this.form.fileName, {response});
-      window.open(url, '_blank');
-      this.downloaded = true;
-    },
-    approve() {
-      if(this.downloaded) {
-        this.isApproving = true;
-        this.doApprove();
-      } else {
-        this.$message({
-          message: i18n.tc('share.checkFile'),
-          type: 'warning'
-        });
+      if(validateThesis(this.form)) {
+        this.updateThesisUpload(this.$route.params.id, this.form);
       }
     },
-    doApprove() {
-      const id = this.$route.params.id;
-      this.$api.approveShare(id, this.form, this.categories.toString()).then(res => {
+    updateThesisUpload(id, upload) {
+      this.$api.updateThesisUpload(id, upload).then(res => {
         if(res.data.code === 200) {
           this.$message({
-            message: i18n.tc('share.approveSuccess'),
+            message: i18n.tc('upload.updateSuccess'),
             type: 'success'
           });
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
-        } else if(res.data.code === 303) {
-          this.$alert(i18n.tc('thesis.invalidCatId') + res.data.data.failedCatId, {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
-        } else if(res.data.code === 406) {
-          this.$alert(i18n.tc('thesis.thesisExist'), {
-            confirmButtonText: i18n.tc('thesis.confirm'),
-            callback: () => {}
-          });
-        } else if (res.data.code === 501) {
-          this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
+          this.$router.push("/profile/MyUpload");
         } else if(res.data.code === 503) {
-          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
+          this.$message.error(i18n.tc('upload.approvedUploadCanNotUpdate'));
+          this.$router.push("/profile/MyUpload");
         } else {
           generalError(res.data);
         }
@@ -320,66 +260,24 @@ export default {
         unexpectedError(res);
       })
     },
-    inputReason(reason) {
-      this.reason = reason;
-    },
-    reject() {
-      if(this.reason.trim().length > 0) {
-        this.isRejecting = true;
-        this.doReject(this.$route.params.id, this.reason);
-      } else {
-        this.$alert(i18n.tc('share.inputReason'), {
-          confirmButtonText: i18n.tc('thesis.confirm'),
-          callback: () => {}
-        });
-      }
-    },
-    doReject(id, reason) {
-      this.$api.rejectShare(id, reason).then(res => {
-        if(res.data.code === 200) {
-          this.$message({
-            message: i18n.tc('share.rejectSuccess'),
-            type: 'success'
-          });
-          this.isRejecting = false;
-          this.confirmRejectPanel = false;
-          this.$router.push("/admin/UploadList");
-        } else if (res.data.code === 501) {
-          this.$message.error(i18n.tc('thesis.thesisIdNotExist'));
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
-        } else if(res.data.code === 503) {
-          this.$message.error(i18n.tc('share.approvedSharingCanNotUpdate'));
-          this.isApproving = false;
-          this.$router.push("/admin/UploadList");
-        } else {
-          generalError(res.data);
-        }
-      }).catch(res => {
-        unexpectedError(res);
-      })
-    }
   }
 }
 </script>
 
 <style lang="less" scoped>
-.approve-share-container {
+.update-upload-container {
   margin: 40px 25%;
 }
-.approve-share-title {
+.update-upload-title {
   text-align: center;
   font-size: 1.5em;
 }
-.approve-share-form {
+.update-upload-form {
   margin-top: 20px;
 }
-.share-share-btn {
+.update-upload-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-}
-.el-tag + .el-tag {
-  margin-left: 10px;
 }
 </style>

@@ -12,14 +12,14 @@ import CategoryAdd from '@/views/Category/AddCategory.vue'
 import CategoryDetail from '@/views/Category/CategoryDetail.vue'
 import Profile from '@/views/Profile'
 import Admin from "@/views/Admin"
-import ShareList from '@/views/Share/ShareList.vue'
+import UploadList from '@/views/Upload/UploadList.vue'
 import NotFound from "@/views/404"
 import UserInfo from "@/views/Profile/UserInfo.vue";
-import MySharing from "@/views/Profile/MySharing.vue";
-import AddShare from "@/views/Share/AddShare.vue";
+import MyUpload from "@/views/Profile/MyUpload.vue";
+import AddUpload from "@/views/Upload/AddUpload.vue";
 import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
-import UpdateShare from "@/views/Share/UpdateShare.vue";
-import ApproveShare from "@/views/Share/ApproveShare.vue";
+import UpdateUpload from "@/views/Upload/UpdateUpload.vue";
+import ApproveUpload from "@/views/Upload/ApproveUpload.vue";
 import About from "@/views/Info/About/index.vue";
 import TermOfService from "@/views/Info/TermOfService/index.vue";
 import PrivacyPolicy from "@/views/Info/PrivacyPolicy/index.vue";
@@ -74,8 +74,8 @@ const routes = [
           },
           {
             path: 'upload',
-            name: 'AddShare',
-            component: AddShare,
+            name: 'AddUpload',
+            component: AddUpload,
             meta: {
               activeMenu: '/thesis/list'
             }
@@ -138,7 +138,7 @@ const routes = [
           {
             path: 'MyUpload',
             name: 'MyUpload',
-            component: MySharing,
+            component: MyUpload,
             meta: {
               activeMenu: '/profile'
             }
@@ -154,12 +154,12 @@ const routes = [
           {
             path: 'UploadList',
             name: 'UploadList',
-            component: ShareList
+            component: UploadList
           },
           {
             path: 'ApproveUpload/:id',
             name: 'ApproveUpload',
-            component: ApproveShare,
+            component: ApproveUpload,
             meta: {
               activeMenu: '/admin/UploadList'
             }
@@ -209,7 +209,7 @@ const routes = [
       {
         path: 'UpdateUpload/:id',
         name: 'UpdateUpload',
-        component: UpdateShare,
+        component: UpdateUpload,
         meta: {
           activeMenu: '/thesis/list'
         }

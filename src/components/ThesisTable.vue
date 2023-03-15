@@ -96,7 +96,7 @@
 
     <el-dialog :title="$t('thesis.downloadThesis')" :lock-scroll="false" :append-to-body="true" :visible.sync="confirmDownloadPanel" width="30%">
       <div>{{ $t('thesis.youHave') }}<span style="font-weight: bold; color: green;">{{ this.remain }}</span>{{ $t('thesis.downloadChance') }}</div>
-      <div style="margin-top: 20px;">{{ $t('thesis.youCanIncreaseDownload') }}<span class="span-link" @click="toSharePage">{{ $t('thesis.shareThesis') }}</span>{{ $t('thesis.youCanIncreaseDownload2') }}</div>
+      <div style="margin-top: 20px;">{{ $t('thesis.youCanIncreaseDownload') }}<span class="span-link" @click="toUploadPage">{{ $t('thesis.uploadThesis') }}</span>{{ $t('thesis.youCanIncreaseDownload2') }}</div>
       <div slot="footer" class="dialog-footer">
         <el-button @click="confirmDownloadPanel = false">{{ $t('thesis.cancel') }}</el-button>
         <el-button type="success" @click="doDownload">{{ $t('thesis.download') }}</el-button>
@@ -247,7 +247,7 @@ export default {
         unexpectedError(res);
       })
     },
-    toSharePage() {
+    toUploadPage() {
       this.$router.push("/thesis/upload");
     },
     doDownload() {

@@ -19,7 +19,7 @@ const unregistered = [
 ]
 
 const user = [
-    'AddShare',
+    'AddUpload',
     'Profile',
     'UserInfo',
     'MyUpload',

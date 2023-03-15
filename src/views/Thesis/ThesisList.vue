@@ -15,8 +15,8 @@
           <el-button v-if="this.userRights >= 1" type="primary" @click="toAddPage" plain>
             {{ $t('thesis.add') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-plus" />
           </el-button>
-          <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
-            {{ $t('thesis.share') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
+          <el-button v-if="this.userRights === 0" type="warning" @click="toUploadPage" plain>
+            {{ $t('thesis.upload') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
           </el-button>
           <el-button v-if="tableData.length > 0" type="success" plain @click="prepareExport">
             {{ $t('thesis.export') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-file-export" />
@@ -277,7 +277,7 @@ export default {
     toAddPage() {
       this.$router.push("/thesis/add");
     },
-    toSharePage() {
+    toUploadPage() {
       this.$router.push("/thesis/upload");
     },
     changeSize(val) {

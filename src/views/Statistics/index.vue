@@ -33,7 +33,7 @@
         <div class="general-info-item">
           <el-statistic group-separator="," :title="$t('statistics.uploadCount')">
             <template slot="formatter">
-              <VueCountUp :start-value="0" :end-value="general.shareCount" :duration="5"/>
+              <VueCountUp :start-value="0" :end-value="general.uploadCount" :duration="5"/>
             </template>
           </el-statistic>
         </div>
@@ -103,7 +103,7 @@ export default {
       general: {
         categoryCount: null,
         categoryLinkCount: null,
-        shareCount: null,
+        uploadCount: null,
         thesisCount: null,
         userCount: null
       },

@@ -72,8 +72,8 @@
                      type="danger" @click="openConfirmDeletePanel = true" plain>
             {{ $t('category.delete') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-trash-can" />
           </el-button>
-          <el-button v-if="this.userRights === 0" type="warning" @click="toSharePage" plain>
-            {{ $t('thesis.share') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
+          <el-button v-if="this.userRights === 0" type="warning" @click="toUploadPage" plain>
+            {{ $t('thesis.upload') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-upload" />
           </el-button>
           <el-button v-if="subThesisTableData.length > 0" type="success" plain @click="prepareExport">{{ $t('thesis.export') }}<font-awesome-icon class="btn-icon" icon="fa-solid fa-file-export" /></el-button>
         </el-col>
@@ -368,7 +368,7 @@ export default {
         });
       }
     },
-    toSharePage() {
+    toUploadPage() {
       this.$router.push("/thesis/upload");
     },
     getSubCatSelection(val) {
