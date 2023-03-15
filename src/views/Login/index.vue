@@ -236,7 +236,7 @@ export default{
   },
   methods:{
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
+    ...mapMutations('User', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     changeType() {
       this.isLogin = !this.isLogin;

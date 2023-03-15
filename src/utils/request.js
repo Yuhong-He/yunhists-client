@@ -19,7 +19,7 @@ const service = axios.create({
 })
 
 const isTokenExpired = () => {
-    let expireTime = store.state.UserInfo.expiredTime;
+    let expireTime = store.state.User.expiredTime;
     if (expireTime) {
         let nowTime = new Date().getTime();
         return nowTime > expireTime; // expired: true
@@ -43,7 +43,7 @@ function addSubscriber(callback) {
 
 service.interceptors.request.use(
     config => {
-        config.headers['access_token'] = store.state.UserInfo.accessToken;
+        config.headers['access_token'] = store.state.User.accessToken;
         if (isTokenExpired()) {
             if (!isRefreshing) {
                 isRefreshing = true
@@ -51,7 +51,7 @@ service.interceptors.request.use(
                 axios({
                     url: '/user/refreshToken',
                     method: 'post',
-                    data: store.state.UserInfo.refreshToken,
+                    data: store.state.User.refreshToken,
                     baseURL: Base_URL,
                     timeout: 5000,
                 }).then(res => {

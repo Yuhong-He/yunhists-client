@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   data() {
     return {

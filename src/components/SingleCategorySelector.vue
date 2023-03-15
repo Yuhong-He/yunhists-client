@@ -30,7 +30,7 @@ import {generalError, unexpectedError} from "@/utils/general";
 export default {
   computed: {
     ...mapState('Settings', ['lang']),
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   data() {
     return {

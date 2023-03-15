@@ -105,7 +105,7 @@ export default {
     CategorySelector
   },
   computed: {
-    ...mapState('UserInfo', ['userRights']),
+    ...mapState('User', ['userRights']),
     ...mapState('Settings', ['categoryListTips']),
     options() {
       return [{

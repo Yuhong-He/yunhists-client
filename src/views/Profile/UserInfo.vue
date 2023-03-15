@@ -318,7 +318,7 @@ export default {
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
+    ...mapMutations('User', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     generateUserInfo() {
       this.$api.getUserInfo().then(res => {

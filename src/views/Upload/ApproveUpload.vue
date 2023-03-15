@@ -120,7 +120,7 @@ export default {
     CategorySelector
   },
   computed: {
-    ...mapState('UserInfo', ['userRights']),
+    ...mapState('User', ['userRights']),
     options() {
       return [{
         value: '维普资讯',

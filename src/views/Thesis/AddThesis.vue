@@ -113,7 +113,7 @@ export default {
     document.title = getTitle("addThesis");
   },
   computed: {
-    ...mapState('UserInfo', ['userRights']),
+    ...mapState('User', ['userRights']),
     options() {
       return [{
         value: '维普资讯',

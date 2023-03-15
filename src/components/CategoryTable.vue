@@ -25,7 +25,7 @@ import {mapState} from "vuex";
 export default {
   props: ["tableData", "loading"],
   computed: {
-    ...mapState('UserInfo', ['userRights']),
+    ...mapState('User', ['userRights']),
   },
   methods: {
     changeSelection(selection) {

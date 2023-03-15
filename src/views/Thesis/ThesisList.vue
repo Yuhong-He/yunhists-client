@@ -127,7 +127,7 @@ import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   computed: {
-    ...mapState('UserInfo', ['userRights']),
+    ...mapState('User', ['userRights']),
     options() {
       return [{
         value: '5',

@@ -225,7 +225,7 @@ export default {
     CategoryTable
   },
   computed: {
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   watch: {
     '$i18n.locale'() {

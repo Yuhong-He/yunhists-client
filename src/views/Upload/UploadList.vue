@@ -78,7 +78,7 @@ export default {
     document.title = getTitle("uploadList");
   },
   computed: {
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   components: {
     Pagination

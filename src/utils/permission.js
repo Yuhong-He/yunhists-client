@@ -41,8 +41,8 @@ const admin = [
 ]
 
 export function validatePermission(to, from, next) {
-    const userName = store.state.UserInfo.username;
-    const userRights = store.state.UserInfo.userRights;
+    const userName = store.state.User.username;
+    const userRights = store.state.User.userRights;
     if (userName.length > 0) {
         if (to.path === '/login') {
             next({ path: '/' })

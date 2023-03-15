@@ -84,7 +84,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   components: {
     Pagination

@@ -32,30 +32,30 @@ export function initLang() {
 }
 
 export function setUserInfo(data) {
-    store.commit('UserInfo/setAccessToken', data.access_token);
-    store.commit('UserInfo/setRefreshToken', data.refresh_token);
-    store.commit('UserInfo/setExpiredTime', data.expired_time);
-    store.commit('UserInfo/setUsername', data.username);
-    store.commit('UserInfo/setUserRights', data.userRights);
+    store.commit('User/setAccessToken', data.access_token);
+    store.commit('User/setRefreshToken', data.refresh_token);
+    store.commit('User/setExpiredTime', data.expired_time);
+    store.commit('User/setUsername', data.username);
+    store.commit('User/setUserRights', data.userRights);
     store.commit('Aliyun/setAccessKeyId', data.sts.accessKeyId);
     store.commit('Aliyun/setAccessKeySecret', data.sts.accessKeySecret);
     store.commit('Aliyun/setStsToken', data.sts.stsToken);
 }
 
 export function refreshUserToken(data) {
-    store.commit('UserInfo/setAccessToken', data.access_token);
-    store.commit('UserInfo/setExpiredTime', data.expired_time);
+    store.commit('User/setAccessToken', data.access_token);
+    store.commit('User/setExpiredTime', data.expired_time);
     store.commit('Aliyun/setAccessKeyId', data.sts.accessKeyId);
     store.commit('Aliyun/setAccessKeySecret', data.sts.accessKeySecret);
     store.commit('Aliyun/setStsToken', data.sts.stsToken);
 }
 
 export function cleanUserInfo() {
-    store.commit('UserInfo/setAccessToken', "");
-    store.commit('UserInfo/setRefreshToken', "");
-    store.commit('UserInfo/setExpiredTime', "");
-    store.commit('UserInfo/setUsername', "");
-    store.commit('UserInfo/setUserRights', "");
+    store.commit('User/setAccessToken', "");
+    store.commit('User/setRefreshToken', "");
+    store.commit('User/setExpiredTime', "");
+    store.commit('User/setUsername', "");
+    store.commit('User/setUserRights', "");
     store.commit('Aliyun/setAccessKeyId', "");
     store.commit('Aliyun/setAccessKeySecret', "");
     store.commit('Aliyun/setStsToken', "");

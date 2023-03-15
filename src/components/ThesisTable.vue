@@ -138,7 +138,7 @@ import {generalError, unexpectedError} from "@/utils/general";
 export default {
   props: ["tableData", "loading"],
   computed: {
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   mounted() {
     if(this.userRights >= 1) {

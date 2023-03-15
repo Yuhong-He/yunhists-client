@@ -71,11 +71,11 @@ export default {
     };
   },
   computed: {
-    ...mapState('UserInfo', ['username', 'userRights'])
+    ...mapState('User', ['username', 'userRights'])
   },
   methods: {
     ...mapMutations('Settings', ['setLang']),
-    ...mapMutations('UserInfo', ['setUsername', 'setUserRights']),
+    ...mapMutations('User', ['setUsername', 'setUserRights']),
     ...mapMutations('Aliyun', ['setAccessKeyId', 'setAccessKeySecret', 'setStsToken']),
     activeMenu() {
       let route = this.$route;

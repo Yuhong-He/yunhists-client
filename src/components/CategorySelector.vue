@@ -32,7 +32,7 @@ export default {
   props: ['catList'],
   computed: {
     ...mapState('Settings', ['lang']),
-    ...mapState('UserInfo', ['userRights'])
+    ...mapState('User', ['userRights'])
   },
   watch: {
     catList(val) {
