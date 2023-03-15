@@ -175,7 +175,7 @@ export default {
         } else {
           unexpectedError("Invalid path");
         }
-        await this.$store.dispatch("Aliyun/checkAccessKeyId");
+        await that.$store.dispatch("Aliyun/checkAccessKeyId");
         new OSS(oss).multipartUpload(that.fileName, file.file, {
           progress: function(plan) {
             that.showProgress = true

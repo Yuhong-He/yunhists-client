@@ -4,9 +4,15 @@ import {generalError, unexpectedError} from "@/utils/general";
 
 export const oss = {
     region: "oss-cn-hongkong",
-    accessKeyId: store.state.Aliyun.accessKeyId,
-    accessKeySecret: store.state.Aliyun.accessKeySecret,
-    stsToken: store.state.Aliyun.stsToken,
+    get accessKeyId() {
+        return store.state.Aliyun.accessKeyId;
+    },
+    get accessKeySecret() {
+        return store.state.Aliyun.accessKeySecret;
+    },
+    get stsToken() {
+        return store.state.Aliyun.stsToken;
+    },
     bucket: "yunhists",
     refreshSTSToken: async () => {
         try {

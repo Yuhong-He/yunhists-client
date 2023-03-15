@@ -180,7 +180,7 @@
             :placeholder="$t('profile.inputVerificationCode')"
             v-model="verificationCode"
             clearable>
-          <el-button slot="append" icon="el-icon-s-promotion" id="v-email-btn" @click="sendChangeEmailEmail">
+          <el-button slot="append" icon="el-icon-s-promotion" :disabled="disableVerificationBtn" id="v-email-btn" @click="sendChangeEmailEmail">
             <span id="v-email-txt">{{ $t('profile.send') }}</span>
           </el-button>
         </el-input>
@@ -275,7 +275,8 @@ export default {
         value: 'en',
         label: 'English'
       }],
-      pointsToNextLevel: 1
+      pointsToNextLevel: 1,
+      disableVerificationBtn: false
     }
   },
   watch: {
@@ -463,6 +464,8 @@ export default {
       this.oldPassword = "";
       this.changeEmailPanel = true;
       this.verificationCode = "";
+      clearInterval(this.timer);
+      this.restoreEmailBtn();
     },
     sendChangeEmailEmail() {
       const email = this.newEmail;
@@ -470,8 +473,7 @@ export default {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         if (regex.test(email)) {
           if(email !== this.userInfo.email) {
-            $("#v-email-btn").css("cursor", "not-allowed");
-            this.countDown();
+            this.disableVerificationBtn = true;
             this.doSendChangeEmailEmail(email);
           } else {
             this.$message(i18n.tc('profile.emailSame'));
@@ -491,9 +493,14 @@ export default {
     },
     doSendChangeEmailEmail(email) {
       this.$api.sendChangeEmailEmail({'email': email}).then(res => {
+        this.disableVerificationBtn = false;
         if(res.data.code === 200) {
+          $("#v-email-btn").css("cursor", "not-allowed");
+          this.countDown();
           this.$message({
             type: 'success',
+            duration: 30000,
+            showClose: true,
             message: i18n.tc('profile.codeSent')
           });
         } else if(res.data.code === 211) {

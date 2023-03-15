@@ -46,7 +46,7 @@
                 </el-form-item>
                 <el-form-item style="margin-bottom: 15px;" prop="register_verificationCode">
                   <el-input prefix-icon="el-icon-info" :placeholder="$t('login.verificationCode')" v-model="registerForm.register_verificationCode" clearable autocomplete="off">
-                    <el-button slot="append" icon="el-icon-s-promotion" id="v-email-btn" @click="verificationCode">
+                    <el-button slot="append" icon="el-icon-s-promotion" id="v-email-btn" :disabled="disableVerificationBtn" @click="verificationCode">
                       <span id="v-email-txt">{{ $t('login.send') }}</span>
                     </el-button>
                   </el-input>
@@ -81,7 +81,7 @@
           <el-input v-model="resetPwdForm.resetPwd_email" :placeholder="$t('login.email')" clearable></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="resetPwd('resetPwdForm')">{{ $t('login.reset') }}</el-button>
+          <el-button type="primary" :disabled="disableResetPwdBtn" @click="resetPwd('resetPwdForm')">{{ $t('login.reset') }}</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -90,7 +90,7 @@
         :title="$t('login.caution')"
         :visible.sync="readPrivacy"
         width="30%">
-      <span>{{ $t('login.cautionTxt1') }}<a href="/TermOfService" target="_blank">{{ $t('login.cautionTxt2') }}</a>{{ $t('login.cautionTxt3') }}<a href="/PrivacyPolicy" target="_blank">{{ $t('login.cautionTxt4') }}</a>{{ $t('login.cautionTxt5') }}</span>
+      <span>{{ $t('login.cautionTxt1') }}<a href="/TermsOfService" target="_blank">{{ $t('login.cautionTxt2') }}</a>{{ $t('login.cautionTxt3') }}<a href="/PrivacyPolicy" target="_blank">{{ $t('login.cautionTxt4') }}</a>{{ $t('login.cautionTxt5') }}</span>
       <span slot="footer" class="dialog-footer">
         <el-button @click="readPrivacy = false">{{ $t('login.cancel') }}</el-button>
         <el-button type="success" @click="confirmRegister">{{ $t('login.register') }}</el-button>
@@ -231,7 +231,9 @@ export default{
         resetPwd_email: ''
       },
       loginLoading: false,
-      readPrivacy: false
+      readPrivacy: false,
+      disableVerificationBtn: false,
+      disableResetPwdBtn: false
     }
   },
   methods:{
@@ -256,6 +258,8 @@ export default{
           this.$refs["registerForm"].clearValidate();
         })
       }
+      clearInterval(this.timer);
+      this.restoreEmailBtn();
     },
     login(formName) {
       this.$refs[formName].validate((valid) => {
@@ -359,6 +363,8 @@ export default{
             type: 'success',
             message: i18n.tc('login.registerSuccess')
           });
+          clearInterval(this.timer);
+          this.restoreEmailBtn();
           this.isLogin = true;
           this.loginForm.login_email = email;
           this.loginForm.login_password = pwd;
@@ -394,6 +400,7 @@ export default{
       if(email && email.length > 0) {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         if (regex.test(email)) {
+          this.disableVerificationBtn = true;
           this.doSendVerificationEmail(email);
         } else {
           this.$alert(i18n.tc('login.invalidEmail'), {
@@ -410,11 +417,14 @@ export default{
     },
     doSendVerificationEmail (email) {
       this.$api.sendVerificationEmail({'lang': this.lang, 'email': email}).then(res => {
+        this.disableVerificationBtn = false;
         if(res.data.code === 200) {
           $("#v-email-btn").css("cursor", "not-allowed");
           this.countDown();
           this.$message({
             type: 'success',
+            duration: 30000,
+            showClose: true,
             message: i18n.tc('login.codeSent')
           });
         } else if (res.data.code === 211) {
@@ -460,6 +470,7 @@ export default{
       if(email && email.length > 0) {
         const regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
         if(regex.test(email)) {
+          this.disableResetPwdBtn = true;
           this.doResetPwd(email);
         } else {
           this.$alert(i18n.tc('login.invalidEmail'), {
@@ -477,9 +488,12 @@ export default{
     doResetPwd(email) {
       this.$api.resetPassword({'email': email}).then(res => {
         if(res.data.code === 200) {
+          this.disableResetPwdBtn = false;
           this.resetPwdBox = false;
           this.$message({
             type: 'success',
+            duration: 30000,
+            showClose: true,
             message: i18n.tc('login.newPwdSent')
           });
         } else if (res.data.code === 208) {
