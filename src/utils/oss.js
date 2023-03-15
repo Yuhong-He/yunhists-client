@@ -8,8 +8,9 @@ export const oss = {
     accessKeySecret: store.state.Aliyun.accessKeySecret,
     stsToken: store.state.Aliyun.stsToken,
     bucket: "yunhists",
-    refreshSTSToken: () => {
-        api.refreshSTS().then(res => {
+    refreshSTSToken: async () => {
+        try {
+            const res = await api.refreshSTS();
             if(res.data.code === 200) {
                 store.commit('Aliyun/setAccessKeyId', res.data.data.sts.accessKeyId);
                 store.commit('Aliyun/setAccessKeySecret', res.data.data.sts.accessKeySecret);
@@ -22,8 +23,8 @@ export const oss = {
             } else {
                 generalError(res.data);
             }
-        }).catch(res => {
-            unexpectedError(res);
-        })
+        } catch (e) {
+            unexpectedError(e);
+        }
     }
 };

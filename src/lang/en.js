@@ -154,6 +154,7 @@ export default {
             tokenError: "Token error, please login again",
             missingToken: "Token not exist, please login again",
             unknownError: "Unknown error, please login again",
+            loginAgain: "Please login again",
             noPermission: "You Don't Have Permission!",
             unexpectedError: "Unexpected Error"
         }

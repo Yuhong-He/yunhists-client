@@ -153,6 +153,7 @@ export default {
             tokenError: "Token错误，请重新登陆",
             missingToken: "Token不存在，请重新登陆",
             unknownError: "未知错误，请重新登陆",
+            loginAgain: "请重新登陆",
             noPermission: "您没有权限！",
             unexpectedError: "未知错误"
         }

@@ -103,7 +103,7 @@
 import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import $ from "jquery";
-import {setToken} from "@/utils/token";
+import {setAccessToken, setRefreshToken, setExpiredTime} from "@/utils/token";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Loading } from 'element-ui';
@@ -269,7 +269,9 @@ export default{
       this.loginLoading = true;
       this.$api.login({'email': email, 'password': password}).then(res => {
         if(res.data.code === 200) {
-          setToken(res.data.data.token);
+          setAccessToken(res.data.data.access_token);
+          setRefreshToken(res.data.data.refresh_token);
+          setExpiredTime(res.data.data.expired_time);
           this.setUsername(res.data.data.username);
           this.setUserRights(res.data.data.userRights);
           this.setAccessKeyId(res.data.data.sts.accessKeyId);
@@ -314,7 +316,9 @@ export default{
         const user = googleResult.user;
         this.$api.google(user.email, user.displayName, i18n.locale).then(loginResult => {
           if (loginResult.data.code === 200) {
-            setToken(loginResult.data.data.token);
+            setAccessToken(loginResult.data.data.access_token);
+            setRefreshToken(loginResult.data.data.refresh_token);
+            setExpiredTime(loginResult.data.data.expired_time);
             this.setUsername(loginResult.data.data.username);
             this.setUserRights(loginResult.data.data.userRights);
             this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);

@@ -1,15 +1,25 @@
-function setToken(token) {
-    document.cookie = "token=" + token;
+import store from "@/store";
+import {getCookie} from "@/utils/cookie";
+
+function setAccessToken(token) {
+    document.cookie = "access_token=" + token;
+    store.commit('UserInfo/setAccessToken', token);
 }
 
-function getToken() {
-    const name = "token=";
-    const ca = document.cookie.split(';');
-    for(let i=0; i<ca.length; i++)
-    {
-        const c = ca[i].trim();
-        if (c.indexOf(name)===0) return c.substring(name.length,c.length);
-    }
-    return "";
+function setRefreshToken(token) {
+    document.cookie = "refresh_token=" + token;
+    store.commit('UserInfo/setRefreshToken', token);
 }
-export {setToken, getToken};
+
+function setExpiredTime(time) {
+    store.commit('UserInfo/setExpiredTime', time);
+}
+
+function getAccessToken() {
+    return getCookie("access_token");
+}
+
+function getRefreshToken() {
+    return getCookie("refresh_token");
+}
+export {setAccessToken, getAccessToken, setRefreshToken, getRefreshToken, setExpiredTime};

@@ -235,7 +235,7 @@
 <script>
 import {mapMutations} from "vuex";
 import {generalError, unexpectedError} from "@/utils/user";
-import {setToken} from "@/utils/token";
+import {setAccessToken, setExpiredTime, setRefreshToken} from "@/utils/token";
 import i18n from "@/lang";
 import $ from "jquery";
 import {getTitle} from "@/utils/title";
@@ -413,7 +413,9 @@ export default {
     deleteAccount() {
       this.$api.deleteAccount().then(res => {
         if(res.data.code === 200) {
-          setToken("");
+          setAccessToken("");
+          setRefreshToken("");
+          setExpiredTime("");
           this.setUsername("");
           this.setUserRights("");
           this.setAccessKeyId("");

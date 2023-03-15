@@ -62,7 +62,7 @@
 <script>
 import {mapMutations, mapState} from 'vuex';
 import i18n from "@/lang";
-import {getToken, setToken} from "@/utils/token";
+import {setAccessToken, setExpiredTime, setRefreshToken} from "@/utils/token";
 
 export default {
   data() {
@@ -88,7 +88,7 @@ export default {
     setLangTo(lang) {
       this.setLang(lang);
       this.$i18n.locale = lang;
-      if(getToken().length > 0) {
+      if(this.username.length > 0) {
         this.updateDatabaseLang(lang);
       }
     },
@@ -98,7 +98,9 @@ export default {
         cancelButtonText: i18n.tc('header.cancel'),
         type: 'warning'
       }).then(() => {
-        setToken("");
+        setAccessToken("");
+        setRefreshToken("");
+        setExpiredTime("");
         this.setUsername("");
         this.setUserRights("");
         this.setAccessKeyId("");
