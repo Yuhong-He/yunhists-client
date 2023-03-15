@@ -13,7 +13,7 @@ const unregistered = [
     'CategoryDetail',
     'Statistics',
     'About',
-    'TermOfService',
+    'TermsOfService',
     'PrivacyPolicy',
     'NotFound'
 ]

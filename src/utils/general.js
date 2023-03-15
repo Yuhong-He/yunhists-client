@@ -6,6 +6,10 @@ export function getTitle(page) {
     return i18n.tc("title." + page) + i18n.tc("title.siteName");
 }
 
+export function getContactEmail() {
+    return "xiliuheshui@gmail.com";
+}
+
 export function generalError(data) { // error with request.js Promise.resolve
 
     const authenticationError = [

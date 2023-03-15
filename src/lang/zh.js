@@ -405,6 +405,9 @@ export default {
         addThesis: "添加论文",
         thesisList: "论文列表",
         updateThesis: "修改论文",
+        about: "关于本站",
+        termsOfService: "服务条款",
+        privacyPolicy: "隐私政策",
         siteName: " - 滇史论辑"
     }
 };

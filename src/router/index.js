@@ -21,7 +21,7 @@ import UpdateThesis from "@/views/Thesis/UpdateThesis.vue";
 import UpdateUpload from "@/views/Upload/UpdateUpload.vue";
 import ApproveUpload from "@/views/Upload/ApproveUpload.vue";
 import About from "@/views/Info/About/index.vue";
-import TermOfService from "@/views/Info/TermOfService/index.vue";
+import TermsOfService from "@/views/Info/TermsOfService/index.vue";
 import PrivacyPolicy from "@/views/Info/PrivacyPolicy/index.vue";
 import Maintain from "@/views/Admin/Maintain/index.vue";
 import MissingFile from "@/views/Admin/Maintain/MissingFile.vue";
@@ -223,9 +223,9 @@ const routes = [
         }
       },
       {
-        path: '/TermOfService',
-        name: 'TermOfService',
-        component: TermOfService,
+        path: '/TermsOfService',
+        name: 'TermsOfService',
+        component: TermsOfService,
         meta: {
           activeMenu: '/'
         }

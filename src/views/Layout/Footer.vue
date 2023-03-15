@@ -5,7 +5,7 @@
         <div>
           <span class="clickable" @click="toPage('/about')">{{ $t('footer.about') }}</span>
           <el-divider direction="vertical"></el-divider>
-          <span class="clickable" @click="toPage('/TermOfService')">{{ $t('footer.term') }}</span>
+          <span class="clickable" @click="toPage('/TermsOfService')">{{ $t('footer.term') }}</span>
           <el-divider direction="vertical"></el-divider>
           <span class="clickable" @click="toPage('/PrivacyPolicy')">{{ $t('footer.privacy') }}</span>
         </div>

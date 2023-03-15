@@ -11,11 +11,11 @@ import zh from "./zh.vue";
 import {getTitle} from "@/utils/general";
 export default {
   created() {
-    document.title = getTitle("privacyPolicy");
+    document.title = getTitle("termsOfService");
   },
   watch: {
     '$i18n.locale'() {
-      document.title = getTitle("privacyPolicy");
+      document.title = getTitle("termsOfService");
     },
   },
   components: {

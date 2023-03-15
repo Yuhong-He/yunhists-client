@@ -406,6 +406,9 @@ export default {
         addThesis: "Add Thesis",
         thesisList: "Thesis List",
         updateThesis: "Update Thesis",
+        about: "About",
+        termsOfService: "Terms of Service",
+        privacyPolicy: "Privacy Policy",
         siteName: " - Yunhists"
     }
 };
