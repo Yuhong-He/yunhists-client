@@ -14,7 +14,7 @@
 
 <script>
 import router from "@/router";
-import {getTitle} from "@/utils/title";
+import {getTitle} from "@/utils/general";
 
 export default {
   created() {

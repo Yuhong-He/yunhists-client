@@ -131,9 +131,9 @@
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
-import {generalError, unexpectedError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
+import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
   props: ["tableData", "loading"],

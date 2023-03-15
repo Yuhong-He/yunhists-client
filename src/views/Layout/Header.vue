@@ -62,7 +62,7 @@
 <script>
 import {mapMutations, mapState} from 'vuex';
 import i18n from "@/lang";
-import {setAccessToken, setExpiredTime, setRefreshToken} from "@/utils/token";
+import {cleanUserInfo} from "@/utils/user";
 
 export default {
   data() {
@@ -98,14 +98,7 @@ export default {
         cancelButtonText: i18n.tc('header.cancel'),
         type: 'warning'
       }).then(() => {
-        setAccessToken("");
-        setRefreshToken("");
-        setExpiredTime("");
-        this.setUsername("");
-        this.setUserRights("");
-        this.setAccessKeyId("");
-        this.setAccessKeySecret("");
-        this.setStsToken("");
+        cleanUserInfo();
         if(this.$router.currentRoute.path !== '/') {
           this.$router.push("/");
         }

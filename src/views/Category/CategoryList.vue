@@ -77,9 +77,8 @@ import _ from "lodash";
 import CategoryTable from "@/components/CategoryTable.vue";
 import Pagination from "@/components/Pagination.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {generalError, unexpectedError} from "@/utils/user";
 import {generateErrorMsg} from "@/utils/category";
-import {getTitle} from "@/utils/title";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   data() {

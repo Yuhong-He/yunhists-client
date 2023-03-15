@@ -108,10 +108,9 @@
 import {mapState} from "vuex";
 import i18n from "@/lang";
 import CategorySelector from "@/components/CategorySelector.vue";
-import {generalError, unexpectedError} from "@/utils/user";
 import OSS from "ali-oss";
 import {oss} from "@/utils/oss";
-import {getTitle} from "@/utils/title";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

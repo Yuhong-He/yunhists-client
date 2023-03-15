@@ -1,6 +1,6 @@
 import store from "@/store";
 import api from "@/api";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/general";
 
 export const oss = {
     region: "oss-cn-hongkong",

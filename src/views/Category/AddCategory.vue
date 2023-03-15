@@ -25,9 +25,8 @@
 <script>
 import CategorySelector from "@/components/CategorySelector.vue";
 import {mapState} from "vuex";
-import {generalError, unexpectedError} from "@/utils/user";
 import i18n from "@/lang";
-import {getTitle} from "@/utils/title";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

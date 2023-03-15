@@ -1,11 +1,11 @@
 import axios from "axios";
-import {getAccessToken, getRefreshToken, setAccessToken, setExpiredTime, setRefreshToken} from "@/utils/token";
 import {Loading, Message} from "element-ui";
 import Vue from "vue";
 import i18n from "@/lang";
 import router from "@/router";
 import store from "@/store";
-import {unexpectedError} from "@/utils/user";
+import {cleanUserInfo, refreshUserToken} from "@/utils/user";
+import {unexpectedError} from "@/utils/general";
 
 const Base_URL = 'http://localhost:9999/api';
 
@@ -43,7 +43,7 @@ function addSubscriber(callback) {
 
 service.interceptors.request.use(
     config => {
-        config.headers['access_token'] = getAccessToken();
+        config.headers['access_token'] = store.state.UserInfo.accessToken;
         if (isTokenExpired()) {
             if (!isRefreshing) {
                 isRefreshing = true
@@ -51,18 +51,14 @@ service.interceptors.request.use(
                 axios({
                     url: '/user/refreshToken',
                     method: 'post',
-                    data: getRefreshToken(),
+                    data: store.state.UserInfo.refreshToken,
                     baseURL: Base_URL,
                     timeout: 5000,
                 }).then(res => {
                     isRefreshing = false;
                     loadingInstance.close();
                     if (res.data.code === 200) {
-                        setAccessToken(res.data.data.access_token);
-                        setExpiredTime(res.data.data.expired_time);
-                        store.commit('Aliyun/setAccessKeyId',res.data.data.sts.accessKeyId);
-                        store.commit('Aliyun/setAccessKeySecret',res.data.data.sts.accessKeySecret);
-                        store.commit('Aliyun/setStsToken',res.data.data.sts.stsToken);
+                        refreshUserToken(res.data.data);
                         onAccessTokenFetched(res.data.data.access_token);
                     } else {
                         Message.error(i18n.tc('util.request.loginAgain'));
@@ -141,14 +137,7 @@ service.interceptors.response.use(
     });
 
 function toLoginPage() {
-    setAccessToken("");
-    setRefreshToken("");
-    setExpiredTime("");
-    store.commit('UserInfo/setUsername',"");
-    store.commit('UserInfo/setUserRights',"");
-    store.commit('Aliyun/setAccessKeyId',"");
-    store.commit('Aliyun/setAccessKeySecret',"");
-    store.commit('Aliyun/setStsToken',"");
+    cleanUserInfo();
     if(router.currentRoute.path !== '/login') {
         router.push('/login');
     }

@@ -108,9 +108,8 @@ import i18n from "@/lang";
 import FileUploader from "@/components/FileUploader.vue";
 import CategorySelector from "@/components/CategorySelector.vue";
 import $ from "jquery";
-import {generalError, unexpectedError} from "@/utils/user";
 import {validateThesis} from "@/utils/thesis";
-import {getTitle} from "@/utils/title";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

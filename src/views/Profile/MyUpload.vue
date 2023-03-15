@@ -69,11 +69,10 @@
 
 <script>
 import Pagination from "@/components/Pagination.vue";
-import {generalError, unexpectedError} from "@/utils/user";
 import i18n from "@/lang";
 import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
-import {getTitle} from "@/utils/title";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

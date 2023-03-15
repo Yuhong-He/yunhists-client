@@ -25,7 +25,7 @@
 <script>
 
 import {mapState} from "vuex";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
   computed: {

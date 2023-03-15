@@ -1,25 +1,5 @@
 import store from "@/store";
 import i18n from "@/lang";
-import {Message} from "element-ui";
-import router from "@/router";
-
-export function generalError(data) { // error with request.js Promise.resolve
-
-    const authenticationError = [
-        203, 205, 223, 224, 225
-    ]
-    if(authenticationError.includes(data.code)) {
-        console.log("Authentication Error");
-    } else {
-        Message.error(i18n.tc('util.request.unexpectedError'));
-        console.log(data.data);
-    }
-}
-
-export function unexpectedError(res) { // error with request.js Promise.reject
-    router.push("/");
-    console.log(res);
-}
 
 export function initLang() {
     if (store.state.Settings.lang && store.state.Settings.lang.length > 0) {
@@ -49,4 +29,34 @@ export function initLang() {
                 break;
         }
     }
+}
+
+export function setUserInfo(data) {
+    store.commit('UserInfo/setAccessToken', data.access_token);
+    store.commit('UserInfo/setRefreshToken', data.refresh_token);
+    store.commit('UserInfo/setExpiredTime', data.expired_time);
+    store.commit('UserInfo/setUsername', data.username);
+    store.commit('UserInfo/setUserRights', data.userRights);
+    store.commit('Aliyun/setAccessKeyId', data.sts.accessKeyId);
+    store.commit('Aliyun/setAccessKeySecret', data.sts.accessKeySecret);
+    store.commit('Aliyun/setStsToken', data.sts.stsToken);
+}
+
+export function refreshUserToken(data) {
+    store.commit('UserInfo/setAccessToken', data.access_token);
+    store.commit('UserInfo/setExpiredTime', data.expired_time);
+    store.commit('Aliyun/setAccessKeyId', data.sts.accessKeyId);
+    store.commit('Aliyun/setAccessKeySecret', data.sts.accessKeySecret);
+    store.commit('Aliyun/setStsToken', data.sts.stsToken);
+}
+
+export function cleanUserInfo() {
+    store.commit('UserInfo/setAccessToken', "");
+    store.commit('UserInfo/setRefreshToken', "");
+    store.commit('UserInfo/setExpiredTime', "");
+    store.commit('UserInfo/setUsername', "");
+    store.commit('UserInfo/setUserRights', "");
+    store.commit('Aliyun/setAccessKeyId', "");
+    store.commit('Aliyun/setAccessKeySecret', "");
+    store.commit('Aliyun/setStsToken', "");
 }

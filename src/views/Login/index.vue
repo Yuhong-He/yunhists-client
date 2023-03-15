@@ -103,13 +103,12 @@
 import {mapMutations, mapState} from "vuex";
 import i18n from "@/lang";
 import $ from "jquery";
-import {setAccessToken, setRefreshToken, setExpiredTime} from "@/utils/token";
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { Loading } from 'element-ui';
 import {firebaseConfig} from "@/utils/firebase";
-import {getTitle} from "@/utils/title";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
+import {setUserInfo} from "@/utils/user";
 
 export default{
   created() {
@@ -269,14 +268,7 @@ export default{
       this.loginLoading = true;
       this.$api.login({'email': email, 'password': password}).then(res => {
         if(res.data.code === 200) {
-          setAccessToken(res.data.data.access_token);
-          setRefreshToken(res.data.data.refresh_token);
-          setExpiredTime(res.data.data.expired_time);
-          this.setUsername(res.data.data.username);
-          this.setUserRights(res.data.data.userRights);
-          this.setAccessKeyId(res.data.data.sts.accessKeyId);
-          this.setAccessKeySecret(res.data.data.sts.accessKeySecret);
-          this.setStsToken(res.data.data.sts.stsToken);
+          setUserInfo(res.data.data);
           this.setLang(res.data.data.lang);
           this.$i18n.locale = res.data.data.lang;
           this.loginLoading = false;
@@ -316,14 +308,7 @@ export default{
         const user = googleResult.user;
         this.$api.google(user.email, user.displayName, i18n.locale).then(loginResult => {
           if (loginResult.data.code === 200) {
-            setAccessToken(loginResult.data.data.access_token);
-            setRefreshToken(loginResult.data.data.refresh_token);
-            setExpiredTime(loginResult.data.data.expired_time);
-            this.setUsername(loginResult.data.data.username);
-            this.setUserRights(loginResult.data.data.userRights);
-            this.setAccessKeyId(loginResult.data.data.sts.accessKeyId);
-            this.setAccessKeySecret(loginResult.data.data.sts.accessKeySecret);
-            this.setStsToken(loginResult.data.data.sts.stsToken);
+            setUserInfo(loginResult.data.data);
             this.setLang(loginResult.data.data.lang);
             this.$i18n.locale = loginResult.data.data.lang;
             this.$message({

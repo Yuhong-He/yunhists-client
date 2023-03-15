@@ -211,11 +211,11 @@ import {mapState} from "vuex";
 import CategoryTable from "@/components/CategoryTable.vue";
 import i18n from "@/lang";
 import ThesisTable from "@/components/ThesisTable.vue";
-import {generalError, unexpectedError} from "@/utils/user";
 import _ from "lodash";
 import CategorySelector from "@/components/CategorySelector.vue";
 import {generateErrorMsg} from "@/utils/category";
 import SingleCategorySelector from "@/components/SingleCategorySelector.vue";
+import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
   components: {

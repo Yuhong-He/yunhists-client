@@ -80,8 +80,7 @@ import VueCountUp from 'vue-countupjs';
 import moment from 'moment';
 import 'moment-timezone';
 import i18n from "@/lang";
-import {getTitle} from "@/utils/title";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

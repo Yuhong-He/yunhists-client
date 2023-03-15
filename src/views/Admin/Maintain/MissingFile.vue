@@ -12,8 +12,7 @@
 </template>
 
 <script>
-import {getTitle} from "@/utils/title";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
   created() {

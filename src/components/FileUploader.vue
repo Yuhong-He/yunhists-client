@@ -30,7 +30,7 @@
 import OSS from "ali-oss";
 import i18n from "@/lang";
 import {oss} from "@/utils/oss";
-import {generalError, unexpectedError} from "@/utils/user";
+import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
   props: ['action', 'fileList'],
