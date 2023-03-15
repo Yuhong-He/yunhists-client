@@ -77,7 +77,8 @@ export default {
         console.log("Unexpected Action!!!");
       }
     },
-    doDownloadFile(path, name) {
+    async doDownloadFile(path, name) {
+      await this.$store.dispatch("Aliyun/checkAccessKeyId");
       const response = {
         'content-disposition': `attachment; filename=${encodeURIComponent(name)}`
       }
@@ -134,7 +135,8 @@ export default {
         unexpectedError(res);
       })
     },
-    doDeleteFile(url) {
+    async doDeleteFile(url) {
+      await this.$store.dispatch("Aliyun/checkAccessKeyId");
       new OSS(oss).delete(url).then(() => {
         this.$message({
           message: i18n.tc('thesis.removeSuccess'),
@@ -159,7 +161,7 @@ export default {
         return `${+new Date()}_${rx()}${rx()}`
       }
 
-      function multipartUpload() {
+      async function multipartUpload() {
         let temporary = file.file.name.lastIndexOf('.')
         let fileNameLength = file.file.name.length
         let fileFormat = file.file.name.substring(
@@ -171,9 +173,9 @@ export default {
         } else if(that.action === "Share" || that.action === "UpdateShare") {
           that.fileName = "temp/" + getFileNameUUID() + '.' + fileFormat;
         } else {
-          console.log("Something went wrong.");
+          unexpectedError("Invalid path");
         }
-
+        await this.$store.dispatch("Aliyun/checkAccessKeyId");
         new OSS(oss).multipartUpload(that.fileName, file.file, {
           progress: function(plan) {
             that.showProgress = true

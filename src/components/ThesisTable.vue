@@ -251,8 +251,9 @@ export default {
       this.$router.push("/thesis/upload");
     },
     doDownload() {
-      this.$api.getFileName(this.downloadThesisId).then(res => {
-        if(res.data.code === 200) {
+      this.$api.getFileName(this.downloadThesisId).then(async res => {
+        if (res.data.code === 200) {
+          await this.$store.dispatch("Aliyun/checkAccessKeyId");
           const fileName = res.data.data.file;
           const suffix = fileName.substring(fileName.lastIndexOf('.') + 1);
           const regex = /[\\/:*?"<>|]/g;
@@ -264,18 +265,18 @@ export default {
           window.open(url, '_blank');
           this.confirmDownloadPanel = false;
           this.openDownloadPanel = false;
-        } else if(res.data.code === 401) {
-          this.$alert(i18n.tc('thesis.noMoreDownload'), {
+        } else if (res.data.code === 401) {
+          await this.$alert(i18n.tc('thesis.noMoreDownload'), {
             confirmButtonText: i18n.tc('thesis.confirm'),
             callback: () => {}
           });
-        } else if(res.data.code === 404) {
-          this.$alert(i18n.tc('thesis.fileMissing'), {
+        } else if (res.data.code === 404) {
+          await this.$alert(i18n.tc('thesis.fileMissing'), {
             confirmButtonText: i18n.tc('thesis.confirm'),
             callback: () => {}
           });
-        } else if(res.data.code === 407) {
-          this.$alert(i18n.tc('thesis.oops'), {
+        } else if (res.data.code === 407) {
+          await this.$alert(i18n.tc('thesis.oops'), {
             confirmButtonText: i18n.tc('thesis.confirm'),
             callback: () => {}
           });

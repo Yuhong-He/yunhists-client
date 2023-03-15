@@ -263,7 +263,8 @@ export default {
     getCategories(val) {
       this.categories = val;
     },
-    downloadFile() {
+    async downloadFile() {
+      await this.$store.dispatch("Aliyun/checkAccessKeyId");
       const response = {
         'content-disposition': `attachment; filename=${encodeURIComponent(this.file)}`
       }
