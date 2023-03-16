@@ -64,7 +64,7 @@ export default {
     onSubmit(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.addCategory(this.form.zhName, this.form.enName, this.form.categories);
+          this.addCategory(this.form.zhName.trim(), this.form.enName.trim(), this.form.categories);
         } else {
           return false;
         }
