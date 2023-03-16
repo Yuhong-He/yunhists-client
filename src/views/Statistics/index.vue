@@ -131,7 +131,9 @@ export default {
         const seconds = duration.seconds().toString().padStart(2, '0');
         this.tomorrow = hours + ':' + minutes + ':' + seconds;
         if(this.tomorrow === "00:00:00") {
-          this.refreshStatistics();
+          if(this.$router.currentRoute.name === "Statistics") {
+            this.refreshStatistics();
+          }
         }
       }, 1000);
     },
