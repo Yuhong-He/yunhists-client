@@ -40,7 +40,7 @@
         <el-form-item v-if="this.form.type === '0' || this.form.type === '3'" :label="$t('thesis.issue')" prop="issue">
           <el-input v-model="form.issue" style="width: 50%" clearable></el-input>
         </el-form-item>
-        <el-form-item v-if="this.form.type !== '3'" :label="$t('thesis.pages')" prop="pages">
+        <el-form-item :label="$t('thesis.pages')" prop="pages">
           <el-input v-model="form.pages" style="width: 50%" clearable></el-input>
         </el-form-item>
         <el-form-item label="DOI" prop="doi">

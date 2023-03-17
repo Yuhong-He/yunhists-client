@@ -79,18 +79,19 @@
         </el-col>
       </el-row>
     </div>
-    <div class="sub-cat-table-area">
+    <div v-if="this.subCatCount > 0" class="sub-cat-table-area">
       <h3>{{ $t('category.subCats') }}（{{ this.subCatCount }}）</h3>
       <div class="sub-cat-table">
         <CategoryTable :tableData="subCatTableData" :loading="subCatLoading" @getSelection="getSubCatSelection" @getSortCol="getSubCatSortCol"></CategoryTable>
       </div>
     </div>
-    <div class="sub-thesis-table-area">
+    <div v-if="this.subThesisCount > 0" class="sub-thesis-table-area">
       <h3>{{ $t('category.theses') }}（{{ this.subThesisCount }}）</h3>
       <div class="sub-thesis-table">
         <ThesisTable :tableData="subThesisTableData" :loading="subThesisLoading" @getSelection="getSubThesisSelection" @getSortCol="getSubThesisSortCol" @refreshList="getCategoryTheses"></ThesisTable>
       </div>
     </div>
+    <el-empty v-if="this.subCatCount === 0 && this.subThesisCount === 0" :description="$t('admin.noData')"></el-empty>
 
     <el-dialog
         :title="$t('category.updateCatName')"

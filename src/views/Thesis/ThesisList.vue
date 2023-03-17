@@ -266,11 +266,11 @@ export default {
       this.refreshRoute();
     },
     searchTitle() {
+      this.page = 1;
       this.query.title = this.titleVal;
       this.query.author = "";
       this.query.publication = "";
       this.query.year = "";
-      this.page = 1;
       this.refreshRoute();
     },
     toAddPage() {
@@ -289,6 +289,7 @@ export default {
       this.refreshRoute();
     },
     advancedSearch() {
+      this.page = 1;
       this.titleVal = "";
       this.query = this.searchForm;
       this.searchForm = {
