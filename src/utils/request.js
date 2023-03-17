@@ -7,7 +7,8 @@ import store from "@/store";
 import {cleanUserInfo, refreshUserToken} from "@/utils/user";
 import {unexpectedError} from "@/utils/general";
 
-const Base_URL = 'http://localhost:9999/api';
+const Base_URL = 'http://localhost:9999/api'; // local
+// const Base_URL = 'https://api.yunnanhistory.com/api'; // server
 
 const service = axios.create({
     timeout: 5000,
@@ -43,7 +44,7 @@ function addSubscriber(callback) {
 
 service.interceptors.request.use(
     config => {
-        config.headers['access_token'] = store.state.User.accessToken;
+        config.headers['AccessToken'] = store.state.User.accessToken;
         if (isTokenExpired()) {
             if (!isRefreshing) {
                 isRefreshing = true
@@ -73,7 +74,7 @@ service.interceptors.request.use(
 
             return new Promise((resolve) => {
                 addSubscriber((newToken) => {
-                    config.headers['access_token'] = newToken;
+                    config.headers['AccessToken'] = newToken;
                     config.url = config.url.replace(config.baseURL, '')
                     resolve(config)
                 })
