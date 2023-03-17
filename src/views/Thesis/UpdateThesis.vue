@@ -222,8 +222,8 @@ export default {
     },
     onSubmit() {
       const regexNewLine = /\t|\n/gi;
-      const regexAuthor = /，|、|；|;/gi;
-      this.form.author = this.form.author.replaceAll(regexAuthor, ",");
+      const regexAuthor = /，|、|；|;|, |; /gi;
+      this.form.author = this.form.author.trim().replaceAll(regexAuthor, ",");
       for (let key in this.form) {
         this.form[key] = this.form[key].trim().replaceAll(regexNewLine, "");
       }
