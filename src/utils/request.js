@@ -130,10 +130,17 @@ service.interceptors.response.use(
         }
     },
     error => {
-        Vue.prototype.$alert(i18n.tc('util.request.unexpectedError'), {
-            confirmButtonText: i18n.tc('header.confirm'),
-            callback: () => {}
-        }).then(() => {});
+        if(error.code === 'ECONNABORTED' || error.message === 'Network Error' || error.message.includes("timeout")) {
+            Vue.prototype.$alert(i18n.tc('util.request.timeout'), {
+                confirmButtonText: i18n.tc('header.confirm'),
+                callback: () => {}
+            }).then(() => {});
+        } else {
+            Vue.prototype.$alert(i18n.tc('util.request.unexpectedError'), {
+                confirmButtonText: i18n.tc('header.confirm'),
+                callback: () => {}
+            }).then(() => {});
+        }
         return Promise.reject(error.response);
     });
 

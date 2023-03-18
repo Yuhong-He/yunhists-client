@@ -155,7 +155,8 @@ export default {
             unknownError: "未知错误，请重新登陆",
             loginAgain: "请重新登陆",
             noPermission: "您没有权限！",
-            unexpectedError: "未知错误"
+            unexpectedError: "未知错误",
+            timeout: "网络超时，请检查网络"
         }
     },
     category: {

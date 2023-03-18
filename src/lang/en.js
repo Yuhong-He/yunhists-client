@@ -156,7 +156,8 @@ export default {
             unknownError: "Unknown error, please login again",
             loginAgain: "Please login again",
             noPermission: "You Don't Have Permission!",
-            unexpectedError: "Unexpected Error"
+            unexpectedError: "Unexpected Error",
+            timeout: "Timeout, please check your internet"
         }
     },
     category: {
