@@ -100,7 +100,7 @@
 </template>
 
 <script>
-import {mapMutations, mapState} from "vuex";
+import {mapMutations} from "vuex";
 import i18n from "@/lang";
 import $ from "jquery";
 import { initializeApp } from "firebase/app";
@@ -118,9 +118,6 @@ export default{
     '$i18n.locale'() {
       document.title = getTitle("login");
     }
-  },
-  computed: {
-    ...mapState('Settings', ['lang'])
   },
   data(){
     const validateLoginEmail = (rule, value, callback) => {
@@ -356,7 +353,7 @@ export default{
     },
     doRegister(email, username, pwd, pwd2, code) {
       this.$api.register(
-          {'lang': this.lang, 'email': email, 'username': username,
+          {'lang': i18n.locale, 'email': email, 'username': username,
            'password': pwd, 'password2': pwd2, 'code': code}).then(res => {
         if(res.data.code === 200) {
           this.$message({
@@ -416,7 +413,7 @@ export default{
       }
     },
     doSendVerificationEmail (email) {
-      this.$api.sendVerificationEmail({'lang': this.lang, 'email': email}).then(res => {
+      this.$api.sendVerificationEmail({'lang': i18n.locale, 'email': email}).then(res => {
         this.disableVerificationBtn = false;
         if(res.data.code === 200) {
           $("#v-email-btn").css("cursor", "not-allowed");
