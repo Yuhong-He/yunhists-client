@@ -2,8 +2,10 @@ import store from "@/store";
 import api from "@/api";
 import {generalError, unexpectedError} from "@/utils/general";
 
-export const oss = {
-    region: "oss-cn-hongkong",
+export const ossConfig = {
+    endpoint: "oss.yunnanhistory.com",
+    bucket: "yunhists",
+    cname: true,
     get accessKeyId() {
         return store.state.Aliyun.accessKeyId;
     },
@@ -13,7 +15,6 @@ export const oss = {
     get stsToken() {
         return store.state.Aliyun.stsToken;
     },
-    bucket: "yunhists",
     refreshSTSToken: async () => {
         try {
             const res = await api.refreshSTS();

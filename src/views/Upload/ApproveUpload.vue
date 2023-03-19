@@ -109,7 +109,7 @@ import {mapState} from "vuex";
 import i18n from "@/lang";
 import CategorySelector from "@/components/CategorySelector.vue";
 import OSS from "ali-oss";
-import {oss} from "@/utils/oss";
+import {ossConfig} from "@/utils/oss";
 import {generalError, getTitle, unexpectedError} from "@/utils/general";
 
 export default {
@@ -267,7 +267,7 @@ export default {
       const response = {
         'content-disposition': `attachment; filename=${encodeURIComponent(this.file)}`
       }
-      const url = new OSS(oss).signatureUrl(this.form.fileName, {response});
+      const url = new OSS(ossConfig).signatureUrl(this.form.fileName, {response});
       window.open(url, '_blank');
       this.downloaded = true;
     },

@@ -132,7 +132,7 @@ import {mapState} from "vuex";
 import {handleThesisIssue} from "@/utils/thesis";
 import i18n from "@/lang";
 import OSS from "ali-oss";
-import {oss} from "@/utils/oss";
+import {ossConfig} from "@/utils/oss";
 import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
@@ -261,7 +261,7 @@ export default {
           const response = {
             'content-disposition': `attachment; filename=${encodeURIComponent(title)}`
           }
-          const url = new OSS(oss).signatureUrl(fileName, {response});
+          const url = new OSS(ossConfig).signatureUrl(fileName, {response});
           window.open(url, '_blank');
           this.confirmDownloadPanel = false;
           this.openDownloadPanel = false;

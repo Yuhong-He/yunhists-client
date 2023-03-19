@@ -29,7 +29,7 @@
 
 import OSS from "ali-oss";
 import i18n from "@/lang";
-import {oss} from "@/utils/oss";
+import {ossConfig} from "@/utils/oss";
 import {generalError, unexpectedError} from "@/utils/general";
 
 export default {
@@ -82,7 +82,7 @@ export default {
       const response = {
         'content-disposition': `attachment; filename=${encodeURIComponent(name)}`
       }
-      const url = new OSS(oss).signatureUrl(path, {response});
+      const url = new OSS(ossConfig).signatureUrl(path, {response});
       window.open(url, '_blank');
     },
     handleRemove(file, fileList) {
@@ -137,7 +137,7 @@ export default {
     },
     async doDeleteFile(url) {
       await this.$store.dispatch("Aliyun/checkAccessKeyId");
-      new OSS(oss).delete(url).then(() => {
+      new OSS(ossConfig).delete(url).then(() => {
         this.$message({
           message: i18n.tc('thesis.removeSuccess'),
           type: 'success'
@@ -176,7 +176,7 @@ export default {
           unexpectedError("Invalid path");
         }
         await that.$store.dispatch("Aliyun/checkAccessKeyId");
-        new OSS(oss).multipartUpload(that.fileName, file.file, {
+        new OSS(ossConfig).multipartUpload(that.fileName, file.file, {
           progress: function(plan) {
             that.showProgress = true
             that.progress = Math.floor(plan * 100)
