@@ -7,7 +7,7 @@ export function getTitle(page) {
 }
 
 export function getContactEmail() {
-    return "xiliuheshui@gmail.com";
+    return "admin@yunnanhistory.com";
 }
 
 export function generalError(data) { // error with request.js Promise.resolve

@@ -6,15 +6,15 @@ export default {
     login(data) {
         return request({
             url: path + "/login",
-            method: "get",
-            params: data
+            method: "post",
+            data: data
         })
     },
     google(email, username, lang) {
         return request({
             url: path + "/google",
-            method: "get",
-            params: {
+            method: "post",
+            data: {
                 email: email,
                 username: username,
                 lang: lang
@@ -25,7 +25,7 @@ export default {
         return request({
             url: path + "/register",
             method: "post",
-            params: data
+            data: data
         })
     },
     refreshSTS() {
