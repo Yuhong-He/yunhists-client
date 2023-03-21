@@ -23,7 +23,7 @@ export default new Vuex.Store({
   },
   plugins: [
     createPersistedstate({
-      key: 'User',
+      key: 'Yunhists',
       paths: ['Settings', 'User', 'Aliyun']
     })
   ]
