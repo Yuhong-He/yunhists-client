@@ -89,8 +89,7 @@ service.interceptors.request.use(
             type: "warning"
         });
         return Promise.reject(error);
-    }
-)
+    });
 
 service.interceptors.response.use(
     response => {
