@@ -1,4 +1,5 @@
 import request from "@/utils/request";
+import store from "@/store";
 
 const path = "/user";
 
@@ -31,7 +32,8 @@ export default {
     refreshSTS() {
         return request({
             url: path + "/refreshSTS",
-            method: "get"
+            method: "post",
+            data: store.state.User.refreshToken
         })
     },
     updateLang(data) {
