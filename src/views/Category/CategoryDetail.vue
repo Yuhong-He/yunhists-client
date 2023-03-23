@@ -271,7 +271,8 @@ export default {
       openConfirmDeletePanel: false,
       openExportPanel: false,
       exportFormat: "xls",
-      exportData: []
+      exportData: [],
+      loadCatOptionFinish: false
     }
   },
   methods: {
@@ -474,11 +475,12 @@ export default {
       this.newParentCat = "";
     },
     querySearchAsync(queryString, cb) {
-      if(!_.isEmpty(this.newParentCategory)) {
+      if(this.loadCatOptionFinish) {
         cb(this.newParentCategory);
       }
     },
     searchCategory(str) {
+      this.loadCatOptionFinish = false;
       this.newParentCategory = [];
       if(str && str.length > 0) {
         this.$api.getCategoryOption(str, i18n.locale).then(res => {
@@ -491,6 +493,7 @@ export default {
                 catOption.value = cat.enName;
               }
               this.newParentCategory.push(catOption);
+              this.loadCatOptionFinish = true;
             });
           } else {
             generalError(res.data);
