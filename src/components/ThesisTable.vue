@@ -15,7 +15,7 @@
         <template v-slot="scope">
           <ul>
             <li v-for="category of scope.row.categories">
-              <el-link @click="toCategoryDetailPage('/category/id/' + category.id)">
+              <el-link :underline="false" @click="toCategoryDetailPage('/category/id/' + category.id)">
                 <span v-if="$i18n.locale === 'zh'">{{ category.zhName }}</span>
                 <span v-if="$i18n.locale === 'en'">{{ category.enName }}</span>
               </el-link>
@@ -362,5 +362,14 @@ export default {
 }
 .el-tag + .el-tag {
   margin-left: 10px;
+}
+.el-link.el-link--default {
+  color: #0645AD;
+}
+.el-link.el-link--default:hover {
+  color: #409EFF;
+}
+.el-link.el-link--default:active {
+  color: darkorange;
 }
 </style>

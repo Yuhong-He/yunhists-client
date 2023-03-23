@@ -46,6 +46,14 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="less" scoped>
+.el-link.el-link--default {
+  color: #0645AD;
+}
+.el-link.el-link--default:hover {
+  color: #409EFF;
+}
+.el-link.el-link--default:active {
+  color: darkorange;
+}
 </style>
