@@ -3,9 +3,10 @@ import api from "@/api";
 import {generalError, unexpectedError} from "@/utils/general";
 
 export const ossConfig = {
-    endpoint: "oss.yunnanhistory.com",
+    region: "oss-cn-hongkong", // localhost
+    // endpoint: "oss.yunnanhistory.com", // server
+    // cname: true, // server
     bucket: "yunhists",
-    cname: true,
     get accessKeyId() {
         return store.state.Aliyun.accessKeyId;
     },
