@@ -484,8 +484,8 @@ export default{
     },
     doResetPwd(email) {
       this.$api.resetPassword({'email': email}).then(res => {
+        this.disableResetPwdBtn = false;
         if(res.data.code === 200) {
-          this.disableResetPwdBtn = false;
           this.resetPwdBox = false;
           this.$message({
             type: 'success',
