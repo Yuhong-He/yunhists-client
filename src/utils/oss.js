@@ -3,7 +3,7 @@ import api from "@/api";
 import {generalError, unexpectedError} from "@/utils/general";
 
 export const ossConfig = {
-    region: "oss-cn-hongkong", // localhost
+    region: "oss-cn-hongkong", // local
     // endpoint: "oss.yunnanhistory.com", // server
     // cname: true, // server
     bucket: "yunhists",
