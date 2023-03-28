@@ -390,31 +390,38 @@ export default {
       this.getCategoryTheses();
     },
     updateCatName() {
-      this.$api.updateCategoryName(this.catId, this.catZhName, this.catEnName).then(res => {
-        if(res.data.code === 200) {
-          this.$message({
-            type: 'success',
-            message: i18n.tc('category.updateSuccess')
-          });
-          this.getCategoryInfo();
-          this.getCategoryTheses();
-          this.updateCatNamePanel = false;
-        } else if(res.data.code === 301) {
-          this.$alert(i18n.tc('category.zhCatExist'), {
-            confirmButtonText: i18n.tc('category.confirm'),
-            callback: () => {}
-          });
-        } else if(res.data.code === 302) {
-          this.$alert(i18n.tc('category.enCatExist'), {
-            confirmButtonText: i18n.tc('category.confirm'),
-            callback: () => {}
-          });
-        } else {
-          generalError(res.data);
-        }
-      }).catch(res => {
-        unexpectedError(res);
-      })
+      if(this.catZhName.length > 0 && this.catEnName.length > 0) {
+        this.$api.updateCategoryName(this.catId, this.catZhName, this.catEnName).then(res => {
+          if(res.data.code === 200) {
+            this.$message({
+              type: 'success',
+              message: i18n.tc('category.updateSuccess')
+            });
+            this.getCategoryInfo();
+            this.getCategoryTheses();
+            this.updateCatNamePanel = false;
+          } else if(res.data.code === 301) {
+            this.$alert(i18n.tc('category.zhCatExist'), {
+              confirmButtonText: i18n.tc('category.confirm'),
+              callback: () => {}
+            });
+          } else if(res.data.code === 302) {
+            this.$alert(i18n.tc('category.enCatExist'), {
+              confirmButtonText: i18n.tc('category.confirm'),
+              callback: () => {}
+            });
+          } else {
+            generalError(res.data);
+          }
+        }).catch(res => {
+          unexpectedError(res);
+        })
+      } else {
+        this.$alert(i18n.tc('category.inputCatName'), {
+          confirmButtonText: i18n.tc('category.confirm'),
+          callback: () => {}
+        });
+      }
     },
     removeCat(tag) {
       this.updateParentCats.splice(this.updateParentCats.indexOf(tag), 1);
@@ -529,13 +536,17 @@ export default {
     addCatALot() {
       if(!_.isEmpty(this.newCategoriesId)) {
         const childCat = [];
-        this.selectedSubCats.forEach(e => {
-          childCat.push(e.id);
-        });
+        if(!_.isEmpty(this.selectedSubCats)) {
+          this.selectedSubCats.forEach(e => {
+            childCat.push(e.id);
+          });
+        }
         const childTheses = [];
-        this.selectedSubTheses.forEach(e => {
-          childTheses.push(e.id);
-        });
+        if(!_.isEmpty(this.selectedSubTheses)) {
+          this.selectedSubTheses.forEach(e => {
+            childTheses.push(e.id);
+          });
+        }
         this.doAddCatALot(childCat, childTheses, this.newCategoriesId);
       } else {
         this.$alert(i18n.tc('category.selectParentCat'), {
