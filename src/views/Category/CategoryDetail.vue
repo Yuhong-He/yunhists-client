@@ -4,7 +4,7 @@
       <span class="parent-cat-header">{{ $t('category.parentCat') }}</span>
       <template v-if="updateParentCat === false">
         <el-tag class="parent-cat-tag" type="info" effect="plain" v-for="obj of parentCats"
-                @click="$router.push('/category/id/' + obj.id)">
+                @click="toCat(obj)">
           <span>{{ $i18n.locale === 'zh' ? obj.zhName : obj.enName }}</span>
         </el-tag>
         <span class="category-parent-cat-edit-btn" v-if="this.userRights >= 1">
@@ -81,8 +81,19 @@
     </div>
     <div v-if="this.subCatCount > 0" class="sub-cat-table-area">
       <h3>{{ $t('category.subCats') }}（{{ this.subCatCount }}）</h3>
-      <div class="sub-cat-table">
-        <CategoryTable :tableData="subCatTableData" :loading="subCatLoading" @getSelection="getSubCatSelection" @getSortCol="getSubCatSortCol"></CategoryTable>
+      <div class="folder-area">
+        <div class="folder-div" v-for="subCat in subCatTableData" @click.stop="toCat(subCat)">
+          <label class="folder-label">
+            <input type="checkbox" class="folder-checkbox" v-if="userRights >= 1" v-model="selectedFolder" :value="subCat.id" @click.stop="">
+            <div class="folder-content">
+              <img :src="require('@/assets/images/Icons8_flat_folder.svg')" class="folder-img" alt="SubCat"/>
+              <div class="folder-name">
+                <span v-if="$i18n.locale === 'zh'">{{ subCat.zhName }}</span>
+                <span v-if="$i18n.locale === 'en'">{{ subCat.enName }}</span>
+              </div>
+            </div>
+          </label>
+        </div>
       </div>
     </div>
     <div v-if="this.subThesisCount > 0" class="sub-thesis-table-area">
@@ -232,7 +243,10 @@ export default {
     '$i18n.locale'() {
       this.generateCategoryDetails();
     },
-    '$route': 'generateCategoryDetails'
+    '$route': 'generateCategoryDetails',
+    'selectedFolder'() {
+      this.selectSubCat();
+    }
   },
   created() {
     this.generateCategoryDetails();
@@ -248,10 +262,10 @@ export default {
       updateParentCats: [],
       subCatLoading: true,
       subCatTableData: [],
-      selectedSubCats: {},
+      selectedSubCats: [],
       subThesisLoading: true,
       subThesisTableData: [],
-      selectedSubTheses: {},
+      selectedSubTheses: [],
       subCatCount: 0,
       subThesisCount: 0,
       subCatSortCol: '',
@@ -272,7 +286,8 @@ export default {
       openExportPanel: false,
       exportFormat: "xls",
       exportData: [],
-      loadCatOptionFinish: false
+      loadCatOptionFinish: false,
+      selectedFolder: []
     }
   },
   methods: {
@@ -373,16 +388,8 @@ export default {
     toUploadPage() {
       this.$router.push("/thesis/upload");
     },
-    getSubCatSelection(val) {
-      this.selectedSubCats = val;
-    },
     getSubThesisSelection(val) {
       this.selectedSubTheses = val;
-    },
-    getSubCatSortCol(val) {
-      this.subCatSortCol = val.sortCol;
-      this.subCatSortOrder = val.sortOrder;
-      this.getCategorySubCats();
     },
     getSubThesisSortCol(val) {
       this.thesesSortCol = val.sortCol;
@@ -557,7 +564,7 @@ export default {
     },
     doAddCatALot(childCat, childTheses, parentCat) {
       this.$api.addCatALot({"categories": childCat, "theses": childTheses, "parentCats": parentCat}).then(res => {
-      if(res.data.code === 200) {
+        if(res.data.code === 200) {
           if(_.isEmpty(res.data.data.failed)) {
             this.operateThesesSubCats = false;
             this.$message({
@@ -578,6 +585,9 @@ export default {
             this.getCategorySubCats();
             this.getCategoryTheses();
           }
+          this.selectedFolder = [];
+          this.selectedSubCats = [];
+          this.selectedSubTheses = [];
         } else {
           generalError(res.data);
         }
@@ -631,6 +641,9 @@ export default {
             this.getCategorySubCats();
             this.getCategoryTheses();
           }
+          this.selectedFolder = [];
+          this.selectedSubCats = [];
+          this.selectedSubTheses = [];
         } else {
           generalError(res.data);
         }
@@ -683,6 +696,9 @@ export default {
             this.getCategorySubCats();
             this.getCategoryTheses();
           }
+          this.selectedFolder = [];
+          this.selectedSubCats = [];
+          this.selectedSubTheses = [];
         } else {
           generalError(res.data);
         }
@@ -716,6 +732,22 @@ export default {
         this.exportData.push(obj);
       }
       this.openExportPanel = true;
+    },
+    toCat(cat) {
+      this.selectedSubCats = [];
+      this.selectedSubTheses = [];
+      this.selectedFolder = [];
+      this.$router.push('/category/id/' + cat.id);
+    },
+    selectSubCat() {
+      this.selectedSubCats = [];
+      for(let selectedId of this.selectedFolder) {
+        this.selectedSubCats.push(_.find(this.subCatTableData, function(obj) {
+          if (obj.id === selectedId) {
+            return true;
+          }
+        }));
+      }
     }
   }
 }
@@ -789,12 +821,84 @@ export default {
 }
 .sub-cat-table-area {
   margin-top: 25px;
-  .sub-cat-table {
-    margin-top: 25px;
+}
+.folder-area {
+  display: inline-flex;
+  flex-wrap: wrap;
+}
+
+.folder-div {
+  width: 90px;
+  margin: 20px;
+  padding: 10px;
+  position: relative;
+  cursor: pointer;
+
+  .folder-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+  }
+
+  .folder-checkbox {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 20px;
+    height: 20px;
+    transform: scale(1.2);
+    cursor: default;
+  }
+
+  .folder-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    .folder-img {
+      width: 90px;
+    }
+
+    .folder-name {
+      padding-top: 5px;
+      text-align: center;
+      font-size: 1.1em;
+    }
   }
 }
+
+.folder-div::before {
+  content: "";
+  position: absolute;
+  border-radius: 10px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 6px);
+  height: calc(100% + 6px);
+  background-color: rgba(77, 144, 254, 0.2);
+  border: 3px solid #1a73e8;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.folder-div:hover::before {
+  opacity: 1;
+}
+
+.folder-div.selected::before {
+  opacity: 1;
+}
+
+.folder-div.selected .folder-content .folder-img {
+  filter: grayscale(1) brightness(0.5);
+}
+
+.folder-div.selected .folder-content .folder-name {
+  color: #aaa;
+}
 .sub-thesis-table-area {
-  margin-top: 25px;
   .sub-thesis-table {
     margin-top: 25px;
   }

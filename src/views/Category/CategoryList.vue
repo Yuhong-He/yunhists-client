@@ -92,7 +92,7 @@ export default {
       sizeVal: '',
       sortCol: '',
       sortOrder: '',
-      selectedCats: {},
+      selectedCats: [],
       operateCats: false,
       newCategoriesId: [],
       newCategories: [],

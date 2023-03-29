@@ -162,7 +162,7 @@ export default {
       sortCol: '',
       sortOrder: '',
       sizeVal: '',
-      selectedTheses: {},
+      selectedTheses: [],
       titleVal: "",
       query: {
         author: "",
