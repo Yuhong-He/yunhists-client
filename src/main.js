@@ -27,7 +27,9 @@ router.beforeEach((to, from, next) => {
     validatePermission(to, from, next);
     next();
 })
-
+router.afterEach(() => {
+    window.scrollTo(0, 0);
+})
 const isDebug_mode = process.env.NODE_ENV !== 'production';
 Vue.config.debug = isDebug_mode;
 Vue.config.devtools = isDebug_mode;

@@ -292,7 +292,6 @@ export default {
   },
   methods: {
     generateCategoryDetails() {
-      window.scrollTo(0, 0);
       this.updateCatNamePanel = false;
       this.updateParentCat = false;
       this.catId = this.$route.params.id;
