@@ -797,6 +797,7 @@ export default {
 }
 .category-detail-header {
   min-height: 50px;
+  margin-bottom: 25px;
   .category-detail-header-right {
     padding-top: 5px;
     text-align: right;
@@ -817,9 +818,6 @@ export default {
 .edit-bracket {
   padding-left: 2px;
   padding-right: 2px;
-}
-.sub-cat-table-area {
-  margin-top: 25px;
 }
 .folder-area {
   display: inline-flex;

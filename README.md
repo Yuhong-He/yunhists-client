@@ -1,4 +1,5 @@
 # yunhists-client
+This is the client side of Yunhists, can be access via [www.yunnanhistory.com](https://www.yunnanhistory.com).
 
 ## Project setup
 ```
