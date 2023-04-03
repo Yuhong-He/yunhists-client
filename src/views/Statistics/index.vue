@@ -122,9 +122,10 @@ export default {
   },
   methods: {
     countdown() {
-      const deadline = moment().endOf('day').add(1, 'days').set({hour: 15, minute: 59, second: 59, millisecond: 0});
+      const deadline = moment.utc().add(1, 'days').set({hour: 15, minute: 59, second: 59, millisecond: 0});
       setInterval(() => {
-        const diff = deadline.diff(moment(), 'seconds');
+        const offset = moment().utcOffset();
+        const diff = deadline.diff(moment().utcOffset(offset), 'seconds');
         const duration = moment.duration(diff, 'seconds');
         const hours = duration.hours().toString().padStart(2, '0');
         const minutes = duration.minutes().toString().padStart(2, '0');
