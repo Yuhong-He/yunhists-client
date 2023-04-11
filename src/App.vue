@@ -23,13 +23,10 @@ export default {
 .el-popover {
   word-break: normal !important;
 }
-.el-dialog__body div {
+.el-dialog__body {
   word-break: normal !important;
 }
 .el-table .cell {
-  word-break: normal !important;
-}
-.el-dialog__body span {
   word-break: normal !important;
 }
 </style>
